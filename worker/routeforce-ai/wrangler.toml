@@ -1,0 +1,7 @@
+name = "routeforce-ai"
+main = "src/index.ts"
+compatibility_date = "2026-10-25"
+workers_dev = false
+
+[ai]
+binding = "AI"
