@@ -1,7 +1,6 @@
 type Env = { GOOGLE_CLIENT_ID: string };
 type Context = { request: Request; env: Env };
 
-// Environment bindings are loaded with each Pages deployment.
 export async function onRequestGet(context: Context) {
   if (!context.env.GOOGLE_CLIENT_ID) {
     return Response.json({ error: "google_oauth_not_configured" }, { status: 503 });
@@ -14,7 +13,11 @@ export async function onRequestGet(context: Context) {
   url.searchParams.set("scope", "openid email profile");
   url.searchParams.set("state", state);
   url.searchParams.set("prompt", "select_account");
-  return Response.redirect(url.toString(), 302, {
-    headers: { "Set-Cookie": "rf_oauth_state=" + state + "; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=600" }
+  return new Response(null, {
+    status: 302,
+    headers: {
+      Location: url.toString(),
+      "Set-Cookie": "rf_oauth_state=" + state + "; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=600"
+    }
   });
 }
