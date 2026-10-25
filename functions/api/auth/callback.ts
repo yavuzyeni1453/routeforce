@@ -42,9 +42,11 @@ export async function onRequestGet(context: Context) {
   const payload = toBase64URL(JSON.stringify({ sub: user.id, login: user.login, exp: Date.now() + 604800000 }));
   const signature = await sign(payload, context.env.SESSION_SECRET);
   const secure = new URL(context.request.url).protocol === "https:" ? " Secure;" : "";
-  return Response.redirect(new URL("/", context.request.url).toString(), 302, {
+  return new Response(null, {
+    status: 302,
     headers: {
-      "Set-Cookie": "rf_session=" + payload + "." + signature + "; HttpOnly;" + secure + " SameSite=Lax; Path=/; Max-Age=604800, rf_oauth_state=; HttpOnly;" + secure + " SameSite=Lax; Path=/; Max-Age=0"
+      "Location": new URL("/", context.request.url).toString(),
+      "Set-Cookie": "rf_session=" + payload + "." + signature + "; HttpOnly;" + secure + " SameSite=Lax; Path=/; Max-Age=604800"
     }
   });
 }
