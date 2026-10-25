@@ -1,6 +1,7 @@
 type Env = { GOOGLE_CLIENT_ID: string };
 type Context = { request: Request; env: Env };
 
+// Environment bindings are loaded with each Pages deployment.
 export async function onRequestGet(context: Context) {
   if (!context.env.GOOGLE_CLIENT_ID) {
     return Response.json({ error: "google_oauth_not_configured" }, { status: 503 });
