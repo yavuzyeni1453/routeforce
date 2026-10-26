@@ -30,11 +30,26 @@ export async function onRequestPost(context: Context) {
     const result = await upstream.json() as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
     const raw = result.candidates?.[0]?.content?.parts?.map(p => p.text || "").join("").trim();
     if (!raw) return Response.json({ error: "empty_ai_response" }, { status: 502 });
-    let parsed: { answer?: string; config_patch?: unknown } = {};
-    try { parsed = JSON.parse(raw); } catch { parsed.answer = raw; }
-    const answer = String(parsed.answer || raw).slice(0, 5000);
-    const configPatch = Array.isArray(parsed.config_patch) ? parsed.config_patch.filter(x => typeof x === "string").map(x => x.trim()).filter(Boolean).slice(0, 100) : [];
-    return Response.json({ answer, configPatch });
+    let parsed: { answer?: string; config_patch?: unknown; description?: unknown; steps?: unknown } = {};
+        try { parsed = JSON.parse(raw); } catch { parsed.answer = raw; }
+        // Some model responses wrap their own JSON inside the answer field. Normalize it.
+        if (typeof parsed.answer === "string" && parsed.answer.trim().startsWith("{")) {
+          try {
+            const nested = JSON.parse(parsed.answer);
+            parsed.description = nested.description || parsed.description;
+            parsed.steps = nested.steps || parsed.steps;
+            parsed.answer = nested.description || parsed.answer;
+          } catch { /* keep the original answer */ }
+        }
+        const directPatch = Array.isArray(parsed.config_patch) ? parsed.config_patch : [];
+        const stepPatch = Array.isArray(parsed.steps) ? parsed.steps.flatMap(step => {
+          if (typeof step !== "string") return [];
+          const snippets = [...step.matchAll(/`([^`\\n]+)`/g)].map(m => m[1]);
+          return snippets.length ? snippets : [];
+        }) : [];
+        const answer = String(parsed.answer || parsed.description || raw).slice(0, 5000);
+        const configPatch = [...directPatch, ...stepPatch].filter(x => typeof x === "string").map(x => String(x).trim()).filter(Boolean).slice(0, 100);
+        return Response.json({ answer, configPatch });
   } catch {
     return Response.json({ error: "assistant_unavailable" }, { status: 502 });
   }
