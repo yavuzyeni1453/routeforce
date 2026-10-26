@@ -13,7 +13,7 @@ export async function onRequestPost(context: Context) {
   const config = body.config?.trim().slice(0, 12000) || "(Config paylaşılmadı)";
   const prompt = "Hedef vendor: " + (body.vendor || "Belirtilmedi") + "\n\nBGP config:\n" + config + "\n\nKullanıcı sorusu: " + message;
   try {
-    const upstream = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent", {
+    const upstream = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-goog-api-key": context.env.GEMINI_API_KEY },
       body: JSON.stringify({
