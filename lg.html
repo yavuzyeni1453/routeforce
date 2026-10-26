@@ -1,20 +1,740 @@
 <!doctype html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RouteForce Looking Glass</title>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RouteForce — Looking Glass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#07121b;--p:#0d1d29;--p2:#102534;--l:#2a4559;--t:#ebf3f7;--m:#97aab9;--a:#73e7b3;--blue:#8ebeff;--amber:#ffc779}*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 480px at 90% -15%,#174655,transparent 63%),var(--bg);color:var(--t);font:14px Inter,ui-sans-serif,system-ui,sans-serif}.top{height:66px;padding:0 30px;border-bottom:1px solid #1e384a;background:#08141edb;backdrop-filter:blur(16px);display:flex;align-items:center;gap:25px}.brand{font-size:20px;font-weight:850;letter-spacing:-.055em;color:#fff;text-decoration:none}.brand b{color:var(--a)}.top a{color:var(--m);text-decoration:none;font-size:13px}.top a.active{color:#fff}.tag{margin-left:auto;font-size:10px;color:#b9ccdb;border:1px solid #36566a;border-radius:20px;padding:5px 8px}.wrap{max-width:1280px;margin:auto;padding:28px}.intro{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:9px 0 23px}.ey{font-size:10px;letter-spacing:.14em;color:var(--a);font-weight:850}.intro h1{font-size:28px;letter-spacing:-.045em;margin:7px 0 3px}.intro p{margin:0;color:var(--m);max-width:690px}.vantage{display:flex;gap:10px;align-items:center;color:var(--m);font-size:11px;white-space:nowrap}.dot{height:7px;width:7px;border-radius:50%;background:var(--a);box-shadow:0 0 0 4px #73e7b320}.toolbar{border:1px solid var(--l);border-radius:13px;background:#0d1d29;padding:11px;display:flex;gap:10px;box-shadow:0 20px 45px #0002}.tools{display:flex;gap:4px;flex-wrap:wrap}.tools button{border:0;border-radius:7px;background:transparent;color:var(--m);font-size:11px;font-weight:750;padding:8px 9px;cursor:pointer}.tools button.active{background:#294c5c;color:#fff}.tools button.locked{color:#6f8390}.query{display:flex;gap:8px;flex:1}.query input{flex:1;min-width:100px;border:1px solid #2e4d61;border-radius:8px;background:#07121a;color:#fff;padding:9px 11px;outline:0}.query input:focus{border-color:#5d9c98}.query button{border:0;border-radius:8px;background:var(--a);color:#082119;font-weight:850;padding:9px 15px;cursor:pointer}.hint{font-size:11px;color:var(--m);margin:9px 2px 20px}.grid{display:grid;grid-template-columns:1.1fr 1.3fr .8fr;gap:13px}.panel{border:1px solid var(--l);border-radius:12px;background:linear-gradient(145deg,#0f202d,#0a1721);min-width:0}.ph{display:flex;justify-content:space-between;align-items:center;padding:13px 14px;border-bottom:1px solid var(--l)}.ph span{font-size:10px;color:var(--m);letter-spacing:.1em;font-weight:800}.ph h2{margin:2px 0 0;font-size:14px}.results{padding:14px}.statusline{display:flex;align-items:center;gap:8px;color:#bcd1dc;font-size:12px;margin-bottom:12px}.result{height:330px;margin:0;overflow:auto;background:#061017;border:1px solid #274255;border-radius:8px;padding:13px;color:#b9e8c9;font:11px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap}.summary{display:grid;gap:10px;padding:14px}.metric{padding:11px;border:1px solid #2c4a5d;border-radius:9px;background:#0b1a25}.metric small{display:block;color:var(--m);font-size:10px;letter-spacing:.09em}.metric b{display:block;font-size:16px;margin-top:3px}.metric em{font-style:normal;color:var(--m);font-size:10px}.probe{padding:14px}.probeitem{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid #274154}.probeitem:last-child{border-bottom:0}.probeitem b{font-size:12px}.probeitem small{display:block;color:var(--m);font-size:10px;margin-top:2px}.pending{font-size:10px;color:var(--amber);border:1px solid #694f2c;padding:4px 6px;border-radius:20px}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:13px}.feature{border:1px solid var(--l);border-radius:11px;padding:13px;background:#0d1c27}.feature b{font-size:12px}.feature p{margin:5px 0 0;color:var(--m);font-size:11px;line-height:1.5}@media(max-width:960px){.grid{grid-template-columns:1fr 1fr}.grid>.panel:last-child{grid-column:span 2}.features{grid-template-columns:1fr 1fr}}@media(max-width:650px){.top{padding:0 17px}.top a{display:none}.tag{display:none}.wrap{padding:19px}.intro{align-items:start;flex-direction:column}.toolbar{display:block}.tools{margin-bottom:9px}.query{width:100%}.grid,.features{display:block}.panel,.feature{margin-bottom:12px}.grid>.panel:last-child{display:block}.result{height:260px}}
-</style></head><body>
-<header class="top"><a class="brand" href="/">Route<b>Force</b></a><a href="/">BGP Studio</a><a href="/app.html">Projeler</a><a class="active" href="/lg.html">Looking Glass</a><a href="/tools.html">Tools</a><span class="tag">PUBLIC NETWORK TOOLS</span></header>
-<main class="wrap"><section class="intro"><div><div class="ey">LOOKING GLASS</div><h1>İnternet rotasını farklı bir açıdan görün.</h1><p>Prefix, ASN, domain ve IP görünürlüğünü tek ekranda sorgulayın. Canlı BGP, WHOIS ve DNS verisi herkese açıktır.</p></div><div class="vantage"><i class="dot"></i> Public data vantage · global</div></section>
-<section class="toolbar"><div class="tools" id="tools"><button class="active" data-tool="bgp">BGP lookup</button><button data-tool="whois">WHOIS</button><button data-tool="dns">DNS</button><button class="locked" data-tool="ping">Ping</button><button class="locked" data-tool="trace">Traceroute</button><button class="locked" data-tool="mtr">MTR</button></div><form class="query" id="query"><input id="target" placeholder="AS13335, 1.1.1.0/24 veya example.com" autocomplete="off"><button>Sorgula</button></form></section>
-<div class="hint" id="hint">BGP: ASN, IPv4/IPv6 adresi veya prefix girin. Özel ağ hedefleri kabul edilmez.</div>
-<section class="grid"><section class="panel"><div class="ph"><div><span>CANLI VERİ</span><h2 id="toolTitle">BGP görünürlüğü</h2></div><span id="state">HAZIR</span></div><div class="summary"><div class="metric"><small>SORGU</small><b id="shownTarget">—</b><em>Genel hedef bekleniyor</em></div><div class="metric"><small>KAYNAK</small><b id="source">RIPEstat</b><em id="sourceNote">BGP routing visibility</em></div><div class="metric"><small>SONUÇ</small><b id="summary">—</b><em>Henüz sorgu çalışmadı</em></div></div></section>
-<section class="panel"><div class="ph"><div><span>TERMINAL</span><h2>Sonuç çıktısı</h2></div><button id="copy" style="border:0;background:transparent;color:#a9c1d0;cursor:pointer">Kopyala</button></div><div class="results"><div class="statusline"><i class="dot"></i><span id="status">Sorgu için hedef girin.</span></div><pre class="result" id="output">routeforce-lg $ ready
+:root {
+  --bg-base: #060911;
+  --bg-surface: rgba(13, 20, 36, 0.72);
+  --bg-card: rgba(11, 18, 32, 0.82);
+  --bg-editor: #070c18;
+  
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-medium: rgba(255, 255, 255, 0.12);
+  
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  
+  --accent-mint: #10B981;
+  --accent-mint-light: #34D399;
+  --accent-cyan: #06B6D4;
+  --accent-blue: #38BDF8;
+  --accent-amber: #F59E0B;
+  
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: var(--bg-base);
+  background-image: 
+    radial-gradient(1000px 520px at 85% -10%, rgba(14, 165, 233, 0.12) 0%, transparent 70%),
+    radial-gradient(800px 480px at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 65%);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.28); }
+
+/* Header */
+.top {
+  height: 68px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 0 32px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(6, 9, 17, 0.78);
+  backdrop-filter: blur(20px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.brand-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(6, 182, 212, 0.25));
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+}
+
+.brand-logo svg { width: 20px; height: 20px; color: #34D399; }
+
+.wordmark {
+  font-size: 19px;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+  color: #fff;
+}
+
+.wordmark em {
+  font-style: normal;
+  background: linear-gradient(135deg, #34D399 0%, #06B6D4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-badge {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--accent-mint-light);
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 2px 7px;
+  border-radius: 6px;
+  margin-left: 6px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+}
+
+.nav a {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 7px;
+  transition: all 0.2s ease;
+}
+
+.nav a:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav a.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.tag {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #38BDF8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  background: rgba(56, 189, 248, 0.08);
+  border-radius: 99px;
+  padding: 5px 12px;
+}
+
+/* Wrap */
+.wrap {
+  max-width: 1440px;
+  margin: auto;
+  padding: 32px 36px 48px;
+}
+
+.ey {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--accent-mint-light);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 10px 0 28px;
+  flex-wrap: wrap;
+}
+
+.intro h1 {
+  font-size: 32px;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+  line-height: 1.15;
+  background: linear-gradient(135deg, #FFFFFF 40%, #CBD5E1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 6px 0 4px;
+}
+
+.intro p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  max-width: 720px;
+}
+
+.vantage {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: 99px;
+}
+
+.dot {
+  height: 7px;
+  width: 7px;
+  border-radius: 50%;
+  background: var(--accent-mint-light);
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.6);
+}
+
+/* Toolbar & Query Form */
+.toolbar {
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  padding: 14px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.5);
+}
+
+.tools {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+}
+
+.tools button {
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-sans);
+}
+
+.tools button:hover:not(.locked) {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.tools button.active {
+  background: rgba(16, 185, 129, 0.18);
+  color: #34D399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.tools button.locked {
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.query {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+}
+
+.query input {
+  flex: 1;
+  min-width: 140px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  padding: 11px 16px;
+  outline: 0;
+  font-size: 13px;
+  font-family: var(--font-mono);
+  transition: border-color 0.2s ease;
+}
+
+.query input:focus {
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+}
+
+.query button {
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: #032014;
+  font-weight: 800;
+  padding: 11px 22px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.query button:hover {
+  background: linear-gradient(135deg, #34D399, #10B981);
+  transform: translateY(-1px);
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 12px 4px 24px;
+}
+
+/* Grid Layout */
+.grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1.35fr 0.85fr;
+  gap: 18px;
+}
+
+.panel {
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  min-width: 0;
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.5);
+}
+
+.ph {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.02);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.ph span {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.ph h2 {
+  margin: 2px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.results {
+  padding: 18px 20px;
+}
+
+.statusline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-bottom: 14px;
+}
+
+.result {
+  height: 380px;
+  margin: 0;
+  overflow: auto;
+  background: var(--bg-editor);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 16px;
+  color: #b9e8c9;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.summary {
+  display: grid;
+  gap: 12px;
+  padding: 18px 20px;
+}
+
+.metric {
+  padding: 14px 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.metric small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  font-weight: 800;
+}
+
+.metric b {
+  display: block;
+  font-size: 18px;
+  margin-top: 4px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.metric em {
+  font-style: normal;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.probe {
+  padding: 18px 20px;
+}
+
+.probeitem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.probeitem:last-child {
+  border-bottom: 0;
+}
+
+.probeitem b {
+  font-size: 13px;
+  color: #fff;
+}
+
+.probeitem small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.pending {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--accent-amber);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  background: rgba(245, 158, 11, 0.1);
+  padding: 4px 8px;
+  border-radius: 99px;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.feature {
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 16px 18px;
+  background: var(--bg-card);
+}
+
+.feature b {
+  font-size: 13px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.feature p {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+@media(max-width: 1080px) {
+  .grid { grid-template-columns: 1fr 1fr; }
+  .grid > .panel:last-child { grid-column: span 2; }
+  .features { grid-template-columns: 1fr 1fr; }
+}
+
+@media(max-width: 760px) {
+  .top { padding: 0 18px; }
+  .nav { display: none; }
+  .tag { display: none; }
+  .wrap { padding: 20px 18px; }
+  .intro { align-items: flex-start; flex-direction: column; }
+  .toolbar { display: block; }
+  .tools { margin-bottom: 12px; }
+  .query { width: 100%; }
+  .grid, .features { display: block; }
+  .panel, .feature { margin-bottom: 16px; }
+  .result { height: 280px; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand-wrapper" href="/">
+    <div class="brand-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="6" cy="18" r="3"></circle>
+        <circle cx="18" cy="6" r="3"></circle>
+        <circle cx="6" cy="6" r="3"></circle>
+        <path d="M18 9v6"></path>
+        <path d="M9 6h6"></path>
+        <path d="M7.5 15.5l9-9"></path>
+      </svg>
+    </div>
+    <div class="wordmark">Route<em>Force</em><span class="brand-badge">BGP STUDIO</span></div>
+  </a>
+
+  <nav class="nav">
+    <a href="/">BGP Studio</a>
+    <a href="/app.html">Projeler</a>
+    <a class="active" href="/lg.html">Looking Glass</a>
+    <a href="/tools.html">Tools</a>
+  </nav>
+
+  <span class="tag">PUBLIC LOOKING GLASS</span>
+</header>
+
+<main class="wrap">
+  <section class="intro">
+    <div>
+      <div class="ey">LOOKING GLASS</div>
+      <h1>İnternet rotasını farklı bir açıdan görün.</h1>
+      <p>Prefix, ASN, domain ve IP görünürlüğünü tek ekranda sorgulayın. Canlı BGP, WHOIS ve DNS verisi herkese açıktır.</p>
+    </div>
+    <div class="vantage">
+      <i class="dot"></i> Public data vantage · Global
+    </div>
+  </section>
+
+  <section class="toolbar">
+    <div class="tools" id="tools">
+      <button class="active" data-tool="bgp">BGP lookup</button>
+      <button data-tool="whois">WHOIS</button>
+      <button data-tool="dns">DNS</button>
+      <button class="locked" data-tool="ping">Ping</button>
+      <button class="locked" data-tool="trace">Traceroute</button>
+      <button class="locked" data-tool="mtr">MTR</button>
+    </div>
+    
+    <form class="query" id="query">
+      <input id="target" placeholder="AS13335, 1.1.1.0/24 veya example.com" autocomplete="off">
+      <button type="submit">Sorgula</button>
+    </form>
+  </section>
+
+  <div class="hint" id="hint">BGP: ASN, IPv4/IPv6 adresi veya prefix girin. Özel ağ hedefleri kabul edilmez.</div>
+
+  <section class="grid">
+    <section class="panel">
+      <div class="ph">
+        <div>
+          <span>CANLI VERİ</span>
+          <h2 id="toolTitle">BGP görünürlüğü</h2>
+        </div>
+        <span id="state" style="font-size:10px; font-weight:800; color:var(--accent-mint-light); background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); padding:4px 8px; border-radius:99px;">HAZIR</span>
+      </div>
+      <div class="summary">
+        <div class="metric">
+          <small>SORGU</small>
+          <b id="shownTarget">—</b>
+          <em>Genel hedef bekleniyor</em>
+        </div>
+        <div class="metric">
+          <small>KAYNAK</small>
+          <b id="source">RIPEstat</b>
+          <em id="sourceNote">BGP routing visibility</em>
+        </div>
+        <div class="metric">
+          <small>SONUÇ</small>
+          <b id="summary">—</b>
+          <em>Henüz sorgu çalışmadı</em>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="ph">
+        <div>
+          <span>TERMINAL</span>
+          <h2>Sonuç çıktısı</h2>
+        </div>
+        <button id="copy" style="border:1px solid var(--border-subtle); background:rgba(255,255,255,0.04); border-radius:7px; padding:5px 10px; color:#a9c1d0; cursor:pointer; font-size:11px; font-weight:700;">Kopyala</button>
+      </div>
+      <div class="results">
+        <div class="statusline">
+          <i class="dot"></i>
+          <span id="status">Sorgu için hedef girin.</span>
+        </div>
+        <pre class="result" id="output">routeforce-lg $ ready
 > BGP lookup, WHOIS ve DNS canlı veri kaynaklarını kullanır.
-> Ping, traceroute ve MTR için RouteForce probe node yakında eklenecek.</pre></div></section>
-<section class="panel"><div class="ph"><div><span>PROBE ARAÇLARI</span><h2>Network testleri</h2></div></div><div class="probe"><div class="probeitem"><div><b>Ping analizi</b><small>Latency, loss, jitter</small></div><span class="pending">PROBE GEREKİR</span></div><div class="probeitem"><div><b>Traceroute</b><small>Hop-by-hop rota</small></div><span class="pending">PROBE GEREKİR</span></div><div class="probeitem"><div><b>MTR</b><small>Tekrarlı yol ölçümü</small></div><span class="pending">PROBE GEREKİR</span></div><div class="probeitem"><div><b>Speed test</b><small>Download performansı</small></div><span class="pending">YAKINDA</span></div></div></section></section>
-<section class="features"><article class="feature"><b>BGP lookup</b><p>RIPEstat üzerinden prefix kökeni ve ASN görünürlüğü.</p></article><article class="feature"><b>WHOIS / RDAP</b><p>IP veya domain sahibi, netname ve registry verisi.</p></article><article class="feature"><b>DNS</b><p>Cloudflare DNS-over-HTTPS ile genel A kayıtları.</p></article></section>
-</main><script>
-const labels={bgp:['BGP görünürlüğü','BGP: ASN, IPv4/IPv6 adresi veya prefix girin.','RIPEstat','BGP routing visibility'],whois:['WHOIS / RDAP','WHOIS: IP adresi veya domain girin.','RDAP','Registry ownership data'],dns:['DNS lookup','DNS: Bir domain girin.','Cloudflare DoH','Public DNS A records'],ping:['Ping analizi','Ping için RouteForce probe node gerekir.','Probe gerekli','Latency, loss, jitter'],trace:['Traceroute','Traceroute için RouteForce probe node gerekir.','Probe gerekli','Hop-by-hop route'],mtr:['MTR','MTR için RouteForce probe node gerekir.','Probe gerekli','Repeated path checks']};let tool='bgp';const target=document.querySelector('#target'),output=document.querySelector('#output');
-function choose(next){tool=next;document.querySelectorAll('[data-tool]').forEach(b=>b.classList.toggle('active',b.dataset.tool===tool));const l=labels[tool];document.querySelector('#toolTitle').textContent=l[0];document.querySelector('#hint').textContent=l[1];document.querySelector('#source').textContent=l[2];document.querySelector('#sourceNote').textContent=l[3];target.placeholder=tool==='bgp'?'AS13335, 1.1.1.0/24 veya example.com':tool==='whois'?'IP adresi veya example.com':'example.com'}
-document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>choose(b.dataset.tool));document.querySelector('#query').onsubmit=async e=>{e.preventDefault();const value=target.value.trim();if(!value)return;if(['ping','trace','mtr'].includes(tool)){document.querySelector('#state').textContent='PROBE GEREKİR';document.querySelector('#status').textContent='Bu araç henüz bağlı değil.';output.textContent='routeforce-lg $ '+tool+' '+value+'\n> Bu test, RouteForce probe node bağlandığında aktif olacaktır.';return}document.querySelector('#shownTarget').textContent=value;document.querySelector('#state').textContent='ÇALIŞIYOR';document.querySelector('#status').textContent='Genel veri kaynağı sorgulanıyor…';output.textContent='routeforce-lg $ '+tool+' '+value+'\n> Working…';try{const r=await fetch('/api/lg/query?tool='+tool+'&target='+encodeURIComponent(value));const data=await r.json();if(!r.ok)throw Error(data.error||'query_failed');document.querySelector('#state').textContent='TAMAMLANDI';document.querySelector('#status').textContent=data.summary;document.querySelector('#summary').textContent=data.summary;output.textContent='routeforce-lg $ '+tool+' '+value+'\n\n'+data.output}catch(err){document.querySelector('#state').textContent='HATA';document.querySelector('#status').textContent='Sorgu tamamlanamadı.';output.textContent='routeforce-lg $ error\n> '+err.message+'\n> Hedefin genel ve geçerli olduğundan emin olun.'}};document.querySelector('#copy').onclick=async()=>{await navigator.clipboard.writeText(output.textContent);document.querySelector('#copy').textContent='Kopyalandı';setTimeout(()=>document.querySelector('#copy').textContent='Kopyala',1300)};
-</script></body></html>
+> Ping, traceroute ve MTR için RouteForce probe node yakında eklenecek.</pre>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="ph">
+        <div>
+          <span>PROBE ARAÇLARI</span>
+          <h2>Network Testleri</h2>
+        </div>
+      </div>
+      <div class="probe">
+        <div class="probeitem">
+          <div>
+            <b>Ping analizi</b>
+            <small>Latency, loss, jitter</small>
+          </div>
+          <span class="pending">PROBE GEREKİR</span>
+        </div>
+        <div class="probeitem">
+          <div>
+            <b>Traceroute</b>
+            <small>Hop-by-hop rota</small>
+          </div>
+          <span class="pending">PROBE GEREKİR</span>
+        </div>
+        <div class="probeitem">
+          <div>
+            <b>MTR</b>
+            <small>Tekrarlı yol ölçümü</small>
+          </div>
+          <span class="pending">PROBE GEREKİR</span>
+        </div>
+        <div class="probeitem">
+          <div>
+            <b>Speed test</b>
+            <small>Download performansı</small>
+          </div>
+          <span class="pending">YAKINDA</span>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <section class="features">
+    <article class="feature">
+      <b>BGP lookup</b>
+      <p>RIPEstat üzerinden prefix kökeni ve ASN görünürlüğü.</p>
+    </article>
+    <article class="feature">
+      <b>WHOIS / RDAP</b>
+      <p>IP veya domain sahibi, netname ve registry verisi.</p>
+    </article>
+    <article class="feature">
+      <b>DNS</b>
+      <p>Cloudflare DNS-over-HTTPS ile genel A kayıtları.</p>
+    </article>
+  </section>
+</main>
+
+<script>
+const labels = {
+  bgp: ['BGP görünürlüğü', 'BGP: ASN, IPv4/IPv6 adresi veya prefix girin.', 'RIPEstat', 'BGP routing visibility'],
+  whois: ['WHOIS / RDAP', 'WHOIS: IP adresi veya domain girin.', 'RDAP', 'Registry ownership data'],
+  dns: ['DNS lookup', 'DNS: Bir domain girin.', 'Cloudflare DoH', 'Public DNS A records'],
+  ping: ['Ping analizi', 'Ping için RouteForce probe node gerekir.', 'Probe gerekli', 'Latency, loss, jitter'],
+  trace: ['Traceroute', 'Traceroute için RouteForce probe node gerekir.', 'Probe gerekli', 'Hop-by-hop route'],
+  mtr: ['MTR', 'MTR için RouteForce probe node gerekir.', 'Probe gerekli', 'Repeated path checks']
+};
+
+let tool = 'bgp';
+const target = document.querySelector('#target');
+const output = document.querySelector('#output');
+
+function choose(next) {
+  tool = next;
+  document.querySelectorAll('[data-tool]').forEach(b => b.classList.toggle('active', b.dataset.tool === tool));
+  const l = labels[tool];
+  document.querySelector('#toolTitle').textContent = l[0];
+  document.querySelector('#hint').textContent = l[1];
+  document.querySelector('#source').textContent = l[2];
+  document.querySelector('#sourceNote').textContent = l[3];
+  target.placeholder = tool === 'bgp' ? 'AS13335, 1.1.1.0/24 veya example.com' : tool === 'whois' ? 'IP adresi veya example.com' : 'example.com';
+}
+
+document.querySelectorAll('[data-tool]').forEach(b => b.onclick = () => choose(b.dataset.tool));
+
+document.querySelector('#query').onsubmit = async e => {
+  e.preventDefault();
+  const value = target.value.trim();
+  if (!value) return;
+  if (['ping', 'trace', 'mtr'].includes(tool)) {
+    document.querySelector('#state').textContent = 'PROBE GEREKİR';
+    document.querySelector('#status').textContent = 'Bu araç henüz bağlı değil.';
+    output.textContent = 'routeforce-lg $ ' + tool + ' ' + value + '\n> Bu test, RouteForce probe node bağlandığında aktif olacaktır.';
+    return;
+  }
+  document.querySelector('#shownTarget').textContent = value;
+  document.querySelector('#state').textContent = 'ÇALIŞIYOR';
+  document.querySelector('#status').textContent = 'Genel veri kaynağı sorgulanıyor…';
+  output.textContent = 'routeforce-lg $ ' + tool + ' ' + value + '\n> Working…';
+  try {
+    const r = await fetch('/api/lg/query?tool=' + tool + '&target=' + encodeURIComponent(value));
+    const data = await r.json();
+    if (!r.ok) throw Error(data.error || 'query_failed');
+    document.querySelector('#state').textContent = 'TAMAMLANDI';
+    document.querySelector('#status').textContent = data.summary;
+    document.querySelector('#summary').textContent = data.summary;
+    output.textContent = 'routeforce-lg $ ' + tool + ' ' + value + '\n\n' + data.output;
+  } catch (err) {
+    document.querySelector('#state').textContent = 'HATA';
+    document.querySelector('#status').textContent = 'Sorgu tamamlanamadı.';
+    output.textContent = 'routeforce-lg $ error\n> ' + err.message + '\n> Hedefin genel ve geçerli olduğundan emin olun.';
+  }
+};
+
+document.querySelector('#copy').onclick = async () => {
+  await navigator.clipboard.writeText(output.textContent);
+  document.querySelector('#copy').textContent = 'Kopyalandı';
+  setTimeout(() => document.querySelector('#copy').textContent = 'Kopyala', 1300);
+};
+</script>
+</body>
+</html>

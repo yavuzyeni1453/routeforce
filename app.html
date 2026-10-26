@@ -1,42 +1,866 @@
 <!doctype html>
-<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RouteForce — Projeler</title>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RouteForce — Projeler & BGP Kütüphanesi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#07121b;--p:#0d1d29;--p2:#112534;--l:#294357;--t:#eaf1f6;--m:#96a8b7;--a:#73e7b3;--blue:#8fbaff}*{box-sizing:border-box}body{margin:0;background:radial-gradient(700px 440px at 100% -10%,#163c4a,transparent 65%),var(--bg);color:var(--t);font:14px Inter,ui-sans-serif,system-ui,sans-serif}.top{height:66px;padding:0 27px;display:flex;align-items:center;gap:25px;border-bottom:1px solid #1e3546;background:#08141edb;backdrop-filter:blur(16px);position:sticky;top:0;z-index:3}.brand{font-size:20px;font-weight:850;letter-spacing:-.055em;color:#fff;text-decoration:none}.brand b{color:var(--a)}.nav{display:flex;gap:18px}.nav a{color:var(--m);text-decoration:none;font-size:13px}.nav a.active{color:#fff}.account{margin-left:auto;border:1px solid #bfd0d7;border-radius:8px;background:#f7f9fa;color:#17232e;padding:8px 12px;font-weight:800;font-size:12px;cursor:pointer}.shell{display:grid;grid-template-columns:278px minmax(450px,1fr) 315px;min-height:calc(100vh - 66px)}.left{border-right:1px solid var(--l);padding:20px 14px;background:#091721}.overline{font-size:10px;letter-spacing:.13em;color:var(--m);font-weight:800;margin:8px 7px 12px}.newproject{width:100%;border:1px dashed #497189;border-radius:9px;background:#112938;color:var(--a);padding:10px;text-align:left;font-weight:760;cursor:pointer}.create{display:none;margin:9px 0;padding:9px;border-radius:9px;background:#10212f;border:1px solid var(--l)}.create.show{display:block}.create input{width:100%;border:1px solid #36576c;background:#07131c;color:#fff;padding:8px;border-radius:6px;outline:0}.create div{display:flex;gap:7px;margin-top:7px}.smallbtn{border:0;border-radius:6px;padding:6px 8px;background:var(--a);color:#092019;font-size:11px;font-weight:800;cursor:pointer}.cancel{background:#263d4d;color:#d7e6ee}.projects{margin-top:12px}.project{padding:10px;border-radius:8px;margin:4px 0;cursor:pointer;color:#c9d8e1}.project:hover{background:#112938}.project.active{background:#193a4d;color:#fff}.project strong{font-size:13px}.project small{display:block;color:var(--m);font-size:10px;margin-top:3px}.configs{padding:4px 3px 5px 11px}.config{padding:7px 8px;border-left:1px solid #3e6074;color:#aebfca;font-size:11px;cursor:pointer}.config:hover{color:#fff;background:#122a3b}.empty{padding:18px 8px;color:var(--m);font-size:12px;line-height:1.55}.main{padding:27px;min-width:0}.head{display:flex;align-items:start;justify-content:space-between;gap:12px}.head h1{font-size:24px;letter-spacing:-.045em;margin:3px 0 4px}.head p{margin:0;color:var(--m);font-size:13px}.mode{font-size:11px;color:#9fc4d7;border:1px solid #36576d;padding:6px 8px;border-radius:20px}.tabs{display:flex;gap:5px;padding:4px;margin-top:23px;background:#0a1721;border:1px solid var(--l);width:max-content;border-radius:9px}.tabs button{border:0;background:transparent;padding:6px 10px;border-radius:6px;color:var(--m);font-size:11px;font-weight:750;cursor:pointer}.tabs button.active{background:#294a5d;color:#fff}.editor{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:12px}.box{background:#0c1b26;border:1px solid var(--l);border-radius:12px;overflow:hidden}.boxhead{padding:12px 13px;border-bottom:1px solid var(--l);font-size:11px;font-weight:800;color:#bfced7}.boxhead span{font-weight:600;color:var(--m);float:right}textarea,pre{margin:0;border:0;display:block;width:100%;height:390px;resize:vertical;background:#061019;color:#dbeaf1;padding:14px;white-space:pre-wrap;font:12px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;outline:0}.save{display:flex;gap:8px;margin-top:13px}.save input{min-width:0;flex:1;border:1px solid var(--l);border-radius:8px;background:#0c1a25;color:#fff;padding:9px;outline:0}.save button{border:0;border-radius:8px;background:var(--a);padding:8px 12px;color:#092019;font-weight:850;cursor:pointer}.right{padding:20px;border-left:1px solid var(--l);background:#091721}.card{border:1px solid var(--l);border-radius:11px;padding:13px;margin-bottom:12px;background:#0f202d}.assistant-title{display:flex;gap:9px;align-items:center}.spark{width:27px;height:27px;border:1px solid #518b85;color:var(--a);border-radius:8px;display:grid;place-items:center}.card h2{font-size:13px;margin:0}.card p{font-size:11px;line-height:1.55;color:var(--m)}.suggestions{display:grid;gap:6px}.suggestions button{border:1px solid #34566c;background:#112737;color:#b5cbd8;border-radius:7px;padding:8px;font-size:11px;text-align:left;cursor:pointer}.meter{height:5px;border-radius:4px;background:#1c3545;margin-top:11px;overflow:hidden}.meter i{display:block;width:45%;height:100%;background:var(--a)}.notice{border-left:2px solid var(--blue);padding-left:9px;color:#adbfcd;font-size:11px;line-height:1.5}@media(max-width:1080px){.shell{grid-template-columns:240px 1fr}.right{display:none}}@media(max-width:720px){.top{padding:0 16px}.nav{display:none}.shell{display:block}.left{border-right:0;border-bottom:1px solid var(--l)}.main{padding:19px}.editor{grid-template-columns:1fr}textarea,pre{height:290px}.account{font-size:0;padding:8px}.account::first-letter{font-size:13px}}
-</style></head><body>
-<header class="top"><a class="brand" href="/">Route<b>Force</b></a><nav class="nav"><a href="/">BGP Studio</a><a class="active" href="/app.html">Projeler</a><a href="/lg.html">Looking Glass</a><a href="/tools.html">Tools</a><a id="adminLink" href="/admin.html" style="display:none">Yönetim</a></nav><button class="account" id="login">Google ile giriş yap</button></header>
-<main class="shell"><aside class="left"><div class="overline">CONFIG PROJELERİ</div><button class="newproject" id="newProject">＋ Yeni proje oluştur</button><form class="create" id="create"><input id="projectInput" maxlength="80" placeholder="Örn. Ankara POP"><div><button class="smallbtn">Oluştur</button><button type="button" class="smallbtn cancel" id="cancel">Vazgeç</button></div></form><div class="projects" id="projects"><div class="empty">Giriş yaptıktan sonra projelerin ve config geçmişin burada görünecek.</div></div></aside>
-<section class="main"><div class="head"><div><div class="overline" style="margin-left:0">ÇALIŞMA ALANI</div><h1 id="projectTitle">Açık dönüşüm</h1><p id="subtitle">Config’i dönüştürün; Google ile giriş yaparak bunu bir projeye kaydedin.</p></div><span class="mode" id="mode">Giriş yapılmadı</span></div>
-<div class="tabs"><button class="active" data-v="cisco">Cisco</button><button data-v="huawei">Huawei</button><button data-v="juniper">Juniper</button></div>
-<div class="editor"><section class="box"><div class="boxhead">KAYNAK CONFIG <span>Otomatik algılama</span></div><textarea id="config" spellcheck="false">router bgp 65001
+:root {
+  --bg-base: #060911;
+  --bg-surface: rgba(13, 20, 36, 0.72);
+  --bg-surface-elevated: rgba(18, 28, 48, 0.85);
+  --bg-card: rgba(11, 18, 32, 0.82);
+  --bg-editor: #070c18;
+  
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-medium: rgba(255, 255, 255, 0.12);
+  --border-highlight: rgba(99, 102, 241, 0.35);
+  
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  
+  --accent-mint: #10B981;
+  --accent-mint-light: #34D399;
+  --accent-blue: #38BDF8;
+  --accent-indigo: #6366F1;
+  --accent-violet: #8B5CF6;
+  
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: var(--bg-base);
+  background-image: 
+    radial-gradient(1000px 520px at 85% -10%, rgba(14, 165, 233, 0.12) 0%, transparent 70%),
+    radial-gradient(800px 480px at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 65%);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.28); }
+
+/* Header */
+.top {
+  height: 68px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 0 32px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(6, 9, 17, 0.78);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.brand-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(6, 182, 212, 0.25));
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+}
+
+.brand-logo svg { width: 20px; height: 20px; color: #34D399; }
+
+.wordmark {
+  font-size: 19px;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+  color: #fff;
+}
+
+.wordmark em {
+  font-style: normal;
+  background: linear-gradient(135deg, #34D399 0%, #06B6D4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-badge {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--accent-mint-light);
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 2px 7px;
+  border-radius: 6px;
+  margin-left: 6px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+}
+
+.nav a {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 7px;
+  transition: all 0.2s ease;
+}
+
+.nav a:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav a.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.account {
+  margin-left: auto;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  padding: 8px 16px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(12px);
+}
+
+.account:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Shell Layout */
+.shell {
+  display: grid;
+  grid-template-columns: 290px minmax(500px, 1fr) 340px;
+  min-height: calc(100vh - 68px);
+}
+
+/* Left Sidebar (Projects) */
+.left {
+  border-right: 1px solid var(--border-subtle);
+  padding: 24px 18px;
+  background: rgba(8, 13, 24, 0.65);
+  backdrop-filter: blur(16px);
+}
+
+.overline {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  font-weight: 800;
+  text-transform: uppercase;
+  margin: 6px 8px 14px;
+}
+
+.newproject {
+  width: 100%;
+  border: 1px dashed rgba(52, 211, 153, 0.4);
+  border-radius: 12px;
+  background: rgba(16, 185, 129, 0.06);
+  color: var(--accent-mint-light);
+  padding: 12px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.newproject:hover {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(52, 211, 153, 0.6);
+  transform: translateY(-1px);
+}
+
+.create {
+  display: none;
+  margin: 12px 0;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(13, 20, 36, 0.9);
+  border: 1px solid var(--border-medium);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.create.show { display: block; }
+
+.create input {
+  width: 100%;
+  border: 1px solid var(--border-medium);
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  padding: 9px 12px;
+  border-radius: 8px;
+  outline: 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+
+.create input:focus {
+  border-color: var(--accent-mint-light);
+}
+
+.create div {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.smallbtn {
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: #032014;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.smallbtn:hover {
+  background: linear-gradient(135deg, #34D399, #10B981);
+}
+
+.smallbtn.cancel {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+}
+
+.smallbtn.cancel:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.projects {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.project {
+  padding: 12px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.project:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.project.active {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.project strong {
+  font-size: 13.5px;
+  display: block;
+}
+
+.project small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.configs {
+  padding: 8px 4px 8px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.config {
+  padding: 8px 10px;
+  border-left: 2px solid rgba(52, 211, 153, 0.4);
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 0 6px 6px 0;
+  transition: all 0.2s ease;
+}
+
+.config:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  border-left-color: var(--accent-mint-light);
+}
+
+.empty {
+  padding: 24px 12px;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* Center Main Area */
+.main {
+  padding: 32px 36px;
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.head h1 {
+  font-size: 28px;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+  color: #fff;
+  margin-top: 4px;
+}
+
+.head p {
+  margin-top: 4px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.mode {
+  font-size: 11px;
+  font-weight: 700;
+  color: #38BDF8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  background: rgba(56, 189, 248, 0.08);
+  padding: 6px 12px;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin-top: 24px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-subtle);
+  width: max-content;
+  border-radius: 10px;
+}
+
+.tabs button {
+  border: 0;
+  background: transparent;
+  padding: 7px 14px;
+  border-radius: 7px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tabs button:hover { color: #fff; }
+
+.tabs button.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.editor {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.5);
+}
+
+.boxhead {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  letter-spacing: 0.08em;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.boxhead span {
+  font-weight: 600;
+  color: var(--accent-mint-light);
+  float: right;
+  letter-spacing: normal;
+}
+
+textarea, pre {
+  margin: 0;
+  border: 0;
+  display: block;
+  width: 100%;
+  height: 420px;
+  resize: vertical;
+  background: var(--bg-editor);
+  color: #E2E8F0;
+  padding: 16px;
+  white-space: pre;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  outline: 0;
+  tab-size: 2;
+}
+
+.save {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.save input {
+  min-width: 0;
+  flex: 1;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  padding: 11px 14px;
+  outline: 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+
+.save input:focus {
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+.save button {
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #10B981, #059669);
+  padding: 11px 20px;
+  color: #032014;
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.save button:hover {
+  background: linear-gradient(135deg, #34D399, #10B981);
+  transform: translateY(-1px);
+}
+
+/* Right Sidebar */
+.right {
+  padding: 24px 20px;
+  border-left: 1px solid var(--border-subtle);
+  background: rgba(8, 13, 24, 0.65);
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 16px;
+  background: var(--bg-card);
+}
+
+.assistant-title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.spark {
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  background: rgba(99, 102, 241, 0.15);
+  color: #A5B4FC;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+}
+
+.card h2 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.card p {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.suggestions {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.suggestions button {
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-secondary);
+  border-radius: 8px;
+  padding: 9px 11px;
+  font-size: 11.5px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.suggestions button:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.meter {
+  height: 6px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.08);
+  margin-top: 14px;
+  overflow: hidden;
+}
+
+.meter i {
+  display: block;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(90deg, #10B981, #06B6D4);
+  border-radius: 99px;
+}
+
+.notice {
+  border-left: 2px solid var(--accent-blue);
+  padding-left: 12px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media(max-width: 1140px) {
+  .shell { grid-template-columns: 240px 1fr; }
+  .right { display: none; }
+}
+
+@media(max-width: 780px) {
+  .top { padding: 0 18px; }
+  .nav { display: none; }
+  .shell { display: block; }
+  .left { border-right: 0; border-bottom: 1px solid var(--border-subtle); }
+  .main { padding: 20px; }
+  .editor { grid-template-columns: 1fr; }
+  textarea, pre { height: 300px; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand-wrapper" href="/">
+    <div class="brand-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="6" cy="18" r="3"></circle>
+        <circle cx="18" cy="6" r="3"></circle>
+        <circle cx="6" cy="6" r="3"></circle>
+        <path d="M18 9v6"></path>
+        <path d="M9 6h6"></path>
+        <path d="M7.5 15.5l9-9"></path>
+      </svg>
+    </div>
+    <div class="wordmark">Route<em>Force</em><span class="brand-badge">BGP STUDIO</span></div>
+  </a>
+
+  <nav class="nav">
+    <a href="/">BGP Studio</a>
+    <a class="active" href="/app.html">Projeler</a>
+    <a href="/lg.html">Looking Glass</a>
+    <a href="/tools.html">Tools</a>
+    <a id="adminLink" href="/admin.html" style="display:none">Yönetim</a>
+  </nav>
+
+  <button class="account" id="login">Google ile giriş yap</button>
+</header>
+
+<main class="shell">
+  <aside class="left">
+    <div class="overline">CONFIG PROJELERİ</div>
+    <button class="newproject" id="newProject">＋ Yeni proje oluştur</button>
+    <form class="create" id="create">
+      <input id="projectInput" maxlength="80" placeholder="Örn. Ankara POP">
+      <div>
+        <button class="smallbtn">Oluştur</button>
+        <button type="button" class="smallbtn cancel" id="cancel">Vazgeç</button>
+      </div>
+    </form>
+    <div class="projects" id="projects">
+      <div class="empty">Giriş yaptıktan sonra projelerin ve config geçmişin burada görünecek.</div>
+    </div>
+  </aside>
+
+  <section class="main">
+    <div class="head">
+      <div>
+        <div class="overline" style="margin-left:0">ÇALIŞMA ALANI</div>
+        <h1 id="projectTitle">Açık Dönüşüm</h1>
+        <p id="subtitle">Config’i dönüştürün; Google ile giriş yaparak bunu bir projeye kaydedin.</p>
+      </div>
+      <span class="mode" id="mode">Giriş yapılmadı</span>
+    </div>
+
+    <div class="tabs">
+      <button class="active" data-v="cisco">Cisco</button>
+      <button data-v="huawei">Huawei</button>
+      <button data-v="juniper">Juniper</button>
+    </div>
+
+    <div class="editor">
+      <section class="box">
+        <div class="boxhead">KAYNAK CONFIG <span>Otomatik algılama</span></div>
+        <textarea id="config" spellcheck="false">router bgp 65001
  bgp router-id 10.0.0.1
  neighbor 192.0.2.2 remote-as 65002
  neighbor 192.0.2.2 description TRANSIT-ISP
- network 203.0.113.0 mask 255.255.255.0</textarea></section><section class="box"><div class="boxhead">HEDEF CONFIG <span id="vendorLabel">Cisco IOS / IOS-XE</span></div><pre id="output"></pre></section></div>
-<div class="save"><input id="configName" maxlength="100" placeholder="Bu config için bir ad verin"><button id="save">Projeye kaydet</button></div></section>
-<aside class="right"><section class="card"><div class="assistant-title"><div class="spark">✦</div><div><h2>RouteForce Assistant</h2><p style="margin:1px 0 0">AI yapılandırma yardımcısı</p></div></div><p>Peer ayarları, announce policy’leri ve vendor farklarını birlikte kontrol edin.</p><div class="suggestions"><button>Prefix filter kontrolü yap</button><button>Bu BGP peer için öneri ver</button><button>Cisco–Junos farklarını açıkla</button></div></section><section class="card"><h2>Proje durumu</h2><p id="stat">Bir proje seçildiğinde kayıtlı config’ler burada listelenir.</p><div class="meter"><i></i></div></section><section class="notice">AI sohbet bağlantısı hazırlanıyor. Üretim anahtarı aktif olduğunda yanıtlar config bağlamıyla gelir.</section></aside></main>
+ network 203.0.113.0 mask 255.255.255.0</textarea>
+      </section>
+      
+      <section class="box">
+        <div class="boxhead">HEDEF CONFIG <span id="vendorLabel">Cisco IOS / IOS-XE</span></div>
+        <pre id="output"></pre>
+      </section>
+    </div>
+
+    <div class="save">
+      <input id="configName" maxlength="100" placeholder="Bu config için bir ad verin">
+      <button id="save">Projeye kaydet</button>
+    </div>
+  </section>
+
+  <aside class="right">
+    <section class="card">
+      <div class="assistant-title">
+        <div class="spark">✦</div>
+        <div>
+          <h2>RouteForce Assistant</h2>
+          <p style="margin:1px 0 0">AI yapılandırma yardımcısı</p>
+        </div>
+      </div>
+      <p>Peer ayarları, announce policy'leri ve vendor farklarını birlikte kontrol edin.</p>
+      <div class="suggestions">
+        <button>Prefix filter kontrolü yap</button>
+        <button>Bu BGP peer için öneri ver</button>
+        <button>Cisco–Junos farklarını açıkla</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Proje durumu</h2>
+      <p id="stat">Bir proje seçildiğinde kayıtlı config’ler burada listelenir.</p>
+      <div class="meter"><i></i></div>
+    </section>
+
+    <section class="notice">
+      AI sohbet bağlantısı hazır. Giriş yaptığınızda projeleriniz ve sürümleriniz otomatik eşitlenir.
+    </section>
+  </aside>
+</main>
+
 <script>
-const cfg=document.querySelector('#config'),out=document.querySelector('#output'),projects=document.querySelector('#projects');let vendor='cisco',activeProject=null,authenticated=false;
-function parsed(){const t=cfg.value;const as=(t.match(/(?:router bgp|bgp)\s+(\d+)/i)||[])[1]||'65001',id=(t.match(/router-id\s+([\d.]+)/i)||[])[1]||'10.0.0.1',n=t.match(/(?:neighbor|peer)\s+(\S+)\s+(?:remote-as|as-number)\s+(\d+)/i)||[],net=(t.match(/network\s+([\d.]+)(?:\s+mask\s+|\s+)([\d.]+)/i)||[]);return{as,id,ip:n[1]||'192.0.2.2',peer:n[2]||'65002',network:net[1]||'203.0.113.0',mask:net[2]||'255.255.255.0'}}
-function convert(){const d=parsed();out.textContent={cisco:`router bgp ${d.as}
- bgp router-id ${d.id}
- neighbor ${d.ip} remote-as ${d.peer}
- neighbor ${d.ip} description TRANSIT-PEER
- neighbor ${d.ip} route-map OUTBOUND out
- network ${d.network} mask ${d.mask}`,huawei:`bgp ${d.as}
- router-id ${d.id}
- peer ${d.ip} as-number ${d.peer}
- peer ${d.ip} route-policy OUTBOUND export
- ipv4-family unicast
-  network ${d.network} ${d.mask}`,juniper:`set routing-options router-id ${d.id}
-set routing-options autonomous-system ${d.as}
-set protocols bgp group TRANSIT type external
-set protocols bgp group TRANSIT peer-as ${d.peer}
-set protocols bgp group TRANSIT neighbor ${d.ip}
-set protocols bgp group TRANSIT export OUTBOUND
-set policy-options prefix-list ANNOUNCED ${d.network}/24`}[vendor];document.querySelector('#vendorLabel').textContent={cisco:'Cisco IOS / IOS-XE',huawei:'Huawei VRP',juniper:'Juniper Junos'}[vendor]}
-async function response(url,opts){const r=await fetch(url,opts);if(r.status===401)throw Error('auth');if(!r.ok)throw Error('request');return r.json()}
-async function loadConfigs(id){const data=await response('/api/configs?project_id='+encodeURIComponent(id));document.querySelectorAll('.configs').forEach(x=>x.remove());const parent=document.querySelector('.project.active');const wrap=document.createElement('div');wrap.className='configs';if(!data.configs.length)wrap.innerHTML='<div class="config">Henüz kayıtlı config yok.</div>';data.configs.forEach(c=>{const el=document.createElement('div');el.className='config';el.textContent=c.name;el.onclick=()=>{cfg.value=c.source_config;document.querySelector('#configName').value=c.name;convert()};wrap.append(el)});parent.append(wrap);document.querySelector('#stat').textContent=data.configs.length+' config bu projede kayıtlı.'}
-async function selectProject(el){activeProject=el.dataset.id;document.querySelectorAll('.project').forEach(x=>x.classList.toggle('active',x===el));document.querySelector('#projectTitle').textContent=el.dataset.name;document.querySelector('#subtitle').textContent='Config geçmişi bu proje altında güvenle saklanır.';await loadConfigs(activeProject)}
-async function load(){try{const s=await response('/api/session');authenticated=true;document.querySelector('#login').textContent=s.user.login;document.querySelector('#mode').textContent='Google hesabı bağlı';if(s.user.role==='admin')document.querySelector('#adminLink').style.display='inline';const p=await response('/api/projects');projects.innerHTML=p.projects.length?'':'<div class="empty">Henüz proje yok. İlk projenizi oluşturun.</div>';p.projects.forEach(x=>{const el=document.createElement('div');el.className='project';el.dataset.id=x.id;el.dataset.name=x.name;el.innerHTML='<strong>'+x.name.replaceAll('<','&lt;')+'</strong><small>'+((x.description)||'Config library')+'</small>';el.onclick=()=>selectProject(el);projects.append(el)});if(p.projects.length)selectProject(projects.querySelector('.project'))}catch{}}
-document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{vendor=b.dataset.v;document.querySelectorAll('[data-v]').forEach(x=>x.classList.toggle('active',x===b));convert()});cfg.oninput=convert;document.querySelector('#login').onclick=()=>location.href='/api/auth/google';document.querySelector('#newProject').onclick=()=>authenticated?document.querySelector('#create').classList.add('show'):location.href='/api/auth/google';document.querySelector('#cancel').onclick=()=>document.querySelector('#create').classList.remove('show');document.querySelector('#create').onsubmit=async e=>{e.preventDefault();try{const x=await response('/api/projects',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:document.querySelector('#projectInput').value})});await load();const el=[...document.querySelectorAll('.project')].find(y=>y.dataset.id===x.project.id);if(el)selectProject(el);document.querySelector('#create').classList.remove('show')}catch{location.href='/api/auth/google'}};document.querySelector('#save').onclick=async()=>{if(!activeProject){location.href='/api/auth/google';return}const name=document.querySelector('#configName').value.trim()||'Yeni BGP config';try{await response('/api/configs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({project_id:activeProject,name,source_config:cfg.value})});await loadConfigs(activeProject);document.querySelector('#save').textContent='Kaydedildi';setTimeout(()=>document.querySelector('#save').textContent='Projeye kaydet',1300)}catch{location.href='/api/auth/google'}};convert();load();
-</script></body></html>
+const cfg = document.querySelector('#config');
+const out = document.querySelector('#output');
+const projects = document.querySelector('#projects');
+let vendor = 'cisco', activeProject = null, authenticated = false;
+
+function parsed() {
+  const t = cfg.value;
+  const as = (t.match(/(?:router bgp|bgp)\s+(\d+)/i) || [])[1] || '65001';
+  const id = (t.match(/router-id\s+([\d.]+)/i) || [])[1] || '10.0.0.1';
+  const n = t.match(/(?:neighbor|peer)\s+(\S+)\s+(?:remote-as|as-number)\s+(\d+)/i) || [];
+  const net = (t.match(/network\s+([\d.]+)(?:\s+mask\s+|\s+)([\d.]+)/i) || []);
+  return { as, id, ip: n[1] || '192.0.2.2', peer: n[2] || '65002', network: net[1] || '203.0.113.0', mask: net[2] || '255.255.255.0' };
+}
+
+function convert() {
+  const d = parsed();
+  out.textContent = {
+    cisco: `router bgp ${d.as}\n bgp router-id ${d.id}\n neighbor ${d.ip} remote-as ${d.peer}\n neighbor ${d.ip} description TRANSIT-PEER\n neighbor ${d.ip} route-map OUTBOUND out\n network ${d.network} mask ${d.mask}`,
+    huawei: `bgp ${d.as}\n router-id ${d.id}\n peer ${d.ip} as-number ${d.peer}\n peer ${d.ip} route-policy OUTBOUND export\n ipv4-family unicast\n  network ${d.network} ${d.mask}`,
+    juniper: `set routing-options router-id ${d.id}\nset routing-options autonomous-system ${d.as}\nset protocols bgp group TRANSIT type external\nset protocols bgp group TRANSIT peer-as ${d.peer}\nset protocols bgp group TRANSIT neighbor ${d.ip}\nset protocols bgp group TRANSIT export OUTBOUND\nset policy-options prefix-list ANNOUNCED ${d.network}/24`
+  }[vendor];
+  document.querySelector('#vendorLabel').textContent = { cisco: 'Cisco IOS / IOS-XE', huawei: 'Huawei VRP', juniper: 'Juniper Junos' }[vendor];
+}
+
+async function response(url, opts) {
+  const r = await fetch(url, opts);
+  if (r.status === 401) throw Error('auth');
+  if (!r.ok) throw Error('request');
+  return r.json();
+}
+
+async function loadConfigs(id) {
+  const data = await response('/api/configs?project_id=' + encodeURIComponent(id));
+  document.querySelectorAll('.configs').forEach(x => x.remove());
+  const parent = document.querySelector('.project.active');
+  const wrap = document.createElement('div');
+  wrap.className = 'configs';
+  if (!data.configs.length) wrap.innerHTML = '<div class="config">Henüz kayıtlı config yok.</div>';
+  data.configs.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'config';
+    el.textContent = c.name;
+    el.onclick = () => {
+      cfg.value = c.source_config;
+      document.querySelector('#configName').value = c.name;
+      convert();
+    };
+    wrap.append(el);
+  });
+  if (parent) parent.append(wrap);
+  document.querySelector('#stat').textContent = data.configs.length + ' config bu projede kayıtlı.';
+}
+
+async function selectProject(el) {
+  activeProject = el.dataset.id;
+  document.querySelectorAll('.project').forEach(x => x.classList.toggle('active', x === el));
+  document.querySelector('#projectTitle').textContent = el.dataset.name;
+  document.querySelector('#subtitle').textContent = 'Config geçmişi bu proje altında güvenle saklanır.';
+  await loadConfigs(activeProject);
+}
+
+async function load() {
+  try {
+    const s = await response('/api/session');
+    authenticated = true;
+    document.querySelector('#login').textContent = s.user.login;
+    document.querySelector('#mode').textContent = 'Google hesabı bağlı';
+    if (s.user.role === 'admin') document.querySelector('#adminLink').style.display = 'inline';
+    const p = await response('/api/projects');
+    projects.innerHTML = p.projects.length ? '' : '<div class="empty">Henüz proje yok. İlk projenizi oluşturun.</div>';
+    p.projects.forEach(x => {
+      const el = document.createElement('div');
+      el.className = 'project';
+      el.dataset.id = x.id;
+      el.dataset.name = x.name;
+      el.innerHTML = '<strong>' + x.name.replaceAll('<', '&lt;') + '</strong><small>' + (x.description || 'Config library') + '</small>';
+      el.onclick = () => selectProject(el);
+      projects.append(el);
+    });
+    if (p.projects.length) selectProject(projects.querySelector('.project'));
+  } catch {}
+}
+
+document.querySelectorAll('[data-v]').forEach(b => b.onclick = () => {
+  vendor = b.dataset.v;
+  document.querySelectorAll('[data-v]').forEach(x => x.classList.toggle('active', x === b));
+  convert();
+});
+
+cfg.oninput = convert;
+document.querySelector('#login').onclick = () => location.href = '/api/auth/google';
+document.querySelector('#newProject').onclick = () => authenticated ? document.querySelector('#create').classList.add('show') : location.href = '/api/auth/google';
+document.querySelector('#cancel').onclick = () => document.querySelector('#create').classList.remove('show');
+
+document.querySelector('#create').onsubmit = async e => {
+  e.preventDefault();
+  try {
+    const x = await response('/api/projects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: document.querySelector('#projectInput').value })
+    });
+    await load();
+    const el = [...document.querySelectorAll('.project')].find(y => y.dataset.id === x.project.id);
+    if (el) selectProject(el);
+    document.querySelector('#create').classList.remove('show');
+  } catch {
+    location.href = '/api/auth/google';
+  }
+};
+
+document.querySelector('#save').onclick = async () => {
+  if (!activeProject) {
+    location.href = '/api/auth/google';
+    return;
+  }
+  const name = document.querySelector('#configName').value.trim() || 'Yeni BGP config';
+  try {
+    await response('/api/configs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ project_id: activeProject, name, source_config: cfg.value })
+    });
+    await loadConfigs(activeProject);
+    document.querySelector('#save').textContent = 'Kaydedildi';
+    setTimeout(() => document.querySelector('#save').textContent = 'Projeye kaydet', 1300);
+  } catch {
+    location.href = '/api/auth/google';
+  }
+};
+
+convert();
+load();
+</script>
+</body>
+</html>
