@@ -19,23 +19,29 @@ export async function onRequestPost(context: Context) {
   const config = body.config?.trim().slice(0, 12000) || "(Config paylaşılmadı)";
   const prompt = "Hedef vendor: " + (body.vendor || "Belirtilmedi") + "\n\nBGP config:\n" + config + "\n\nKullanıcı sorusu: " + message;
   try {
-    const payload = JSON.stringify({
-      systemInstruction: { parts: [{ text: SYSTEM }] },
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.2, maxOutputTokens: 900, responseMimeType: "application/json", thinkingConfig: { thinkingLevel: "low" } }
-    });
-    let upstream: Response | undefined;
-    for (let attempt = 0; attempt < 2; attempt++) {
-      upstream = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-goog-api-key": context.env.GEMINI_API_KEY },
-        body: payload,
-        signal: AbortSignal.timeout(12000)
-      });
-      if (upstream.ok || (upstream.status !== 429 && upstream.status !== 503)) break;
-      await delay(500 * (attempt + 1));
-    }
-    if (!upstream?.ok) return Response.json({ error: "gemini_unavailable" }, { status: 502 });
+    const baseRequest = {
+          systemInstruction: { parts: [{ text: SYSTEM }] },
+          contents: [{ role: "user", parts: [{ text: prompt }] }]
+        };
+        let upstream: Response | undefined;
+        // Prefer the stronger model; retain a tested low-latency fallback during capacity spikes.
+        for (const model of ["gemini-3.8-flash", "gemini-3.5-flash-lite"]) {
+          const generationConfig: Record<string, unknown> = { temperature: 0.2, maxOutputTokens: 900, responseMimeType: "application/json" };
+          if (model === "gemini-3.8-flash") generationConfig.thinkingConfig = { thinkingLevel: "low" };
+          try {
+            upstream = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "x-goog-api-key": context.env.GEMINI_API_KEY },
+              body: JSON.stringify({ ...baseRequest, generationConfig }),
+              signal: AbortSignal.timeout(12000)
+            });
+          } catch {
+            continue;
+          }
+          if (upstream.ok || (upstream.status !== 429 && upstream.status !== 503)) break;
+          await delay(400);
+        }
+        if (!upstream?.ok) return Response.json({ error: "gemini_unavailable" }, { status: 502 });
     const result = await upstream.json() as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
     const raw = result.candidates?.[0]?.content?.parts?.map(p => p.text || "").join("").trim();
     if (!raw) return Response.json({ error: "empty_ai_response" }, { status: 502 });
