@@ -1,11 +1,15 @@
-type Env = { GEMINI_API_KEY: string };
+type Env = { GEMINI_API_KEY: string; ROUTEFORCE_DB: D1Database };
 type Context = { request: Request; env: Env };
 type AssistantBody = { message?: string; config?: string; vendor?: string };
+
+async function hash(value: string) { const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(value)); return [...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,"0")).join(""); }
+async function allowed(request: Request, db: D1Database) { const id=await hash(request.headers.get("CF-Connecting-IP") || "unknown"); const row=await db.prepare("SELECT COUNT(*) AS count FROM assistant_requests WHERE ip_hash=? AND created_at >= datetime('now','-1 minute')").bind(id).first<{count:number}>(); if ((row?.count || 0) >= 12) return false; await db.prepare("INSERT INTO assistant_requests(ip_hash) VALUES(?)").bind(id).run(); return true; }
 
 const SYSTEM = "Sen RouteForce Assistant'sın: BGP config incelemesi konusunda uzmansın. Türkçe, profesyonel ve kısa yanıt ver. Cisco IOS/XE, Huawei VRP ve Juniper Junos farklarını doğru açıkla. Gerekliyse prefix filter, max-prefix, route-policy ve session security eksiklerini belirt. Emin olmadığın güvenlik iddiasında bulunma. En fazla 6 kısa madde kullan.";
 
 export async function onRequestPost(context: Context) {
   if (!context.env.GEMINI_API_KEY) return Response.json({ error: "assistant_not_configured" }, { status: 503 });
+  if (!await allowed(context.request, context.env.ROUTEFORCE_DB)) return Response.json({ error: "rate_limited" }, { status: 429 });
   let body: AssistantBody;
   try { body = await context.request.json(); } catch { return Response.json({ error: "invalid_json" }, { status: 400 }); }
   const message = body.message?.trim().slice(0, 1600);
