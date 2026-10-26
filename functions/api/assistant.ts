@@ -29,7 +29,8 @@ export async function onRequestPost(context: Context) {
       upstream = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-goog-api-key": context.env.GEMINI_API_KEY },
-        body: payload
+        body: payload,
+        signal: AbortSignal.timeout(12000)
       });
       if (upstream.ok || (upstream.status !== 429 && upstream.status !== 503)) break;
       await delay(500 * (attempt + 1));
