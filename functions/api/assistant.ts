@@ -22,7 +22,7 @@ export async function onRequestPost(context: Context) {
     const payload = JSON.stringify({
       systemInstruction: { parts: [{ text: SYSTEM }] },
       contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.2, maxOutputTokens: 900, responseMimeType: "application/json", thinkingConfig: { thinkingBudget: 0 } }
+      generationConfig: { temperature: 0.2, maxOutputTokens: 900, responseMimeType: "application/json", thinkingConfig: { thinkingLevel: "low" } }
     });
     let upstream: Response | undefined;
     for (let attempt = 0; attempt < 2; attempt++) {
