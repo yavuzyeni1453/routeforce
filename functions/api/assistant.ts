@@ -19,7 +19,7 @@ export async function onRequestPost(context: Context) {
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: SYSTEM }] },
         contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.25, maxOutputTokens: 700 }
+        generationConfig: { temperature: 0.25, maxOutputTokens: 700, thinkingConfig: { thinkingBudget: 0 } }
       })
     });
     if (!upstream.ok) return Response.json({ error: "gemini_unavailable" }, { status: 502 });
