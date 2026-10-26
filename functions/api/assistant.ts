@@ -23,14 +23,18 @@ export async function onRequestPost(context: Context) {
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: SYSTEM }] },
         contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.25, maxOutputTokens: 700, thinkingConfig: { thinkingBudget: 0 } }
+        generationConfig: { temperature: 0.25, maxOutputTokens: 900, responseMimeType: "application/json", thinkingConfig: { thinkingBudget: 0 } }
       })
     });
     if (!upstream.ok) return Response.json({ error: "gemini_unavailable" }, { status: 502 });
     const result = await upstream.json() as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
-    const answer = result.candidates?.[0]?.content?.parts?.map(p => p.text || "").join("").trim();
-    if (!answer) return Response.json({ error: "empty_ai_response" }, { status: 502 });
-    return Response.json({ answer });
+    const raw = result.candidates?.[0]?.content?.parts?.map(p => p.text || "").join("").trim();
+    if (!raw) return Response.json({ error: "empty_ai_response" }, { status: 502 });
+    let parsed: { answer?: string; config_patch?: unknown } = {};
+    try { parsed = JSON.parse(raw); } catch { parsed.answer = raw; }
+    const answer = String(parsed.answer || raw).slice(0, 5000);
+    const configPatch = Array.isArray(parsed.config_patch) ? parsed.config_patch.filter(x => typeof x === "string").map(x => x.trim()).filter(Boolean).slice(0, 100) : [];
+    return Response.json({ answer, configPatch });
   } catch {
     return Response.json({ error: "assistant_unavailable" }, { status: 502 });
   }
