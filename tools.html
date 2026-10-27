@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RouteForce — Network Intelligence & Tools</title>
+<title>RouteForce — Ağ Araçları & İstihbarat Portalı</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,11 +11,12 @@
 :root {
   --bg-base: #060911;
   --bg-surface: rgba(13, 20, 36, 0.72);
-  --bg-card: rgba(11, 18, 32, 0.82);
+  --bg-card: rgba(11, 18, 32, 0.85);
   --bg-editor: #070c18;
   
   --border-subtle: rgba(255, 255, 255, 0.07);
   --border-medium: rgba(255, 255, 255, 0.12);
+  --border-highlight: rgba(99, 102, 241, 0.35);
   
   --text-primary: #F8FAFC;
   --text-secondary: #94A3B8;
@@ -25,6 +26,7 @@
   --accent-mint-light: #34D399;
   --accent-cyan: #06B6D4;
   --accent-blue: #38BDF8;
+  --accent-indigo: #6366F1;
   --accent-amber: #F59E0B;
   --accent-rose: #F43F5E;
   
@@ -37,8 +39,8 @@
 body {
   background-color: var(--bg-base);
   background-image: 
-    radial-gradient(1000px 520px at 85% -10%, rgba(14, 165, 233, 0.12) 0%, transparent 70%),
-    radial-gradient(800px 480px at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 65%);
+    radial-gradient(1100px 520px at 85% -10%, rgba(14, 165, 233, 0.12) 0%, transparent 70%),
+    radial-gradient(850px 480px at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 65%);
   background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-sans);
@@ -159,23 +161,29 @@ body {
   padding: 5px 12px;
 }
 
-/* Wrap */
+/* Container */
 .wrap {
-  max-width: 1440px;
+  max-width: 1540px;
   margin: auto;
-  padding: 32px 36px 48px;
+  padding: 28px 36px 48px;
 }
 
-.ey {
-  font-size: 11px;
-  letter-spacing: 0.14em;
+.crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: var(--accent-mint-light);
+  font-size: 11px;
+  letter-spacing: 0.1em;
   font-weight: 800;
   text-transform: uppercase;
+  margin-bottom: 8px;
 }
 
+.crumb span { color: var(--text-muted); }
+
 .intro {
-  margin: 10px 0 28px;
+  margin-bottom: 24px;
 }
 
 .intro h1 {
@@ -186,50 +194,256 @@ body {
   background: linear-gradient(135deg, #FFFFFF 40%, #CBD5E1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin: 6px 0 4px;
 }
 
 .intro p {
   color: var(--text-secondary);
   font-size: 14px;
-  max-width: 740px;
+  margin-top: 6px;
+  max-width: 780px;
 }
 
-/* Layout */
+/* Universal Command & Search Bar */
+.search-hero {
+  border: 1px solid var(--border-medium);
+  border-radius: 18px;
+  background: rgba(13, 20, 36, 0.85);
+  backdrop-filter: blur(20px);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.search-form {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.input-group {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 16px;
+  color: var(--accent-mint-light);
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  padding: 13px 18px 13px 46px;
+  outline: 0;
+  font-size: 14px;
+  font-family: var(--font-mono);
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12), inset 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.submit-btn {
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #032014;
+  font-weight: 800;
+  padding: 13px 26px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  flex-shrink: 0;
+}
+
+.submit-btn:hover {
+  background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  transform: translateY(-1px);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+/* Quick Target Chips & History */
+.search-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.quick-chips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.quick-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.quick-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: 7px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quick-chip:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--border-medium);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.history-strip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.history-chip {
+  background: rgba(14, 165, 233, 0.1);
+  border: 1px solid rgba(14, 165, 233, 0.25);
+  color: #38BDF8;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.history-chip:hover {
+  background: rgba(14, 165, 233, 0.2);
+}
+
+/* Two-column Layout: Left Categories & Tool Catalog, Right Workspace */
 .layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 20px;
+  grid-template-columns: 360px minmax(0, 1fr);
+  gap: 24px;
   align-items: start;
 }
 
-.catalog, .work {
+/* Left Column: Category Tabs & Tool List */
+.sidebar {
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
   background: var(--bg-card);
   backdrop-filter: blur(16px);
+  padding: 16px;
   box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.5);
 }
 
-.catalog {
-  padding: 14px;
-  max-height: calc(100vh - 180px);
-  overflow-y: auto;
+.cat-filters {
+  display: flex;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 12px;
+  overflow-x: auto;
 }
 
-.catalog h2 {
-  font-size: 11px;
-  letter-spacing: 0.12em;
+.cat-btn {
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 6px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  font-family: var(--font-sans);
+}
+
+.cat-btn:hover { color: #fff; }
+
+.cat-btn.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Tool Search Filter Input */
+.filter-box {
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.filter-input {
+  width: 100%;
+  border: 1px solid var(--border-subtle);
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  padding: 8px 12px 8px 32px;
+  font-size: 12px;
+  outline: 0;
+  font-family: var(--font-sans);
+}
+
+.filter-input:focus {
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.filter-icon {
+  position: absolute;
+  left: 10px;
+  top: 9px;
+  width: 14px;
+  height: 14px;
   color: var(--text-muted);
-  text-transform: uppercase;
-  margin: 8px 10px 12px;
-  font-weight: 800;
 }
 
-.tool {
+.tool-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 580px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.tool-item {
   width: 100%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
   text-align: left;
   border: 1px solid transparent;
@@ -242,43 +456,99 @@ body {
   font-family: var(--font-sans);
 }
 
-.tool:hover {
+.tool-item:hover {
   background: rgba(255, 255, 255, 0.04);
   color: #fff;
 }
 
-.tool.active {
+.tool-item.active {
   background: rgba(16, 185, 129, 0.1);
   border-color: rgba(16, 185, 129, 0.3);
   color: #fff;
 }
 
-.tool i {
-  width: 8px;
-  height: 8px;
-  margin-top: 5px;
-  border-radius: 50%;
-  background: var(--accent-mint-light);
+.tool-item-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.tool-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  display: grid;
+  place-items: center;
+  color: var(--accent-mint-light);
   flex-shrink: 0;
-  box-shadow: 0 0 8px rgba(52, 211, 153, 0.6);
-}
-
-.tool strong {
   font-size: 13px;
-  display: block;
 }
 
-.tool small {
+.tool-item.active .tool-icon {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.tool-text {
+  min-width: 0;
+}
+
+.tool-text strong {
+  font-size: 12.5px;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tool-text small {
   font-size: 11px;
   color: var(--text-muted);
   display: block;
-  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
 }
 
-/* Work Panel */
-.work { min-width: 0; }
+.tool-badge {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 3px 7px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
 
-.wh {
+.badge-free {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34D399;
+}
+
+.badge-api {
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #A5B4FC;
+}
+
+/* Right Column: Work Area & Live Results */
+.work-area {
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.5);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.work-header {
   padding: 20px 24px;
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
@@ -290,106 +560,98 @@ body {
   border-top-right-radius: 18px;
 }
 
-.wh h2 {
-  font-size: 20px;
+.work-title-group h2 {
+  font-size: 22px;
   letter-spacing: -0.03em;
-  font-weight: 700;
+  font-weight: 800;
   color: #fff;
-  margin: 4px 0 2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.wh p {
+.work-title-group p {
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: 13.5px;
+  margin-top: 4px;
 }
 
-.source {
+.source-badge {
   font-size: 11px;
   font-weight: 700;
   color: #38BDF8;
   border: 1px solid rgba(56, 189, 248, 0.3);
   background: rgba(56, 189, 248, 0.08);
   border-radius: 99px;
-  padding: 6px 12px;
+  padding: 6px 14px;
   white-space: nowrap;
 }
 
-.form {
-  padding: 20px 24px;
+/* Results Content */
+.work-body {
+  padding: 24px;
+}
+
+.result-toolbar {
   display: flex;
-  gap: 10px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-input {
-  min-width: 0;
-  flex: 1;
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.4);
-  color: #fff;
-  padding: 12px 16px;
-  outline: 0;
-  font-size: 13.5px;
-  font-family: var(--font-mono);
-  transition: border-color 0.2s ease;
-}
-
-input:focus {
-  border-color: rgba(16, 185, 129, 0.5);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
-}
-
-.form button {
-  border: 0;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #10B981, #059669);
-  color: #032014;
-  font-weight: 800;
-  padding: 12px 24px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.form button:hover {
-  background: linear-gradient(135deg, #34D399, #10B981);
-  transform: translateY(-1px);
-}
-
-.hint {
-  padding: 10px 24px;
-  color: var(--text-muted);
-  font-size: 12px;
-}
-
-.output {
-  padding: 20px 24px;
-}
-
-.state {
-  display: flex;
-  gap: 8px;
   align-items: center;
-  color: var(--text-secondary);
-  font-size: 12.5px;
-  margin-bottom: 14px;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
-.dot {
-  height: 7px;
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.pulse-dot {
   width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--accent-mint-light);
   box-shadow: 0 0 10px rgba(52, 211, 153, 0.6);
 }
 
+.result-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-secondary);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: #fff;
+  border-color: var(--border-medium);
+}
+
+/* Result View Box */
 .result-view {
-  min-height: 420px;
+  min-height: 440px;
   background: var(--bg-editor);
   border: 1px solid var(--border-subtle);
   border-radius: 14px;
-  padding: 18px;
+  padding: 20px;
   overflow: auto;
   box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
 }
@@ -399,14 +661,15 @@ input:focus {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .result-head b {
-  font-size: 15px;
+  font-size: 16px;
   color: #fff;
+  font-family: var(--font-mono);
 }
 
 .badge {
@@ -420,11 +683,52 @@ input:focus {
   padding: 5px 12px;
 }
 
+/* Summary Fact Cards */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.fact {
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 14px 16px;
+  transition: all 0.2s ease;
+}
+
+.fact:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--border-medium);
+}
+
+.fact small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-weight: 800;
+}
+
+.fact b {
+  display: block;
+  font-size: 14px;
+  line-height: 1.4;
+  word-break: break-word;
+  color: #fff;
+  font-family: var(--font-mono);
+}
+
+/* Record Table View */
 .record-group {
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.02);
-  margin: 12px 0;
+  margin: 14px 0;
   overflow: hidden;
 }
 
@@ -432,7 +736,7 @@ input:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--border-subtle);
   font-size: 12px;
   font-weight: 800;
@@ -454,97 +758,139 @@ input:focus {
 }
 
 .record-table td {
-  padding: 11px 14px;
+  padding: 11px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   word-break: break-word;
   color: #E2E8F0;
 }
 
 .record-table tr:last-child td { border: 0; }
-.record-table td:first-child { width: 85px; color: var(--accent-mint-light); font-weight: 700; }
+.record-table td:first-child { width: 95px; color: var(--accent-mint-light); font-weight: 700; }
 
-.facts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.fact {
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.02);
-  padding: 14px;
-}
-
-.fact small {
-  display: block;
-  color: var(--text-muted);
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-  font-weight: 800;
-}
-
-.fact b {
-  display: block;
-  font-size: 13.5px;
-  line-height: 1.4;
-  word-break: break-word;
-  color: #fff;
-}
-
-.empty {
-  padding: 36px 16px;
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 380px;
   text-align: center;
   color: var(--text-muted);
-  font-size: 13px;
-  line-height: 1.6;
+  padding: 40px 20px;
 }
 
-.raw { margin-top: 14px; }
-.raw summary { cursor: pointer; color: var(--text-secondary); font-size: 12px; }
-.raw pre {
-  margin: 10px 0 0;
-  padding: 14px;
-  max-height: 280px;
-  overflow: auto;
+.empty-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  display: grid;
+  place-items: center;
+  color: var(--accent-mint-light);
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.empty-state p {
+  font-size: 13px;
+  max-width: 420px;
+  line-height: 1.5;
+}
+
+.raw-details {
+  margin-top: 16px;
+  border: 1px solid var(--border-subtle);
   border-radius: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 10px 14px;
+}
+
+.raw-details summary {
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.raw-details pre {
+  margin: 12px 0 0;
+  padding: 14px;
+  max-height: 300px;
+  overflow: auto;
+  border-radius: 8px;
   background: rgba(0, 0, 0, 0.5);
   color: #b9e8c9;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 11.5px;
   line-height: 1.6;
   white-space: pre-wrap;
 }
 
+/* Toast Notification */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34D399;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(16px);
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 100;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
 .disclaimer {
-  margin-top: 20px;
+  margin-top: 24px;
   border: 1px solid var(--border-subtle);
   border-radius: 14px;
-  padding: 16px 20px;
+  padding: 16px 22px;
   color: var(--text-secondary);
   font-size: 12px;
-  line-height: 1.55;
+  line-height: 1.6;
   background: rgba(255, 255, 255, 0.02);
 }
 
 .disclaimer b { color: #fff; }
 
-@media(max-width: 820px) {
-  .top { padding: 0 18px; }
-  .nav { display: none; }
-  .tag { display: none; }
+@media (max-width: 1080px) {
+  .layout { grid-template-columns: 1fr; }
+  .tool-list { max-height: 280px; }
+}
+
+@media (max-width: 760px) {
   .wrap { padding: 20px 18px; }
-  .layout { display: block; }
-  .catalog { margin-bottom: 16px; max-height: 160px; }
+  .top { padding: 0 18px; }
+  .nav, .tag { display: none; }
+  .search-form { flex-direction: column; }
+  .submit-btn { width: 100%; justify-content: center; }
   .facts { grid-template-columns: 1fr; }
-  .result-view { min-height: 300px; }
 }
 </style>
 </head>
 <body>
 
+<!-- Header -->
 <header class="top">
   <a class="brand-wrapper" href="/">
     <div class="brand-logo">
@@ -567,68 +913,107 @@ input:focus {
     <a class="active" href="/tools.html">Tools</a>
   </nav>
 
-  <span class="tag">NETWORK INTELLIGENCE</span>
+  <span class="tag">NETWORK INTELLIGENCE PORTAL</span>
 </header>
 
 <main class="wrap">
+  <div class="crumb">RouteForce <span>/</span> Network Tools <span>/</span> Global Intelligence</div>
+
   <section class="intro">
-    <div class="ey">TOOLS</div>
-    <h1>Genel ağ verisini tek çalışma alanında toplayın.</h1>
-    <p>DNS, rota, kayıt ve tehdit istihbaratı sorguları. Sonuçlar genel kaynaklardan gelir; aktif tarama yapılmaz.</p>
+    <h1>Ağ & Güvenlik İstihbarat Portalı</h1>
+    <p>DNS, WHOIS/RDAP, BGP rotaları, RPKI doğrulaması ve küresel tehdit verilerini tek bir arama çubuğundan zahmetsizce sorgulayın.</p>
+  </section>
+
+  <!-- Universal Search & Command Hero -->
+  <section class="search-hero">
+    <form class="search-form" id="searchForm">
+      <div class="input-group">
+        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input class="search-input" id="target" placeholder="Hedef girin (Örn: 1.1.1.1, AS13335, cloudflare.com)..." autocomplete="off" spellcheck="false">
+      </div>
+      <button class="submit-btn" type="submit" id="submitBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        Sorgula
+      </button>
+    </form>
+
+    <div class="search-meta">
+      <div class="quick-chips">
+        <span class="quick-label">Hızlı Deneme:</span>
+        <button class="quick-chip" data-val="1.1.1.1">1.1.1.1 (DNS IP)</button>
+        <button class="quick-chip" data-val="AS13335">AS13335 (Cloudflare)</button>
+        <button class="quick-chip" data-val="cloudflare.com">cloudflare.com (Domain)</button>
+        <button class="quick-chip" data-val="00:1A:2B:3C:4D:5E">00:1A:2B:3C:4D:5E (MAC)</button>
+      </div>
+
+      <div class="history-strip" id="historyStrip" style="display:none;">
+        <span>Son Sorgular:</span>
+        <div id="historyItems" style="display:inline-flex; gap:6px;"></div>
+      </div>
+    </div>
   </section>
 
   <section class="layout">
-    <aside class="catalog">
-      <h2>ARAÇ KATALOĞU</h2>
-      <button class="tool active" data-tool="dns"><i></i><span><strong>DNS kayıtları</strong><small>A, AAAA, MX, NS, TXT</small></span></button>
-      <button class="tool" data-tool="whois"><i></i><span><strong>WHOIS / RDAP</strong><small>IP veya domain kayıtları</small></span></button>
-      <button class="tool" data-tool="bgp"><i></i><span><strong>BGP görünürlüğü</strong><small>ASN, IP ve prefix kökeni</small></span></button>
-      <button class="tool" data-tool="rpki"><i></i><span><strong>RPKI doğrulama</strong><small>Route Origin Authorization</small></span></button>
-      <button class="tool" data-tool="certificates"><i></i><span><strong>Sertifikalar</strong><small>Certificate Transparency</small></span></button>
-      <button class="tool" data-tool="urlhaus"><i></i><span><strong>URLHaus</strong><small>Zararlı URL araştırması</small></span></button>
-      <button class="tool" data-tool="threatfox"><i></i><span><strong>ThreatFox</strong><small>IOC ve tehdit kaydı</small></span></button>
-      <button class="tool" data-tool="bgp_history"><i></i><span><strong>BGP History</strong><small>Rota geçmişi</small></span></button>
-      <button class="tool" data-tool="bgp_prefixes"><i></i><span><strong>Announced Prefixes</strong><small>ASN duyuruları</small></span></button>
-      <button class="tool" data-tool="peeringdb"><i></i><span><strong>PeeringDB</strong><small>ASN peering profili</small></span></button>
-      <button class="tool" data-tool="ipapi"><i></i><span><strong>IP Intelligence</strong><small>ASN, konum ve operatör</small></span></button>
-      <button class="tool" data-tool="macvendor"><i></i><span><strong>MAC Vendor</strong><small>Üretici tanımlama</small></span></button>
-      <button class="tool" data-tool="abuseipdb"><i></i><span><strong>AbuseIPDB</strong><small>IP kötüye kullanım skoru</small></span></button>
-      <button class="tool" data-tool="virustotal"><i></i><span><strong>VirusTotal</strong><small>Domain/IP analizi</small></span></button>
-      <button class="tool" data-tool="censys"><i></i><span><strong>Censys</strong><small>Genel host envanteri</small></span></button>
-      <button class="tool" data-tool="netlas"><i></i><span><strong>Netlas</strong><small>İnternet görünürlüğü</small></span></button>
-      <button class="tool" data-tool="leakix"><i></i><span><strong>LeakIX</strong><small>Maruziyet istihbaratı</small></span></button>
-      <button class="tool" data-tool="criminalip"><i></i><span><strong>Criminal IP</strong><small>IP risk profili</small></span></button>
-      <button class="tool" data-tool="ipinfo"><i></i><span><strong>IPinfo</strong><small>Operatör ve ASN verisi</small></span></button>
-      <button class="tool" data-tool="securitytrails"><i></i><span><strong>SecurityTrails</strong><small>Domain ve DNS tarihi</small></span></button>
-      <button class="tool" data-tool="urlscan"><i></i><span><strong>urlscan.io</strong><small>URL görünürlük kaydı</small></span></button>
+    <!-- Left Column: Tool Categorization & Catalog -->
+    <aside class="sidebar">
+      <!-- Category Tabs -->
+      <div class="cat-filters">
+        <button class="cat-btn active" data-cat="all">Tümü (21)</button>
+        <button class="cat-btn" data-cat="public">⚡ Açık & Ücretsiz</button>
+        <button class="cat-btn" data-cat="bgp">🛰️ BGP & Routing</button>
+        <button class="cat-btn" data-cat="domain">🌐 DNS & Domain</button>
+        <button class="cat-btn" data-cat="security">🛡️ Tehdit & Güvenlik</button>
+      </div>
+
+      <!-- Live Search in Tools List -->
+      <div class="filter-box">
+        <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input class="filter-input" id="toolSearch" placeholder="Araçları filtrele..." autocomplete="off">
+      </div>
+
+      <!-- Tool Items List -->
+      <div class="tool-list" id="toolList"></div>
     </aside>
 
-    <section class="work">
-      <header class="wh">
-        <div>
-          <div class="ey" id="kind">DNS LOOKUP</div>
-          <h2 id="title">DNS kayıtları</h2>
+    <!-- Right Column: Active Tool Work Area & Results -->
+    <section class="work-area">
+      <header class="work-header">
+        <div class="work-title-group">
+          <h2>
+            <span id="toolIcon">🌐</span>
+            <span id="title">DNS Kayıtları</span>
+          </h2>
           <p id="description">Bir alan adının genel DNS kayıtlarını inceleyin.</p>
         </div>
-        <span class="source" id="source">Cloudflare DNS-over-HTTPS</span>
+        <span class="source-badge" id="source">Cloudflare DNS-over-HTTPS</span>
       </header>
-      
-      <form class="form" id="form">
-        <input id="target" autocomplete="off" placeholder="example.com">
-        <button type="submit">Sorgula</button>
-      </form>
-      
-      <div class="hint" id="hint">Alan adı girin. Genel sorgular rate-limit uygulanarak çalışır.</div>
-      
-      <div class="output">
-        <div class="state">
-          <i class="dot"></i>
-          <span id="status">Sorgu için hedef girin.</span>
+
+      <div class="work-body">
+        <div class="result-toolbar">
+          <div class="status-pill">
+            <span class="pulse-dot"></span>
+            <span id="status">Sorgu için hedef girip 'Sorgula' butonuna basın.</span>
+          </div>
+
+          <div class="result-actions" id="resultActions" style="display:none;">
+            <button class="action-btn" id="copyBtn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              Kopyala
+            </button>
+            <button class="action-btn" id="downloadBtn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              JSON İndir
+            </button>
+          </div>
         </div>
+
         <div class="result-view" id="output">
-          <div class="empty">
-            Bir araç seçip hedef girin.<br>
-            <small>Sonuçlar okunabilir tablolar ve özet kartlar halinde gösterilir.</small>
+          <div class="empty-state">
+            <div class="empty-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+            <h3>Sorgu Bekleniyor</h3>
+            <p>Yukarıdaki arama çubuğuna bir hedef girin veya sol menüden istediğiniz aracı seçerek hemen sorgulayın.</p>
           </div>
         </div>
       </div>
@@ -636,117 +1021,345 @@ input:focus {
   </section>
 
   <div class="disclaimer">
-    <b>Yetkili kullanım:</b> Bu araçlar yalnızca genel veri kaynaklarını sorgular. Hedef sistemde aktif keşif, port taraması veya hizmet testi gerçekleştirmez; yetkisiz erişim amacıyla kullanmayın.
+    <b>Yetkili & Güvenli Kullanım:</b> RouteForce araçları yalnızca halka açık genel veri kaynaklarını (Cloudflare, RIPEstat, RDAP, PeeringDB, crt.sh vb.) sorgular. Hedef sistemlerde aktif port taraması, sızma testi veya kesintiye yol açabilecek işlemler yapılmaz.
   </div>
 </main>
 
+<!-- Toast Notification -->
+<div class="toast" id="toast">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg>
+  <span id="toastMsg">Panoya kopyalandı</span>
+</div>
+
 <script>
 const defs = {
-  dns: { kind: 'DNS LOOKUP', title: 'DNS kayıtları', description: 'Bir alan adının genel DNS kayıtlarını inceleyin.', source: 'Cloudflare DNS-over-HTTPS', placeholder: 'example.com', hint: 'Alan adı girin. A, AAAA, MX, NS ve TXT kayıtları döner.' },
-  whois: { kind: 'WHOIS / RDAP', title: 'Kayıt bilgisi', description: 'IP adresi veya alan adı için registry bilgisini görüntüleyin.', source: 'RDAP', placeholder: '8.8.8.8 veya example.com', hint: 'IP adresi veya alan adı girin.' },
-  bgp: { kind: 'BGP LOOKUP', title: 'Rota görünürlüğü', description: 'Prefix veya ASN kökeni için RIPEstat genel BGP verisini sorgulayın.', source: 'RIPEstat', placeholder: 'AS13335 veya 1.1.1.0/24', hint: 'ASN, genel IP adresi veya prefix girin.' },
-  rpki: { kind: 'RPKI', title: 'RPKI doğrulama', description: 'Bir ASN için genel RPKI doğrulama özetini inceleyin.', source: 'RIPEstat', placeholder: 'AS13335', hint: 'ASN girin.' },
-  certificates: { kind: 'CERTIFICATE TRANSPARENCY', title: 'Sertifika kayıtları', description: 'Alan adına yayımlanmış genel TLS sertifikalarını görüntüleyin.', source: 'crt.sh', placeholder: 'example.com', hint: 'Alan adı girin; en yeni sertifika kayıtları listelenir.' },
-  urlhaus: { kind: 'THREAT INTELLIGENCE', title: 'URLHaus araştırması', description: 'Domain veya IP için bilinen zararlı URL kaydı arayın.', source: 'abuse.ch URLHaus', placeholder: 'example.com veya 1.2.3.4', hint: 'Domain veya genel IP girin. Bu, pasif tehdit istihbaratı sorgusudur.' },
-  threatfox: { kind: 'THREAT INTELLIGENCE', title: 'ThreatFox IOC', description: 'IOC için genel ThreatFox istihbarat kaydını inceleyin.', source: 'abuse.ch ThreatFox', placeholder: '1.2.3.4 veya domain', hint: 'Genel IP, domain veya IOC değeri girin.' },
-  bgp_history: { kind: 'BGP HISTORY', title: 'BGP rota geçmişi', description: 'Prefix veya ASN için RIPEstat rota geçmişini inceleyin.', source: 'RIPEstat', placeholder: 'AS13335 veya 1.1.1.0/24', hint: 'ASN, IP veya prefix girin.' },
-  bgp_prefixes: { kind: 'BGP PREFIXES', title: 'Duyurulan prefixler', description: 'Bir ASN tarafından duyurulan prefixleri görüntüleyin.', source: 'RIPEstat', placeholder: 'AS13335', hint: 'ASN girin.' },
-  peeringdb: { kind: 'PEERINGDB', title: 'Peering profili', description: 'ASN için genel peering ve ağ profilini inceleyin.', source: 'PeeringDB', placeholder: 'AS13335', hint: 'ASN girin.' },
-  ipapi: { kind: 'IP INTELLIGENCE', title: 'IP Intelligence', description: 'Genel IP için ASN, konum ve operatör bilgisi.', source: 'ipapi.co', placeholder: '8.8.8.8', hint: 'Genel IPv4 veya IPv6 adresi girin.' },
-  macvendor: { kind: 'MAC LOOKUP', title: 'MAC üreticisi', description: 'MAC adresinin üreticisini tanımlayın.', source: 'MAC Vendors', placeholder: '00:11:22:33:44:55', hint: 'MAC adresini iki nokta ile girin.' },
-  abuseipdb: { kind: 'API INTELLIGENCE', title: 'AbuseIPDB', description: 'Kayıtlı API anahtarıyla IP itibarını sorgulayın.', source: 'AbuseIPDB', placeholder: '8.8.8.8', hint: 'Giriş ve yapılandırılmış AbuseIPDB anahtarı gerekir.' },
-  virustotal: { kind: 'API INTELLIGENCE', title: 'VirusTotal', description: 'Domain veya IP görünürlüğünü sorgulayın.', source: 'VirusTotal', placeholder: 'example.com veya 8.8.8.8', hint: 'Giriş ve yapılandırılmış VirusTotal anahtarı gerekir.' },
-  censys: { kind: 'API INTELLIGENCE', title: 'Censys', description: 'Genel host envanterini sorgulayın.', source: 'Censys', placeholder: '8.8.8.8', hint: 'Giriş ve Censys API ID:Secret gerektirir.' },
-  netlas: { kind: 'API INTELLIGENCE', title: 'Netlas', description: 'Genel internet görünürlüğünü sorgulayın.', source: 'Netlas', placeholder: '8.8.8.8', hint: 'Giriş ve Netlas API anahtarı gerekir.' },
-  leakix: { kind: 'API INTELLIGENCE', title: 'LeakIX', description: 'Pasif maruziyet istihbaratını sorgulayın.', source: 'LeakIX', placeholder: '8.8.8.8', hint: 'Giriş ve LeakIX API anahtarı gerekir.' },
-  criminalip: { kind: 'API INTELLIGENCE', title: 'Criminal IP', description: 'IP risk raporunu görüntüleyin.', source: 'Criminal IP', placeholder: '8.8.8.8', hint: 'Giriş ve Criminal IP API anahtarı gerekir.' },
-  ipinfo: { kind: 'API INTELLIGENCE', title: 'IPinfo', description: 'Operatör ve ASN verisini sorgulayın.', source: 'IPinfo', placeholder: '8.8.8.8', hint: 'Giriş ve IPinfo token gerekir.' },
-  securitytrails: { kind: 'API INTELLIGENCE', title: 'SecurityTrails', description: 'Domain profili ve DNS verisini sorgulayın.', source: 'SecurityTrails', placeholder: 'example.com', hint: 'Giriş ve SecurityTrails API anahtarı gerekir.' },
-  urlscan: { kind: 'API INTELLIGENCE', title: 'urlscan.io', description: 'URL görünürlük kaydını sorgulayın.', source: 'urlscan.io', placeholder: 'example.com', hint: 'Giriş ve urlscan.io API anahtarı gerekir.' }
+  dns: { cat: 'domain', kind: 'DNS LOOKUP', title: 'DNS Kayıtları', icon: '🌐', isPublic: true, description: 'Alan adına ait A, AAAA, MX, NS ve TXT kayıtlarını sorgulayın.', source: 'Cloudflare DNS-over-HTTPS', placeholder: 'example.com', hint: 'Alan adı girin.' },
+  whois: { cat: 'domain', kind: 'WHOIS / RDAP', title: 'WHOIS & RDAP Bilgisi', icon: '📋', isPublic: true, description: 'IP adresi veya alan adı için küresel kayıt (registry) bilgisi.', source: 'ARIN / Verisign RDAP', placeholder: '8.8.8.8 veya example.com', hint: 'IP adresi veya domain girin.' },
+  bgp: { cat: 'bgp', kind: 'BGP LOOKUP', title: 'BGP Rota Görünürlüğü', icon: '🛰️', isPublic: true, description: 'Prefix veya ASN için küresel BGP anons ve rota görünürlüğü.', source: 'RIPEstat', placeholder: 'AS13335 veya 1.1.1.0/24', hint: 'ASN, IP veya prefix girin.' },
+  rpki: { cat: 'bgp', kind: 'RPKI', title: 'RPKI Rota Doğrulama', icon: '🛡️', isPublic: true, description: 'Bir ASN için Route Origin Authorization (ROA) durumunu inceleyin.', source: 'RIPEstat RPKI', placeholder: 'AS13335', hint: 'ASN girin.' },
+  bgp_prefixes: { cat: 'bgp', kind: 'BGP PREFIXES', title: 'Duyurulan Prefixler', icon: '📡', isPublic: true, description: 'Bir otonom sistem (ASN) tarafından internete anons edilen tüm prefixler.', source: 'RIPEstat', placeholder: 'AS13335', hint: 'ASN girin.' },
+  bgp_history: { cat: 'bgp', kind: 'BGP HISTORY', title: 'BGP Rota Geçmişi', icon: '⏱️', isPublic: true, description: 'Son 14 gün içindeki BGP anons değişiklikleri ve rota stabilitesi.', source: 'RIPEstat', placeholder: 'AS13335 veya 1.1.1.0/24', hint: 'ASN veya prefix girin.' },
+  peeringdb: { cat: 'bgp', kind: 'PEERINGDB', title: 'PeeringDB Profili', icon: '🤝', isPublic: true, description: 'ASN için IXP bağlantıları, peering politikası ve veri merkezleri.', source: 'PeeringDB API', placeholder: 'AS13335', hint: 'ASN girin.' },
+  certificates: { cat: 'domain', kind: 'TLS / SSL', title: 'Sertifika Geçmişi', icon: '🔒', isPublic: true, description: 'Certificate Transparency (CT) kayıtlarında yayımlanmış TLS sertifikaları.', source: 'crt.sh', placeholder: 'example.com', hint: 'Domain girin.' },
+  ipapi: { cat: 'security', kind: 'IP INTEL', title: 'IP Konum & ASN', icon: '📍', isPublic: true, description: 'Genel IP için coğrafi konum, ASN, ISP ve operatör bilgileri.', source: 'ipinfo.io Public', placeholder: '8.8.8.8', hint: 'Genel IPv4 veya IPv6 girin.' },
+  macvendor: { cat: 'security', kind: 'HARDWARE', title: 'MAC Vendor Üretici', icon: '💻', isPublic: true, description: 'OUI donanım üreticisini MAC adresi üzerinden tespit edin.', source: 'MAC Vendors API', placeholder: '00:11:22:33:44:55', hint: 'MAC adresi girin.' },
+  urlhaus: { cat: 'security', kind: 'THREAT INTEL', title: 'URLHaus Kötü Amaçlı URL', icon: '⚠️', isPublic: true, description: 'Bilinen zararlı yazılım ve kimlik avı URL veritabanı sorgusu.', source: 'abuse.ch URLHaus', placeholder: 'example.com veya 1.2.3.4', hint: 'Domain veya IP girin.' },
+  threatfox: { cat: 'security', kind: 'THREAT INTEL', title: 'ThreatFox IOC Arama', icon: '🦊', isPublic: true, description: 'Zararlı yazılım göstergeleri (IOC) ve C2 istihbarat kaydı.', source: 'abuse.ch ThreatFox', placeholder: '1.2.3.4 veya domain', hint: 'IP veya IOC girin.' },
+  
+  // API Integrated Tools
+  abuseipdb: { cat: 'security', kind: 'API INTEL', title: 'AbuseIPDB İtibar Raporu', icon: '🚨', isPublic: false, description: 'IP kötüye kullanım ve saldırı skorları.', source: 'AbuseIPDB v2', placeholder: '8.8.8.8', hint: 'API anahtarı gerekir.' },
+  virustotal: { cat: 'security', kind: 'API INTEL', title: 'VirusTotal Analizi', icon: '🦠', isPublic: false, description: '70+ antivirüs motoru ile domain ve IP analizi.', source: 'VirusTotal v3', placeholder: 'example.com veya 8.8.8.8', hint: 'API anahtarı gerekir.' },
+  censys: { cat: 'security', kind: 'API INTEL', title: 'Censys Host Keşfi', icon: '🔍', isPublic: false, description: 'Açık portlar, protokoller ve çalışan servisler.', source: 'Censys Search API', placeholder: '8.8.8.8', hint: 'Censys API gerektirir.' },
+  netlas: { cat: 'security', kind: 'API INTEL', title: 'Netlas İnternet Taraması', icon: '🌌', isPublic: false, description: 'Küresel internet cihaz ve servis görünürlüğü.', source: 'Netlas API', placeholder: '8.8.8.8', hint: 'Netlas API gerektirir.' },
+  leakix: { cat: 'security', kind: 'API INTEL', title: 'LeakIX Maruziyet Verisi', icon: '💧', isPublic: false, description: 'İnternete sızdırılmış veriler ve açık servisler.', source: 'LeakIX API', placeholder: '8.8.8.8', hint: 'LeakIX API gerektirir.' },
+  criminalip: { cat: 'security', kind: 'API INTEL', title: 'Criminal IP Risk Profili', icon: '🛡️', isPublic: false, description: 'Kapsamlı IP siber tehdit ve risk skoru.', source: 'Criminal IP API', placeholder: '8.8.8.8', hint: 'Criminal IP API gerektirir.' },
+  ipinfo: { cat: 'security', kind: 'API INTEL', title: 'IPinfo Kurumsal İstihbarat', icon: '🏢', isPublic: false, description: 'Kurumsal ASN, hosting, VPN ve privacy tespiti.', source: 'IPinfo Token', placeholder: '8.8.8.8', hint: 'Token gerektirir.' },
+  securitytrails: { cat: 'domain', kind: 'API INTEL', title: 'SecurityTrails DNS Tarihi', icon: '📜', isPublic: false, description: 'Geçmiş DNS kayıtları ve subdomain haritası.', source: 'SecurityTrails API', placeholder: 'example.com', hint: 'API anahtarı gerektirir.' },
+  urlscan: { cat: 'security', kind: 'API INTEL', title: 'urlscan.io Tarama Kaydı', icon: '📸', isPublic: false, description: 'Web sitesi taramaları, DOM ve ekran görüntüleri.', source: 'urlscan.io API', placeholder: 'example.com', hint: 'API anahtarı gerektirir.' }
 };
 
-let tool = 'dns';
+let currentTool = 'dns';
+let lastResultData = null;
 const $ = s => document.querySelector(s);
 const esc = v => String(v ?? '—').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-function raw(value) {
-  return '<details class="raw"><summary>Ham yanıtı göster (JSON)</summary><pre>' + esc(JSON.stringify(value, null, 2)) + '</pre></details>';
+function showToast(message) {
+  const toast = $('#toast');
+  $('#toastMsg').textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2400);
 }
 
-function facts(entries) {
-  return '<div class="facts">' + entries.filter(([, v]) => v !== undefined && v !== null && v !== '').map(([k, v]) => '<div class="fact"><small>' + esc(k.replace(/_/g, ' ')) + '</small><b>' + esc(Array.isArray(v) ? v.join(', ') : typeof v === 'object' ? JSON.stringify(v) : v) + '</b></div>').join('') + '</div>';
+// Build Tool Items in Sidebar
+function renderToolList(filterCat = 'all', searchQuery = '') {
+  const list = $('#toolList');
+  list.innerHTML = '';
+  const search = searchQuery.toLowerCase().trim();
+
+  Object.entries(defs).forEach(([key, d]) => {
+    // Category match
+    if (filterCat === 'public' && !d.isPublic) return;
+    if (filterCat !== 'all' && filterCat !== 'public' && d.cat !== filterCat) return;
+
+    // Search query match
+    if (search && !d.title.toLowerCase().includes(search) && !d.description.toLowerCase().includes(search) && !key.toLowerCase().includes(search)) {
+      return;
+    }
+
+    const btn = document.createElement('button');
+    btn.className = 'tool-item ' + (key === currentTool ? 'active' : '');
+    btn.dataset.tool = key;
+    btn.innerHTML = `
+      <div class="tool-item-main">
+        <div class="tool-icon">${d.icon}</div>
+        <div class="tool-text">
+          <strong>${esc(d.title)}</strong>
+          <small>${esc(d.description)}</small>
+        </div>
+      </div>
+      <span class="tool-badge ${d.isPublic ? 'badge-free' : 'badge-api'}">${d.isPublic ? 'Ücretsiz' : 'API'}</span>
+    `;
+
+    btn.onclick = () => selectTool(key);
+    list.appendChild(btn);
+  });
+}
+
+function selectTool(toolKey) {
+  currentTool = toolKey;
+  const d = defs[currentTool];
+  
+  // Highlight active item
+  document.querySelectorAll('.tool-item').forEach(x => {
+    x.classList.toggle('active', x.dataset.tool === currentTool);
+  });
+
+  // Update work header
+  $('#toolIcon').textContent = d.icon;
+  $('#title').textContent = d.title;
+  $('#description').textContent = d.description;
+  $('#source').textContent = d.source;
+  
+  // Update input placeholder without clearing the value!
+  $('#target').placeholder = d.placeholder + ' (' + d.hint + ')';
+
+  // If user already typed something, trigger search directly!
+  if ($('#target').value.trim()) {
+    executeSearch();
+  }
+}
+
+// Category filter button clicks
+document.querySelectorAll('.cat-btn').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    renderToolList(b.dataset.cat, $('#toolSearch').value);
+  };
+});
+
+// Tool Search input
+$('#toolSearch').oninput = e => {
+  const activeCat = document.querySelector('.cat-btn.active').dataset.cat;
+  renderToolList(activeCat, e.target.value);
+};
+
+// Quick chips
+document.querySelectorAll('.quick-chip').forEach(b => {
+  b.onclick = () => {
+    const val = b.dataset.val;
+    $('#target').value = val;
+    // Auto-select smart tool if needed
+    if (val.startsWith('AS') && (currentTool === 'dns' || currentTool === 'macvendor')) {
+      selectTool('bgp');
+    } else if (val.includes(':') && currentTool !== 'macvendor') {
+      selectTool('macvendor');
+    } else {
+      executeSearch();
+    }
+  };
+});
+
+// Search History Management
+function addHistory(term) {
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem('rf_tool_history') || '[]'); } catch {}
+  hist = [term, ...hist.filter(x => x !== term)].slice(0, 4);
+  localStorage.setItem('rf_tool_history', JSON.stringify(hist));
+  renderHistory();
+}
+
+function renderHistory() {
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem('rf_tool_history') || '[]'); } catch {}
+  if (!hist.length) {
+    $('#historyStrip').style.display = 'none';
+    return;
+  }
+  $('#historyStrip').style.display = 'flex';
+  $('#historyItems').innerHTML = hist.map(item => `
+    <span class="history-chip">${esc(item)}</span>
+  `).join('');
+
+  document.querySelectorAll('.history-chip').forEach(ch => {
+    ch.onclick = () => {
+      $('#target').value = ch.textContent;
+      executeSearch();
+    };
+  });
+}
+
+// Rendering Structured Results
+function formatFacts(entries) {
+  return '<div class="facts">' + entries.filter(([, v]) => v !== undefined && v !== null && v !== '').map(([k, v]) => `
+    <div class="fact">
+      <small>${esc(k.replace(/_/g, ' '))}</small>
+      <b>${esc(Array.isArray(v) ? v.join(', ') : typeof v === 'object' ? JSON.stringify(v) : v)}</b>
+    </div>
+  `).join('') + '</div>';
 }
 
 function dnsView(data) {
   let html = '';
   for (const [type, rows] of Object.entries(data)) {
     const records = Array.isArray(rows) ? rows : [];
-    html += '<section class="record-group"><div class="record-title">' + esc(type) + ' <span>' + records.length + ' kayıt</span></div>' + (!records.length ? '<div class="empty">Kayıt bulunamadı</div>' : '<table class="record-table"><tbody>' + records.map(r => '<tr><td>' + esc(r.TTL) + ' sn</td><td>' + esc(r.data) + '</td></tr>').join('') + '</tbody></table>') + '</section>';
+    html += `
+      <section class="record-group">
+        <div class="record-title">${esc(type)} Kayıtları <span>${records.length} adet</span></div>
+        ${!records.length ? '<div style="padding:16px; color:var(--text-muted); font-size:12px;">Kayıt bulunamadı</div>' : `
+          <table class="record-table">
+            <tbody>
+              ${records.map(r => `<tr><td>${esc(r.TTL)} sn</td><td>${esc(r.data)}</td></tr>`).join('')}
+            </tbody>
+          </table>
+        `}
+      </section>
+    `;
   }
   return html;
 }
 
 function certificateView(rows) {
   const items = Array.isArray(rows) ? rows : [];
-  return '<section class="record-group"><div class="record-title">SERTİFİKA GEÇMİŞİ <span>' + items.length + ' kayıt</span></div>' + (!items.length ? '<div class="empty">Sertifika kaydı bulunamadı</div>' : '<table class="record-table"><tbody>' + items.map(x => '<tr><td>' + esc(x.common_name) + '</td><td>' + esc(x.not_before) + ' → ' + esc(x.not_after) + '</td></tr>').join('') + '</tbody></table>') + '</section>';
+  return `
+    <section class="record-group">
+      <div class="record-title">Sertifika Geçmişi <span>${items.length} kayıt</span></div>
+      ${!items.length ? '<div style="padding:16px; color:var(--text-muted);">Sertifika bulunamadı</div>' : `
+        <table class="record-table">
+          <tbody>
+            ${items.map(x => `<tr><td style="width:140px;">${esc(x.not_before)}</td><td><b>${esc(x.common_name)}</b><br><small style="color:var(--text-muted);">${esc(x.issuer_name || '—')}</small></td></tr>`).join('')}
+          </tbody>
+        </table>
+      `}
+    </section>
+  `;
 }
 
-function render(data, target) {
+function renderResult(data, targetTerm) {
+  lastResultData = data;
+  $('#resultActions').style.display = 'flex';
+  
   let parsed;
   try { parsed = JSON.parse(data.output); } catch { parsed = data.output; }
+
   let body = '';
-  if (tool === 'dns' && parsed && typeof parsed === 'object') body = dnsView(parsed);
-  else if (tool === 'certificates') body = certificateView(parsed);
-  else if (tool === 'urlhaus') {
+  if (currentTool === 'dns' && parsed && typeof parsed === 'object') {
+    body = dnsView(parsed);
+  } else if (currentTool === 'certificates') {
+    body = certificateView(parsed);
+  } else if (currentTool === 'urlhaus') {
     const urls = parsed?.urls || [];
-    body = facts([['Durum', parsed?.query_status || 'Kayıt bulunamadı'], ['Bulunan URL', urls.length], ['Hedef', target]]) + (urls.length ? '<section class="record-group"><div class="record-title">SON KAYITLAR <span>pasif istihbarat</span></div><table class="record-table"><tbody>' + urls.slice(0, 10).map(x => '<tr><td>' + esc(x.url_status || 'kayıt') + '</td><td>' + esc(x.url || x.urlhaus_reference || '—') + '</td></tr>').join('') + '</tbody></table></section>' : '');
+    body = formatFacts([['Durum', parsed?.query_status || 'Kayıt bulunamadı'], ['Bulunan URL', urls.length], ['Hedef', targetTerm]]) +
+      (urls.length ? `
+        <section class="record-group">
+          <div class="record-title">Son Kötü Amaçlı URL Kayıtları <span>${urls.length} kayıt</span></div>
+          <table class="record-table">
+            <tbody>
+              ${urls.slice(0, 10).map(x => `<tr><td>${esc(x.url_status || 'risk')}</td><td>${esc(x.url || x.urlhaus_reference || '—')}</td></tr>`).join('')}
+            </tbody>
+          </table>
+        </section>
+      ` : '');
   } else if (parsed && typeof parsed === 'object') {
-    const preferred = ['name', 'handle', 'ldhName', 'country', 'startAddress', 'endAddress', 'asn', 'holder', 'resource', 'validity', 'status'];
+    const preferred = ['name', 'handle', 'ldhName', 'country', 'startAddress', 'endAddress', 'asn', 'holder', 'resource', 'validity', 'status', 'vendor'];
     let pairs = preferred.filter(k => parsed[k] !== undefined).map(k => [k, parsed[k]]);
     if (!pairs.length) pairs = Object.entries(parsed).filter(([, v]) => typeof v !== 'object').slice(0, 12);
-    body = facts(pairs) + raw(parsed);
+    body = formatFacts(pairs);
   } else {
-    body = '<div class="empty">' + esc(parsed) + '</div>';
+    body = '<div style="padding:16px; font-family:var(--font-mono); color:#b9e8c9;">' + esc(parsed) + '</div>';
   }
-  $('#output').innerHTML = '<div class="result-head"><b>' + esc(target) + '</b><span class="badge">' + esc(data.summary) + '</span></div>' + body;
+
+  const rawJson = `
+    <details class="raw-details">
+      <summary>Ham JSON Çıktısını Görüntüle</summary>
+      <pre>${esc(JSON.stringify(parsed, null, 2))}</pre>
+    </details>
+  `;
+
+  $('#output').innerHTML = `
+    <div class="result-head">
+      <b>${esc(targetTerm)}</b>
+      <span class="badge">${esc(data.summary || 'Sonuç Hazır')}</span>
+    </div>
+    ${body}
+    ${rawJson}
+  `;
 }
 
-function choose(next) {
-  tool = next;
-  const d = defs[tool];
-  document.querySelectorAll('.tool').forEach(x => x.classList.toggle('active', x.dataset.tool === tool));
-  $('#kind').textContent = d.kind;
-  $('#title').textContent = d.title;
-  $('#description').textContent = d.description;
-  $('#source').textContent = d.source;
-  $('#target').placeholder = d.placeholder;
-  $('#hint').textContent = d.hint;
-  $('#target').value = '';
-  $('#status').textContent = 'Sorgu için hedef girin.';
-  $('#output').innerHTML = '<div class="empty">Bir araç seçip hedef girin.<br><small>Sonuçlar okunabilir tablolar ve özet kartlar halinde gösterilir.</small></div>';
-}
+// Execute Query
+async function executeSearch() {
+  const targetTerm = $('#target').value.trim();
+  if (!targetTerm) return;
 
-document.querySelectorAll('.tool').forEach(x => x.onclick = () => choose(x.dataset.tool));
+  addHistory(targetTerm);
+  $('#status').textContent = 'Sorgulanıyor: ' + targetTerm + ' (' + defs[currentTool].title + ')…';
+  $('#output').innerHTML = `
+    <div class="empty-state">
+      <div class="empty-icon" style="animation: pulse 1.5s infinite;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+      </div>
+      <h3>Genel Veri Kaynağı Sorgulanıyor</h3>
+      <p>${defs[currentTool].source} üzerinden yanıt bekleniyor…</p>
+    </div>
+  `;
 
-$('#form').onsubmit = async e => {
-  e.preventDefault();
-  const target = $('#target').value.trim();
-  if (!target) return;
-  $('#status').textContent = 'Genel veri kaynağı sorgulanıyor…';
-  $('#output').innerHTML = '<div class="empty">Sorgu çalışıyor…</div>';
   try {
     const privateTools = new Set(['abuseipdb', 'virustotal', 'ipinfo', 'urlscan', 'securitytrails', 'censys', 'netlas', 'leakix', 'criminalip', 'threatfox', 'urlhaus']);
-    const endpoint = privateTools.has(tool) ? '/api/tools/intelligence?provider=' + tool + '&target=' + encodeURIComponent(target) : '/api/tools/query?tool=' + tool + '&target=' + encodeURIComponent(target);
+    const endpoint = privateTools.has(currentTool)
+      ? '/api/tools/intelligence?provider=' + currentTool + '&target=' + encodeURIComponent(targetTerm)
+      : '/api/tools/query?tool=' + currentTool + '&target=' + encodeURIComponent(targetTerm);
+
     const r = await fetch(endpoint);
     const data = await r.json();
-    if (!r.ok) throw Error(data.error || 'query_failed');
-    $('#status').textContent = data.summary;
-    render(data, target);
+    if (!r.ok) {
+      if (data.error === 'login_required') throw Error('Bu aracı kullanmak için Google ile oturum açmanız gerekmektedir.');
+      if (data.error === 'integration_not_configured') throw Error('Bu sağlayıcı için API anahtarı henüz sistemde yapılandırılmamış.');
+      throw Error(data.message || data.error || 'Sorgu başarısız oldu.');
+    }
+
+    $('#status').textContent = '✓ ' + (data.summary || 'Sorgu başarıyla tamamlandı.');
+    renderResult(data, targetTerm);
   } catch (err) {
     $('#status').textContent = 'Sorgu tamamlanamadı.';
-    $('#output').innerHTML = '<div class="empty"><b>Sorgu tamamlanamadı</b><br><small>' + esc(err.message) + '</small></div>';
+    $('#output').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon" style="color:var(--accent-rose); border-color:rgba(244,63,94,0.3);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        </div>
+        <h3 style="color:#FECDD3;">Sorgu Tamamlanamadı</h3>
+        <p>${esc(err.message)}</p>
+      </div>
+    `;
   }
+}
+
+$('#searchForm').onsubmit = e => {
+  e.preventDefault();
+  executeSearch();
 };
+
+// Copy & Download Actions
+$('#copyBtn').onclick = async () => {
+  if (!lastResultData) return;
+  await navigator.clipboard.writeText(typeof lastResultData.output === 'string' ? lastResultData.output : JSON.stringify(lastResultData, null, 2));
+  showToast('✓ Sonuç panoya kopyalandı');
+};
+
+$('#downloadBtn').onclick = () => {
+  if (!lastResultData) return;
+  const content = typeof lastResultData.output === 'string' ? lastResultData.output : JSON.stringify(lastResultData, null, 2);
+  const blob = new Blob([content], { type: 'application/json;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = currentTool + '-' + ($('#target').value.trim() || 'result') + '.json';
+  a.click();
+  showToast('⬇ Sonuç JSON olarak indirildi');
+};
+
+// Initial Setup
+renderToolList('all');
+renderHistory();
+selectTool('dns');
 </script>
 </body>
 </html>
