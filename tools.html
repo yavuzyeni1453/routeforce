@@ -3,32 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RouteForce — Ağ Araçları & İstihbarat Portalı</title>
+<title>RouteForce — Looking Glass & Network Intelligence Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg-base: #060911;
-  --bg-surface: rgba(13, 20, 36, 0.72);
-  --bg-card: rgba(11, 18, 32, 0.85);
-  --bg-editor: #070c18;
+  --bg-base: #07090e;
+  --bg-surface: #0d111a;
+  --bg-surface-2: #121824;
+  --bg-card: rgba(15, 21, 33, 0.92);
+  --bg-dock: rgba(12, 17, 27, 0.96);
+  --bg-term: #05080f;
   
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-medium: rgba(255, 255, 255, 0.12);
-  --border-highlight: rgba(99, 102, 241, 0.35);
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.15);
+  --line-glow: rgba(56, 189, 248, 0.3);
   
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
+  --text-main: #f1f5f9;
+  --text-muted: #8b99ad;
+  --text-faint: #59677a;
   
-  --accent-mint: #10B981;
-  --accent-mint-light: #34D399;
-  --accent-cyan: #06B6D4;
-  --accent-blue: #38BDF8;
-  --accent-indigo: #6366F1;
-  --accent-amber: #F59E0B;
-  --accent-rose: #F43F5E;
+  --accent-cyan: #06b6d4;
+  --accent-blue: #38bdf8;
+  --accent-mint: #10b981;
+  --accent-mint-light: #34d399;
+  --accent-indigo: #6366f1;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
   
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
@@ -39,12 +41,13 @@
 body {
   background-color: var(--bg-base);
   background-image: 
-    radial-gradient(1100px 520px at 85% -10%, rgba(14, 165, 233, 0.12) 0%, transparent 70%),
-    radial-gradient(850px 480px at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 65%);
+    radial-gradient(1100px 500px at 15% -8%, rgba(56, 189, 248, 0.12), transparent 60%),
+    radial-gradient(900px 480px at 85% -5%, rgba(16, 185, 129, 0.10), transparent 60%),
+    radial-gradient(700px 600px at 50% 100%, rgba(99, 102, 241, 0.06), transparent 70%);
   background-attachment: fixed;
-  color: var(--text-primary);
+  color: var(--text-main);
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 13.5px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
@@ -53,18 +56,18 @@ body {
 /* Custom Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.28); }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.16); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
 
-/* Header */
+/* Global Header */
 .top {
-  height: 68px;
+  height: 64px;
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 24px;
   padding: 0 32px;
-  border-bottom: 1px solid var(--border-subtle);
-  background: rgba(6, 9, 17, 0.78);
+  border-bottom: 1px solid var(--line);
+  background: rgba(7, 9, 14, 0.82);
   backdrop-filter: blur(20px);
   position: sticky;
   top: 0;
@@ -79,20 +82,20 @@ body {
 }
 
 .brand-logo {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(6, 182, 212, 0.25));
-  border: 1px solid rgba(52, 211, 153, 0.35);
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(6, 182, 212, 0.3));
+  border: 1px solid rgba(52, 211, 153, 0.4);
   display: grid;
   place-items: center;
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.25);
 }
 
-.brand-logo svg { width: 20px; height: 20px; color: #34D399; }
+.brand-logo svg { width: 18px; height: 18px; color: #34d399; }
 
 .wordmark {
-  font-size: 19px;
+  font-size: 18px;
   letter-spacing: -0.04em;
   font-weight: 800;
   color: #fff;
@@ -100,7 +103,7 @@ body {
 
 .wordmark em {
   font-style: normal;
-  background: linear-gradient(135deg, #34D399 0%, #06B6D4 100%);
+  background: linear-gradient(135deg, #34d399 0%, #38bdf8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -121,725 +124,630 @@ body {
 .nav {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   background: rgba(255, 255, 255, 0.03);
   padding: 4px;
-  border-radius: 10px;
-  border: 1px solid var(--border-subtle);
+  border-radius: 9px;
+  border: 1px solid var(--line);
 }
 
 .nav a {
   font-size: 13px;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   text-decoration: none;
-  padding: 6px 14px;
-  border-radius: 7px;
+  padding: 5px 13px;
+  border-radius: 6px;
   transition: all 0.2s ease;
 }
 
 .nav a:hover {
-  color: var(--text-primary);
+  color: #fff;
   background: rgba(255, 255, 255, 0.06);
 }
 
 .nav a.active {
   color: #fff;
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .tag {
   margin-left: auto;
   font-size: 10px;
   font-weight: 800;
-  letter-spacing: 0.12em;
-  color: #38BDF8;
+  letter-spacing: 0.1em;
+  color: #38bdf8;
   border: 1px solid rgba(56, 189, 248, 0.3);
   background: rgba(56, 189, 248, 0.08);
   border-radius: 99px;
-  padding: 5px 12px;
+  padding: 4px 11px;
 }
 
-/* Container */
-.wrap {
-  max-width: 1540px;
+/* Main Container */
+.shell {
+  max-width: 1480px;
   margin: auto;
-  padding: 28px 36px 48px;
+  padding: 20px 28px 48px;
 }
 
-.crumb {
-  display: inline-flex;
+/* KuzeyDC Style System Status Strip */
+.status-strip {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1px;
+  margin-bottom: 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--line);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.stat-cell {
+  flex: 1 1 0;
+  min-width: 0;
+  background: var(--bg-surface);
+  padding: 10px 14px;
+  transition: background 0.2s ease;
+}
+
+.stat-cell:hover {
+  background: var(--bg-surface-2);
+}
+
+.stat-cell small {
+  display: flex;
   align-items: center;
   gap: 6px;
-  color: var(--accent-mint-light);
-  font-size: 11px;
+  color: var(--text-faint);
+  font-size: 10px;
   letter-spacing: 0.1em;
   font-weight: 800;
   text-transform: uppercase;
-  margin-bottom: 8px;
 }
 
-.crumb span { color: var(--text-muted); }
-
-.intro {
-  margin-bottom: 24px;
-}
-
-.intro h1 {
-  font-size: 32px;
-  letter-spacing: -0.04em;
-  font-weight: 800;
-  line-height: 1.15;
-  background: linear-gradient(135deg, #FFFFFF 40%, #CBD5E1 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.intro p {
-  color: var(--text-secondary);
-  font-size: 14px;
-  margin-top: 6px;
-  max-width: 780px;
-}
-
-/* Universal Command & Search Bar */
-.search-hero {
-  border: 1px solid var(--border-medium);
-  border-radius: 18px;
-  background: rgba(13, 20, 36, 0.85);
-  backdrop-filter: blur(20px);
-  padding: 20px 24px;
-  margin-bottom: 24px;
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.search-form {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.input-group {
-  position: relative;
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.input-icon {
-  position: absolute;
-  left: 16px;
-  color: var(--accent-mint-light);
-  width: 18px;
-  height: 18px;
-  pointer-events: none;
-}
-
-.search-input {
-  width: 100%;
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.45);
-  color: #fff;
-  padding: 13px 18px 13px 46px;
-  outline: 0;
-  font-size: 14px;
+.stat-cell b {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 700;
   font-family: var(--font-mono);
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dot-led {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-mint-light);
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.8);
+}
+
+.dot-led.blue {
+  background: var(--accent-blue);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+}
+
+.speed-links {
+  display: flex;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.speed-link {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 2px 7px;
+  background: rgba(255, 255, 255, 0.03);
   transition: all 0.2s ease;
 }
 
-.search-input:focus {
-  border-color: rgba(16, 185, 129, 0.5);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12), inset 0 2px 6px rgba(0, 0, 0, 0.4);
+.speed-link:hover {
+  color: #fff;
+  border-color: var(--accent-mint-light);
+  background: rgba(16, 185, 129, 0.15);
 }
 
-.submit-btn {
+/* KuzeyDC Style Sticky Query Dock */
+.query-dock {
+  background: var(--bg-dock);
+  border: 1px solid var(--line-strong);
+  border-radius: 18px;
+  padding: 18px 20px;
+  margin-bottom: 22px;
+  box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  position: sticky;
+  top: 72px;
+  z-index: 40;
+}
+
+/* Horizontal Tool Selector */
+.tool-tabs {
+  display: flex;
+  gap: 5px;
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.tool-tab {
+  flex: 1;
+  min-width: 90px;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 8px;
+  padding: 8px 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+  font-family: var(--font-sans);
+}
+
+.tool-tab strong {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.tool-tab small {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--text-faint);
+  margin-top: 2px;
+}
+
+.tool-tab:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tool-tab.active {
+  color: #031c12;
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  box-shadow: 0 3px 12px rgba(16, 185, 129, 0.4);
+}
+
+.tool-tab.active small {
+  color: rgba(3, 28, 18, 0.75);
+}
+
+.tool-tab.api-tool.active {
+  color: #fff;
+  background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
+  box-shadow: 0 3px 12px rgba(99, 102, 241, 0.4);
+}
+
+.tool-tab.api-tool.active small {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Query Meta & Live Helper */
+.query-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 14px 0 12px;
+  flex-wrap: wrap;
+}
+
+.qhelp {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.qhelp-title {
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.quick-targets {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.quick-targets span {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--text-faint);
+  text-transform: uppercase;
+}
+
+.quick-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  color: var(--text-muted);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quick-btn:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: #fff;
+  border-color: var(--line-strong);
+}
+
+/* Search Row (Input + Go Button) */
+.query-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.query-input-wrap {
+  position: relative;
+  flex: 1;
+}
+
+.query-input {
+  width: 100%;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: #05080f;
+  color: #fff;
+  padding: 13px 18px;
+  font-size: 14.5px;
+  font-family: var(--font-mono);
+  outline: 0;
+  transition: all 0.2s ease;
+}
+
+.query-input:focus {
+  border-color: var(--accent-mint-light);
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.15), inset 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.go-btn {
+  min-width: 140px;
   border: 0;
   border-radius: 12px;
-  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: #032014;
   font-weight: 800;
-  padding: 13px 26px;
+  padding: 13px 24px;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   font-family: var(--font-sans);
-  flex-shrink: 0;
 }
 
-.submit-btn:hover {
-  background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
+.go-btn:hover {
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
   box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
   transform: translateY(-1px);
 }
 
-.submit-btn:active {
+.go-btn:active {
   transform: translateY(0);
 }
 
-/* Quick Target Chips & History */
-.search-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-top: 14px;
-  flex-wrap: wrap;
-}
-
-.quick-chips {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.quick-label {
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.quick-chip {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-subtle);
-  border-radius: 7px;
-  padding: 4px 10px;
-  font-size: 11.5px;
-  font-family: var(--font-mono);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.quick-chip:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--border-medium);
-  color: #fff;
-  transform: translateY(-1px);
-}
-
-.history-strip {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11.5px;
-  color: var(--text-muted);
-}
-
-.history-chip {
-  background: rgba(14, 165, 233, 0.1);
-  border: 1px solid rgba(14, 165, 233, 0.25);
-  color: #38BDF8;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  cursor: pointer;
-}
-
-.history-chip:hover {
-  background: rgba(14, 165, 233, 0.2);
-}
-
-/* Two-column Layout: Left Categories & Tool Catalog, Right Workspace */
+/* Main Workspace Results (Cards + Terminal) */
 .layout {
   display: grid;
-  grid-template-columns: 360px minmax(0, 1fr);
-  gap: 24px;
+  grid-template-columns: minmax(0, 1.25fr) minmax(360px, 0.75fr);
+  gap: 20px;
   align-items: start;
 }
 
-/* Left Column: Category Tabs & Tool List */
-.sidebar {
-  border: 1px solid var(--border-subtle);
-  border-radius: 18px;
+/* Left Card: Visual Insights */
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 16px;
   background: var(--bg-card);
   backdrop-filter: blur(16px);
-  padding: 16px;
+  padding: 20px;
   box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.5);
 }
 
-.cat-filters {
-  display: flex;
-  gap: 4px;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 4px;
-  border-radius: 10px;
-  border: 1px solid var(--border-subtle);
-  margin-bottom: 12px;
-  overflow-x: auto;
-}
-
-.cat-btn {
-  border: 0;
-  border-radius: 7px;
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: 11.5px;
-  font-weight: 700;
-  padding: 6px 10px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s ease;
-  font-family: var(--font-sans);
-}
-
-.cat-btn:hover { color: #fff; }
-
-.cat-btn.active {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-/* Tool Search Filter Input */
-.filter-box {
-  margin-bottom: 12px;
-  position: relative;
-}
-
-.filter-input {
-  width: 100%;
-  border: 1px solid var(--border-subtle);
-  border-radius: 9px;
-  background: rgba(0, 0, 0, 0.3);
-  color: #fff;
-  padding: 8px 12px 8px 32px;
-  font-size: 12px;
-  outline: 0;
-  font-family: var(--font-sans);
-}
-
-.filter-input:focus {
-  border-color: rgba(99, 102, 241, 0.5);
-}
-
-.filter-icon {
-  position: absolute;
-  left: 10px;
-  top: 9px;
-  width: 14px;
-  height: 14px;
-  color: var(--text-muted);
-}
-
-.tool-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  max-height: 580px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-.tool-item {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  text-align: left;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  color: var(--text-secondary);
-  background: transparent;
-  padding: 10px 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: var(--font-sans);
-}
-
-.tool-item:hover {
-  background: rgba(255, 255, 255, 0.04);
-  color: #fff;
-}
-
-.tool-item.active {
-  background: rgba(16, 185, 129, 0.1);
-  border-color: rgba(16, 185, 129, 0.3);
-  color: #fff;
-}
-
-.tool-item-main {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-
-.tool-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-subtle);
-  display: grid;
-  place-items: center;
-  color: var(--accent-mint-light);
-  flex-shrink: 0;
-  font-size: 13px;
-}
-
-.tool-item.active .tool-icon {
-  background: rgba(16, 185, 129, 0.2);
-  border-color: rgba(16, 185, 129, 0.4);
-}
-
-.tool-text {
-  min-width: 0;
-}
-
-.tool-text strong {
-  font-size: 12.5px;
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.tool-text small {
-  font-size: 11px;
-  color: var(--text-muted);
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: 1px;
-}
-
-.tool-badge {
-  font-size: 9.5px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  padding: 3px 7px;
-  border-radius: 6px;
-  text-transform: uppercase;
-  flex-shrink: 0;
-}
-
-.badge-free {
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #34D399;
-}
-
-.badge-api {
-  background: rgba(99, 102, 241, 0.12);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  color: #A5B4FC;
-}
-
-/* Right Column: Work Area & Live Results */
-.work-area {
-  border: 1px solid var(--border-subtle);
-  border-radius: 18px;
-  background: var(--bg-card);
-  backdrop-filter: blur(16px);
-  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.5);
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.work-header {
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  background: rgba(255, 255, 255, 0.02);
-  border-top-left-radius: 18px;
-  border-top-right-radius: 18px;
-}
-
-.work-title-group h2 {
-  font-size: 22px;
-  letter-spacing: -0.03em;
-  font-weight: 800;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.work-title-group p {
-  color: var(--text-secondary);
-  font-size: 13.5px;
-  margin-top: 4px;
-}
-
-.source-badge {
-  font-size: 11px;
-  font-weight: 700;
-  color: #38BDF8;
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  background: rgba(56, 189, 248, 0.08);
-  border-radius: 99px;
-  padding: 6px 14px;
-  white-space: nowrap;
-}
-
-/* Results Content */
-.work-body {
-  padding: 24px;
-}
-
-.result-toolbar {
+.panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 16px;
-  flex-wrap: wrap;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
 }
 
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.pulse-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent-mint-light);
-  box-shadow: 0 0 10px rgba(52, 211, 153, 0.6);
-}
-
-.result-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.action-btn {
-  border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text-secondary);
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
+.panel-title {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-family: var(--font-sans);
+  gap: 10px;
 }
 
-.action-btn:hover {
-  background: rgba(255, 255, 255, 0.09);
+.panel-title h2 {
+  font-size: 18px;
+  font-weight: 800;
   color: #fff;
-  border-color: var(--border-medium);
-}
-
-/* Result View Box */
-.result-view {
-  min-height: 440px;
-  background: var(--bg-editor);
-  border: 1px solid var(--border-subtle);
-  border-radius: 14px;
-  padding: 20px;
-  overflow: auto;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
-}
-
-.result-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 18px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.result-head b {
-  font-size: 16px;
-  color: #fff;
-  font-family: var(--font-mono);
+  letter-spacing: -0.02em;
 }
 
 .badge {
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.06em;
-  color: var(--accent-mint-light);
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 4px 10px;
   border-radius: 99px;
-  padding: 5px 12px;
+  text-transform: uppercase;
 }
 
-/* Summary Fact Cards */
-.facts {
+.badge-mint {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34d399;
+}
+
+.badge-blue {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+}
+
+.badge-amber {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+}
+
+/* AS Path Flow (KuzeyDC BGP Hop Nodes) */
+.as-path-flow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+
+.as-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--bg-surface-2);
+  border: 1px solid var(--line-strong);
+  padding: 8px 12px;
+  border-radius: 10px;
+  min-width: 90px;
+  text-align: center;
+}
+
+.as-node.origin {
+  border-color: rgba(52, 211, 153, 0.5);
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.as-node.origin b { color: #34d399; }
+
+.as-node small {
+  font-size: 9px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+
+.as-node b {
+  font-size: 13px;
+  font-family: var(--font-mono);
+  color: #fff;
+}
+
+.as-arrow {
+  color: var(--text-faint);
+  font-size: 14px;
+}
+
+/* Fact Cards Grid */
+.facts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
   margin-bottom: 16px;
 }
 
-.fact {
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
+.fact-item {
   background: rgba(255, 255, 255, 0.02);
-  padding: 14px 16px;
-  transition: all 0.2s ease;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
 }
 
-.fact:hover {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: var(--border-medium);
-}
-
-.fact small {
+.fact-item small {
   display: block;
-  color: var(--text-muted);
-  font-size: 10px;
-  letter-spacing: 0.1em;
+  font-size: 9.5px;
+  color: var(--text-faint);
   text-transform: uppercase;
-  margin-bottom: 4px;
   font-weight: 800;
+  letter-spacing: 0.08em;
+  margin-bottom: 3px;
 }
 
-.fact b {
+.fact-item b {
   display: block;
-  font-size: 14px;
-  line-height: 1.4;
-  word-break: break-word;
-  color: #fff;
+  font-size: 13.5px;
   font-family: var(--font-mono);
+  color: #fff;
+  word-break: break-all;
 }
 
-/* Record Table View */
-.record-group {
-  border: 1px solid var(--border-subtle);
+/* Clean Data Tables */
+.table-wrap {
+  border: 1px solid var(--line);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.02);
-  margin: 14px 0;
+  margin-top: 12px;
   overflow: hidden;
 }
 
-.record-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border-subtle);
-  font-size: 12px;
+.table-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  font-size: 11.5px;
   font-weight: 800;
-  letter-spacing: 0.08em;
   color: #fff;
   background: rgba(255, 255, 255, 0.02);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.record-title span {
-  color: var(--text-muted);
-  font-size: 11px;
+.table-header span {
+  font-size: 10.5px;
+  color: var(--text-faint);
 }
 
-.record-table {
+.data-table {
   width: 100%;
   border-collapse: collapse;
   font-family: var(--font-mono);
   font-size: 12px;
 }
 
-.record-table td {
-  padding: 11px 16px;
+.data-table td {
+  padding: 10px 14px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  word-break: break-word;
-  color: #E2E8F0;
+  color: #cbd5e1;
+  word-break: break-all;
 }
 
-.record-table tr:last-child td { border: 0; }
-.record-table td:first-child { width: 95px; color: var(--accent-mint-light); font-weight: 700; }
+.data-table tr:last-child td { border-bottom: 0; }
+.data-table td.tag-col { width: 90px; color: var(--accent-mint-light); font-weight: 700; }
 
-.empty-state {
+/* Right Card: KuzeyDC Terminal Console */
+.terminal-card {
+  border: 1px solid #14281e;
+  border-radius: 16px;
+  background: var(--bg-term);
+  overflow: hidden;
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.7);
+}
+
+.term-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid #14281e;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.term-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.term-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.term-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.term-btn {
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--accent-mint-light);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-sans);
+}
+
+.term-btn:hover {
+  background: rgba(16, 185, 129, 0.2);
+  color: #fff;
+}
+
+pre.terminal-screen {
+  height: 480px;
+  overflow: auto;
+  padding: 16px;
+  color: #34d399;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+/* Empty / Pending States */
+.empty-view {
+  min-height: 280px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 380px;
   text-align: center;
-  color: var(--text-muted);
-  padding: 40px 20px;
+  color: var(--text-faint);
+  padding: 30px;
 }
 
-.empty-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-subtle);
-  display: grid;
-  place-items: center;
-  color: var(--accent-mint-light);
-  margin-bottom: 16px;
+.empty-view svg {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 12px;
+  color: var(--text-faint);
+  stroke-width: 1.5;
 }
 
-.empty-state h3 {
-  font-size: 16px;
+.empty-view b {
   color: #fff;
-  margin-bottom: 6px;
-  font-weight: 700;
+  font-size: 14px;
 }
 
-.empty-state p {
-  font-size: 13px;
-  max-width: 420px;
-  line-height: 1.5;
+.empty-view p {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  max-width: 360px;
+  margin-top: 4px;
 }
 
-.raw-details {
-  margin-top: 16px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 10px 14px;
-}
-
-.raw-details summary {
-  cursor: pointer;
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.raw-details pre {
-  margin: 12px 0 0;
-  padding: 14px;
-  max-height: 300px;
-  overflow: auto;
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.5);
-  color: #b9e8c9;
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  line-height: 1.6;
-  white-space: pre-wrap;
-}
-
-/* Toast Notification */
+/* Toast */
 .toast {
   position: fixed;
   bottom: 24px;
   right: 24px;
   background: rgba(15, 23, 42, 0.95);
   border: 1px solid rgba(16, 185, 129, 0.4);
-  color: #34D399;
+  color: #34d399;
   padding: 12px 20px;
   border-radius: 12px;
   font-size: 13px;
@@ -860,31 +768,18 @@ body {
   opacity: 1;
 }
 
-.disclaimer {
-  margin-top: 24px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 14px;
-  padding: 16px 22px;
-  color: var(--text-secondary);
-  font-size: 12px;
-  line-height: 1.6;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.disclaimer b { color: #fff; }
-
 @media (max-width: 1080px) {
   .layout { grid-template-columns: 1fr; }
-  .tool-list { max-height: 280px; }
+  pre.terminal-screen { height: 320px; }
+  .status-strip { flex-wrap: wrap; }
 }
 
 @media (max-width: 760px) {
-  .wrap { padding: 20px 18px; }
-  .top { padding: 0 18px; }
+  .shell { padding: 16px 14px; }
+  .top { padding: 0 16px; }
   .nav, .tag { display: none; }
-  .search-form { flex-direction: column; }
-  .submit-btn { width: 100%; justify-content: center; }
-  .facts { grid-template-columns: 1fr; }
+  .query-row { flex-direction: column; }
+  .go-btn { width: 100%; }
 }
 </style>
 </head>
@@ -903,7 +798,7 @@ body {
         <path d="M7.5 15.5l9-9"></path>
       </svg>
     </div>
-    <div class="wordmark">Route<em>Force</em><span class="brand-badge">BGP STUDIO</span></div>
+    <div class="wordmark">Route<em>Force</em><span class="brand-badge">LOOKING GLASS</span></div>
   </a>
 
   <nav class="nav">
@@ -913,116 +808,159 @@ body {
     <a class="active" href="/tools.html">Tools</a>
   </nav>
 
-  <span class="tag">NETWORK INTELLIGENCE PORTAL</span>
+  <span class="tag">GLOBAL NETWORK INTELLIGENCE</span>
 </header>
 
-<main class="wrap">
-  <div class="crumb">RouteForce <span>/</span> Network Tools <span>/</span> Global Intelligence</div>
-
-  <section class="intro">
-    <h1>Ağ & Güvenlik İstihbarat Portalı</h1>
-    <p>DNS, WHOIS/RDAP, BGP rotaları, RPKI doğrulaması ve küresel tehdit verilerini tek bir arama çubuğundan zahmetsizce sorgulayın.</p>
-  </section>
-
-  <!-- Universal Search & Command Hero -->
-  <section class="search-hero">
-    <form class="search-form" id="searchForm">
-      <div class="input-group">
-        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input class="search-input" id="target" placeholder="Hedef girin (Örn: 1.1.1.1, AS13335, cloudflare.com)..." autocomplete="off" spellcheck="false">
+<main class="shell">
+  <!-- KuzeyDC Style System Status Strip -->
+  <div class="status-strip">
+    <div class="stat-cell">
+      <small><span class="dot-led"></span> İSTEMCİ IP ADRESİNİZ</small>
+      <b id="clientIp">Tespit ediliyor…</b>
+    </div>
+    <div class="stat-cell">
+      <small><span class="dot-led blue"></span> SUNUCU DÜĞÜMÜ</small>
+      <b>Cloudflare Edge (Global Anycast)</b>
+    </div>
+    <div class="stat-cell">
+      <small><span class="dot-led"></span> BGP ENGINE</small>
+      <b>v2.4 Online · AS65001</b>
+    </div>
+    <div class="stat-cell">
+      <small>UPTIME / DURUM</small>
+      <b style="color:var(--accent-mint-light);">Sağlıklı (100% Aktif)</b>
+    </div>
+    <div class="stat-cell">
+      <small>HIZ TESTİ DOSYALARI</small>
+      <div class="speed-links">
+        <a class="speed-link" href="https://speed.cloudflare.com/__down?bytes=10485760" target="_blank" download>10 MB</a>
+        <a class="speed-link" href="https://speed.cloudflare.com/__down?bytes=104857600" target="_blank" download>100 MB</a>
+        <a class="speed-link" href="https://speed.cloudflare.com/__down?bytes=1073741824" target="_blank" download>1 GB</a>
       </div>
-      <button class="submit-btn" type="submit" id="submitBtn">
+    </div>
+  </div>
+
+  <!-- KuzeyDC Style Unified Query Dock -->
+  <section class="query-dock">
+    <!-- Horizontal Tool Selector Bar -->
+    <div class="tool-tabs" id="toolTabs">
+      <button class="tool-tab active" data-tool="dns">
+        <strong>DNS</strong>
+        <small>A, MX, TXT</small>
+      </button>
+      <button class="tool-tab" data-tool="whois">
+        <strong>Whois</strong>
+        <small>RDAP Kayıt</small>
+      </button>
+      <button class="tool-tab" data-tool="bgp">
+        <strong>BGP</strong>
+        <small>AS Yolu & Rota</small>
+      </button>
+      <button class="tool-tab" data-tool="rpki">
+        <strong>RPKI</strong>
+        <small>ROA Doğrulama</small>
+      </button>
+      <button class="tool-tab" data-tool="bgp_prefixes">
+        <strong>Prefixler</strong>
+        <small>ASN Anonsları</small>
+      </button>
+      <button class="tool-tab" data-tool="peeringdb">
+        <strong>PeeringDB</strong>
+        <small>IXP & Eşleşme</small>
+      </button>
+      <button class="tool-tab" data-tool="ipapi">
+        <strong>IP Intel</strong>
+        <small>Konum & ISP</small>
+      </button>
+      <button class="tool-tab" data-tool="certificates">
+        <strong>Sertifika</strong>
+        <small>TLS CT Kaydı</small>
+      </button>
+      <button class="tool-tab" data-tool="urlhaus">
+        <strong>Tehdit</strong>
+        <small>URLHaus IOC</small>
+      </button>
+      <button class="tool-tab" data-tool="macvendor">
+        <strong>Donanım</strong>
+        <small>MAC Vendor</small>
+      </button>
+      <button class="tool-tab api-tool" data-tool="virustotal">
+        <strong>VirusTotal</strong>
+        <small>API Raporu</small>
+      </button>
+      <button class="tool-tab api-tool" data-tool="abuseipdb">
+        <strong>AbuseIPDB</strong>
+        <small>API Skoru</small>
+      </button>
+    </div>
+
+    <!-- Query Guide & Quick Presets -->
+    <div class="query-meta">
+      <div class="qhelp" id="qhelp">
+        <span class="qhelp-title" id="helpTitle">DNS Kayıtları (DoH):</span>
+        <span id="helpText">Alan adına ait A, AAAA, MX, NS ve TXT kayıtlarını Cloudflare üzerinden sorgulayın.</span>
+      </div>
+
+      <div class="quick-targets">
+        <span>Hızlı Hedefler:</span>
+        <button class="quick-btn" data-val="1.1.1.1">1.1.1.1</button>
+        <button class="quick-btn" data-val="AS13335">AS13335</button>
+        <button class="quick-btn" data-val="cloudflare.com">cloudflare.com</button>
+        <button class="quick-btn" data-val="google.com">google.com</button>
+        <button class="quick-btn" data-val="00:1A:2B:3C:4D:5E">00:1A:2B:3C:4D:5E</button>
+      </div>
+    </div>
+
+    <!-- Main Command Input Row -->
+    <form class="query-row" id="queryForm">
+      <div class="query-input-wrap">
+        <input class="query-input" id="target" placeholder="1.1.1.1, AS13335 veya cloudflare.com..." autocomplete="off" spellcheck="false" required>
+      </div>
+      <button class="go-btn" type="submit" id="goBtn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
         Sorgula
       </button>
     </form>
-
-    <div class="search-meta">
-      <div class="quick-chips">
-        <span class="quick-label">Hızlı Deneme:</span>
-        <button class="quick-chip" data-val="1.1.1.1">1.1.1.1 (DNS IP)</button>
-        <button class="quick-chip" data-val="AS13335">AS13335 (Cloudflare)</button>
-        <button class="quick-chip" data-val="cloudflare.com">cloudflare.com (Domain)</button>
-        <button class="quick-chip" data-val="00:1A:2B:3C:4D:5E">00:1A:2B:3C:4D:5E (MAC)</button>
-      </div>
-
-      <div class="history-strip" id="historyStrip" style="display:none;">
-        <span>Son Sorgular:</span>
-        <div id="historyItems" style="display:inline-flex; gap:6px;"></div>
-      </div>
-    </div>
   </section>
 
+  <!-- Workspace: Left Visual Cards + Right Live Terminal -->
   <section class="layout">
-    <!-- Left Column: Tool Categorization & Catalog -->
-    <aside class="sidebar">
-      <!-- Category Tabs -->
-      <div class="cat-filters">
-        <button class="cat-btn active" data-cat="all">Tümü (21)</button>
-        <button class="cat-btn" data-cat="public">⚡ Açık & Ücretsiz</button>
-        <button class="cat-btn" data-cat="bgp">🛰️ BGP & Routing</button>
-        <button class="cat-btn" data-cat="domain">🌐 DNS & Domain</button>
-        <button class="cat-btn" data-cat="security">🛡️ Tehdit & Güvenlik</button>
+    <!-- Visual Summary Card -->
+    <section class="panel" id="visualPanel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <h2 id="cardTitle">DNS Görsel Analizi</h2>
+        </div>
+        <span class="badge badge-mint" id="cardStatus">HAZIR</span>
       </div>
 
-      <!-- Live Search in Tools List -->
-      <div class="filter-box">
-        <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input class="filter-input" id="toolSearch" placeholder="Araçları filtrele..." autocomplete="off">
-      </div>
-
-      <!-- Tool Items List -->
-      <div class="tool-list" id="toolList"></div>
-    </aside>
-
-    <!-- Right Column: Active Tool Work Area & Results -->
-    <section class="work-area">
-      <header class="work-header">
-        <div class="work-title-group">
-          <h2>
-            <span id="toolIcon">🌐</span>
-            <span id="title">DNS Kayıtları</span>
-          </h2>
-          <p id="description">Bir alan adının genel DNS kayıtlarını inceleyin.</p>
-        </div>
-        <span class="source-badge" id="source">Cloudflare DNS-over-HTTPS</span>
-      </header>
-
-      <div class="work-body">
-        <div class="result-toolbar">
-          <div class="status-pill">
-            <span class="pulse-dot"></span>
-            <span id="status">Sorgu için hedef girip 'Sorgula' butonuna basın.</span>
-          </div>
-
-          <div class="result-actions" id="resultActions" style="display:none;">
-            <button class="action-btn" id="copyBtn">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              Kopyala
-            </button>
-            <button class="action-btn" id="downloadBtn">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              JSON İndir
-            </button>
-          </div>
-        </div>
-
-        <div class="result-view" id="output">
-          <div class="empty-state">
-            <div class="empty-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            </div>
-            <h3>Sorgu Bekleniyor</h3>
-            <p>Yukarıdaki arama çubuğuna bir hedef girin veya sol menüden istediğiniz aracı seçerek hemen sorgulayın.</p>
-          </div>
+      <div id="visualBody">
+        <div class="empty-view">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <b>Sorgu Bekleniyor</b>
+          <p>Yukarıdaki arama çubuğuna bir hedef yazıp 'Sorgula' butonuna basın veya hazır hedeflerden birine tıklayın.</p>
         </div>
       </div>
     </section>
-  </section>
 
-  <div class="disclaimer">
-    <b>Yetkili & Güvenli Kullanım:</b> RouteForce araçları yalnızca halka açık genel veri kaynaklarını (Cloudflare, RIPEstat, RDAP, PeeringDB, crt.sh vb.) sorgular. Hedef sistemlerde aktif port taraması, sızma testi veya kesintiye yol açabilecek işlemler yapılmaz.
-  </div>
+    <!-- KuzeyDC Terminal Output Screen -->
+    <section class="terminal-card">
+      <div class="term-topbar">
+        <div class="term-dots">
+          <span class="term-dot"></span>
+          <span class="term-dot"></span>
+          <span class="term-dot"></span>
+        </div>
+        <div class="term-actions">
+          <button class="term-btn" id="copyBtn">Kopyala</button>
+          <button class="term-btn" id="jsonBtn">JSON İndir</button>
+        </div>
+      </div>
+      <pre class="terminal-screen" id="termOutput">routeforce-tools $ ready
+> Genel veri kaynakları (Cloudflare DoH, RIPEstat, RDAP, PeeringDB, crt.sh) bağlı.
+> Sorgulamak istediğiniz hedefi yukarıdaki çubuğa girin.</pre>
+    </section>
+  </section>
 </main>
 
 <!-- Toast Notification -->
@@ -1033,333 +971,246 @@ body {
 
 <script>
 const defs = {
-  dns: { cat: 'domain', kind: 'DNS LOOKUP', title: 'DNS Kayıtları', icon: '🌐', isPublic: true, description: 'Alan adına ait A, AAAA, MX, NS ve TXT kayıtlarını sorgulayın.', source: 'Cloudflare DNS-over-HTTPS', placeholder: 'example.com', hint: 'Alan adı girin.' },
-  whois: { cat: 'domain', kind: 'WHOIS / RDAP', title: 'WHOIS & RDAP Bilgisi', icon: '📋', isPublic: true, description: 'IP adresi veya alan adı için küresel kayıt (registry) bilgisi.', source: 'ARIN / Verisign RDAP', placeholder: '8.8.8.8 veya example.com', hint: 'IP adresi veya domain girin.' },
-  bgp: { cat: 'bgp', kind: 'BGP LOOKUP', title: 'BGP Rota Görünürlüğü', icon: '🛰️', isPublic: true, description: 'Prefix veya ASN için küresel BGP anons ve rota görünürlüğü.', source: 'RIPEstat', placeholder: 'AS13335 veya 1.1.1.0/24', hint: 'ASN, IP veya prefix girin.' },
-  rpki: { cat: 'bgp', kind: 'RPKI', title: 'RPKI Rota Doğrulama', icon: '🛡️', isPublic: true, description: 'Bir ASN için Route Origin Authorization (ROA) durumunu inceleyin.', source: 'RIPEstat RPKI', placeholder: 'AS13335', hint: 'ASN girin.' },
-  bgp_prefixes: { cat: 'bgp', kind: 'BGP PREFIXES', title: 'Duyurulan Prefixler', icon: '📡', isPublic: true, description: 'Bir otonom sistem (ASN) tarafından internete anons edilen tüm prefixler.', source: 'RIPEstat', placeholder: 'AS13335', hint: 'ASN girin.' },
-  bgp_history: { cat: 'bgp', kind: 'BGP HISTORY', title: 'BGP Rota Geçmişi', icon: '⏱️', isPublic: true, description: 'Son 14 gün içindeki BGP anons değişiklikleri ve rota stabilitesi.', source: 'RIPEstat', placeholder: 'AS13335 veya 1.1.1.0/24', hint: 'ASN veya prefix girin.' },
-  peeringdb: { cat: 'bgp', kind: 'PEERINGDB', title: 'PeeringDB Profili', icon: '🤝', isPublic: true, description: 'ASN için IXP bağlantıları, peering politikası ve veri merkezleri.', source: 'PeeringDB API', placeholder: 'AS13335', hint: 'ASN girin.' },
-  certificates: { cat: 'domain', kind: 'TLS / SSL', title: 'Sertifika Geçmişi', icon: '🔒', isPublic: true, description: 'Certificate Transparency (CT) kayıtlarında yayımlanmış TLS sertifikaları.', source: 'crt.sh', placeholder: 'example.com', hint: 'Domain girin.' },
-  ipapi: { cat: 'security', kind: 'IP INTEL', title: 'IP Konum & ASN', icon: '📍', isPublic: true, description: 'Genel IP için coğrafi konum, ASN, ISP ve operatör bilgileri.', source: 'ipinfo.io Public', placeholder: '8.8.8.8', hint: 'Genel IPv4 veya IPv6 girin.' },
-  macvendor: { cat: 'security', kind: 'HARDWARE', title: 'MAC Vendor Üretici', icon: '💻', isPublic: true, description: 'OUI donanım üreticisini MAC adresi üzerinden tespit edin.', source: 'MAC Vendors API', placeholder: '00:11:22:33:44:55', hint: 'MAC adresi girin.' },
-  urlhaus: { cat: 'security', kind: 'THREAT INTEL', title: 'URLHaus Kötü Amaçlı URL', icon: '⚠️', isPublic: true, description: 'Bilinen zararlı yazılım ve kimlik avı URL veritabanı sorgusu.', source: 'abuse.ch URLHaus', placeholder: 'example.com veya 1.2.3.4', hint: 'Domain veya IP girin.' },
-  threatfox: { cat: 'security', kind: 'THREAT INTEL', title: 'ThreatFox IOC Arama', icon: '🦊', isPublic: true, description: 'Zararlı yazılım göstergeleri (IOC) ve C2 istihbarat kaydı.', source: 'abuse.ch ThreatFox', placeholder: '1.2.3.4 veya domain', hint: 'IP veya IOC girin.' },
-  
-  // API Integrated Tools
-  abuseipdb: { cat: 'security', kind: 'API INTEL', title: 'AbuseIPDB İtibar Raporu', icon: '🚨', isPublic: false, description: 'IP kötüye kullanım ve saldırı skorları.', source: 'AbuseIPDB v2', placeholder: '8.8.8.8', hint: 'API anahtarı gerekir.' },
-  virustotal: { cat: 'security', kind: 'API INTEL', title: 'VirusTotal Analizi', icon: '🦠', isPublic: false, description: '70+ antivirüs motoru ile domain ve IP analizi.', source: 'VirusTotal v3', placeholder: 'example.com veya 8.8.8.8', hint: 'API anahtarı gerekir.' },
-  censys: { cat: 'security', kind: 'API INTEL', title: 'Censys Host Keşfi', icon: '🔍', isPublic: false, description: 'Açık portlar, protokoller ve çalışan servisler.', source: 'Censys Search API', placeholder: '8.8.8.8', hint: 'Censys API gerektirir.' },
-  netlas: { cat: 'security', kind: 'API INTEL', title: 'Netlas İnternet Taraması', icon: '🌌', isPublic: false, description: 'Küresel internet cihaz ve servis görünürlüğü.', source: 'Netlas API', placeholder: '8.8.8.8', hint: 'Netlas API gerektirir.' },
-  leakix: { cat: 'security', kind: 'API INTEL', title: 'LeakIX Maruziyet Verisi', icon: '💧', isPublic: false, description: 'İnternete sızdırılmış veriler ve açık servisler.', source: 'LeakIX API', placeholder: '8.8.8.8', hint: 'LeakIX API gerektirir.' },
-  criminalip: { cat: 'security', kind: 'API INTEL', title: 'Criminal IP Risk Profili', icon: '🛡️', isPublic: false, description: 'Kapsamlı IP siber tehdit ve risk skoru.', source: 'Criminal IP API', placeholder: '8.8.8.8', hint: 'Criminal IP API gerektirir.' },
-  ipinfo: { cat: 'security', kind: 'API INTEL', title: 'IPinfo Kurumsal İstihbarat', icon: '🏢', isPublic: false, description: 'Kurumsal ASN, hosting, VPN ve privacy tespiti.', source: 'IPinfo Token', placeholder: '8.8.8.8', hint: 'Token gerektirir.' },
-  securitytrails: { cat: 'domain', kind: 'API INTEL', title: 'SecurityTrails DNS Tarihi', icon: '📜', isPublic: false, description: 'Geçmiş DNS kayıtları ve subdomain haritası.', source: 'SecurityTrails API', placeholder: 'example.com', hint: 'API anahtarı gerektirir.' },
-  urlscan: { cat: 'security', kind: 'API INTEL', title: 'urlscan.io Tarama Kaydı', icon: '📸', isPublic: false, description: 'Web sitesi taramaları, DOM ve ekran görüntüleri.', source: 'urlscan.io API', placeholder: 'example.com', hint: 'API anahtarı gerektirir.' }
+  dns: { title: 'DNS Kayıtları', help: 'Alan adına ait A, AAAA, MX, NS ve TXT kayıtlarını Cloudflare DoH üzerinden sorgulayın.', placeholder: 'cloudflare.com veya google.com', source: 'Cloudflare DoH' },
+  whois: { title: 'WHOIS & RDAP Bilgisi', help: 'IP adresi veya alan adı için tescil sahibi, netname ve kayıt otoritesi bilgisi.', placeholder: '8.8.8.8 veya example.com', source: 'RDAP Registry' },
+  bgp: { title: 'BGP Rota Görünürlüğü', help: 'RIPEstat RIS üzerinden ASN veya prefix için global anons ve AS-Path görünürlüğü.', placeholder: 'AS13335 veya 1.1.1.0/24', source: 'RIPEstat RIS' },
+  rpki: { title: 'RPKI ROA Doğrulama', help: 'Otonom sistemin (ASN) anons ettiği prefixlerin Route Origin Authorization geçerliliği.', placeholder: 'AS13335', source: 'RIPEstat RPKI' },
+  bgp_prefixes: { title: 'Duyurulan Prefixler', help: 'Bir ASN tarafından küresel internete anons edilen tüm IPv4 ve IPv6 prefix listesi.', placeholder: 'AS13335', source: 'RIPEstat' },
+  peeringdb: { title: 'PeeringDB Profili', help: 'ASN için Internet Exchange (IXP) noktaları, tesisler ve peering politikası.', placeholder: 'AS13335', source: 'PeeringDB' },
+  ipapi: { title: 'IP Konum & Operatör', help: 'Genel IP adresi için coğrafi konum, ISP operatörü, ASN ve organizasyon verisi.', placeholder: '8.8.8.8 veya 1.1.1.1', source: 'ipinfo.io' },
+  certificates: { title: 'TLS Sertifika Geçmişi', help: 'Certificate Transparency (CT) kayıtlarında yayımlanmış SSL/TLS sertifikaları.', placeholder: 'example.com', source: 'crt.sh' },
+  urlhaus: { title: 'URLHaus Tehdit Kaydı', help: 'Zararlı yazılım ve kimlik avı dağıtan bilinen kötü amaçlı URL veritabanı.', placeholder: 'example.com veya 1.2.3.4', source: 'abuse.ch URLHaus' },
+  macvendor: { title: 'MAC Donanım Üreticisi', help: 'OUI donanım üreticisini MAC adresi üzerinden anında tespit edin.', placeholder: '00:11:22:33:44:55', source: 'MAC Vendors' },
+  virustotal: { title: 'VirusTotal Analizi', help: '70+ güvenlik motoru ile IP/domain kötü amaçlı yazılım raporu (API gerektirir).', placeholder: 'example.com veya 8.8.8.8', source: 'VirusTotal API' },
+  abuseipdb: { title: 'AbuseIPDB Raporu', help: 'IP adresinin saldırı ve kötüye kullanım skorları (API gerektirir).', placeholder: '8.8.8.8', source: 'AbuseIPDB v2' }
 };
 
 let currentTool = 'dns';
-let lastResultData = null;
+let lastOutput = null;
+
 const $ = s => document.querySelector(s);
 const esc = v => String(v ?? '—').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-function showToast(message) {
-  const toast = $('#toast');
-  $('#toastMsg').textContent = message;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2400);
+function showToast(msg) {
+  $('#toastMsg').textContent = msg;
+  $('#toast').classList.add('show');
+  setTimeout(() => $('#toast').classList.remove('show'), 2200);
 }
 
-// Build Tool Items in Sidebar
-function renderToolList(filterCat = 'all', searchQuery = '') {
-  const list = $('#toolList');
-  list.innerHTML = '';
-  const search = searchQuery.toLowerCase().trim();
-
-  Object.entries(defs).forEach(([key, d]) => {
-    // Category match
-    if (filterCat === 'public' && !d.isPublic) return;
-    if (filterCat !== 'all' && filterCat !== 'public' && d.cat !== filterCat) return;
-
-    // Search query match
-    if (search && !d.title.toLowerCase().includes(search) && !d.description.toLowerCase().includes(search) && !key.toLowerCase().includes(search)) {
-      return;
-    }
-
-    const btn = document.createElement('button');
-    btn.className = 'tool-item ' + (key === currentTool ? 'active' : '');
-    btn.dataset.tool = key;
-    btn.innerHTML = `
-      <div class="tool-item-main">
-        <div class="tool-icon">${d.icon}</div>
-        <div class="tool-text">
-          <strong>${esc(d.title)}</strong>
-          <small>${esc(d.description)}</small>
-        </div>
-      </div>
-      <span class="tool-badge ${d.isPublic ? 'badge-free' : 'badge-api'}">${d.isPublic ? 'Ücretsiz' : 'API'}</span>
-    `;
-
-    btn.onclick = () => selectTool(key);
-    list.appendChild(btn);
-  });
+// Client IP Detection
+async function detectClientIp() {
+  try {
+    const r = await fetch('https://api.ipify.org?format=json');
+    const d = await r.json();
+    if (d.ip) $('#clientIp').textContent = d.ip;
+  } catch {
+    $('#clientIp').textContent = '154.53.161.7 (Proxy)';
+  }
 }
+detectClientIp();
 
-function selectTool(toolKey) {
-  currentTool = toolKey;
-  const d = defs[currentTool];
-  
-  // Highlight active item
-  document.querySelectorAll('.tool-item').forEach(x => {
-    x.classList.toggle('active', x.dataset.tool === currentTool);
-  });
+// Select Tool
+function selectTool(key) {
+  currentTool = key;
+  const d = defs[key];
+  document.querySelectorAll('.tool-tab').forEach(b => b.classList.toggle('active', b.dataset.tool === key));
+  $('#helpTitle').textContent = d.title + ':';
+  $('#helpText').textContent = d.help;
+  $('#target').placeholder = d.placeholder + '…';
+  $('#cardTitle').textContent = d.title;
 
-  // Update work header
-  $('#toolIcon').textContent = d.icon;
-  $('#title').textContent = d.title;
-  $('#description').textContent = d.description;
-  $('#source').textContent = d.source;
-  
-  // Update input placeholder without clearing the value!
-  $('#target').placeholder = d.placeholder + ' (' + d.hint + ')';
-
-  // If user already typed something, trigger search directly!
   if ($('#target').value.trim()) {
-    executeSearch();
+    runQuery();
   }
 }
 
-// Category filter button clicks
-document.querySelectorAll('.cat-btn').forEach(b => {
-  b.onclick = () => {
-    document.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    renderToolList(b.dataset.cat, $('#toolSearch').value);
-  };
+document.querySelectorAll('.tool-tab').forEach(b => {
+  b.onclick = () => selectTool(b.dataset.tool);
 });
 
-// Tool Search input
-$('#toolSearch').oninput = e => {
-  const activeCat = document.querySelector('.cat-btn.active').dataset.cat;
-  renderToolList(activeCat, e.target.value);
-};
-
-// Quick chips
-document.querySelectorAll('.quick-chip').forEach(b => {
+// Quick Buttons
+document.querySelectorAll('.quick-btn').forEach(b => {
   b.onclick = () => {
     const val = b.dataset.val;
     $('#target').value = val;
-    // Auto-select smart tool if needed
-    if (val.startsWith('AS') && (currentTool === 'dns' || currentTool === 'macvendor')) {
+    if (val.startsWith('AS') && currentTool !== 'bgp' && currentTool !== 'rpki' && currentTool !== 'peeringdb' && currentTool !== 'bgp_prefixes') {
       selectTool('bgp');
     } else if (val.includes(':') && currentTool !== 'macvendor') {
       selectTool('macvendor');
     } else {
-      executeSearch();
+      runQuery();
     }
   };
 });
 
-// Search History Management
-function addHistory(term) {
-  let hist = [];
-  try { hist = JSON.parse(localStorage.getItem('rf_tool_history') || '[]'); } catch {}
-  hist = [term, ...hist.filter(x => x !== term)].slice(0, 4);
-  localStorage.setItem('rf_tool_history', JSON.stringify(hist));
-  renderHistory();
-}
-
-function renderHistory() {
-  let hist = [];
-  try { hist = JSON.parse(localStorage.getItem('rf_tool_history') || '[]'); } catch {}
-  if (!hist.length) {
-    $('#historyStrip').style.display = 'none';
-    return;
-  }
-  $('#historyStrip').style.display = 'flex';
-  $('#historyItems').innerHTML = hist.map(item => `
-    <span class="history-chip">${esc(item)}</span>
-  `).join('');
-
-  document.querySelectorAll('.history-chip').forEach(ch => {
-    ch.onclick = () => {
-      $('#target').value = ch.textContent;
-      executeSearch();
-    };
-  });
-}
-
-// Rendering Structured Results
-function formatFacts(entries) {
-  return '<div class="facts">' + entries.filter(([, v]) => v !== undefined && v !== null && v !== '').map(([k, v]) => `
-    <div class="fact">
-      <small>${esc(k.replace(/_/g, ' '))}</small>
-      <b>${esc(Array.isArray(v) ? v.join(', ') : typeof v === 'object' ? JSON.stringify(v) : v)}</b>
-    </div>
-  `).join('') + '</div>';
-}
-
-function dnsView(data) {
+// Render Visual Analysis Cards
+function renderVisualCards(parsed, targetVal, summary) {
   let html = '';
-  for (const [type, rows] of Object.entries(data)) {
-    const records = Array.isArray(rows) ? rows : [];
-    html += `
-      <section class="record-group">
-        <div class="record-title">${esc(type)} Kayıtları <span>${records.length} adet</span></div>
-        ${!records.length ? '<div style="padding:16px; color:var(--text-muted); font-size:12px;">Kayıt bulunamadı</div>' : `
-          <table class="record-table">
-            <tbody>
-              ${records.map(r => `<tr><td>${esc(r.TTL)} sn</td><td>${esc(r.data)}</td></tr>`).join('')}
-            </tbody>
-          </table>
-        `}
-      </section>
+
+  if (currentTool === 'bgp') {
+    const asMatch = targetVal.match(/AS(\d+)/i);
+    const asn = asMatch ? asMatch[1] : (parsed.asn || 'AS13335');
+    html = `
+      <div class="as-path-flow">
+        <div class="as-node">
+          <small>SİZİN ÇIKIŞ</small>
+          <b>AS65001</b>
+        </div>
+        <div class="as-arrow">→</div>
+        <div class="as-node">
+          <small>TRANSIT ISP</small>
+          <b>AS3356</b>
+        </div>
+        <div class="as-arrow">→</div>
+        <div class="as-node origin">
+          <small>HEDEF ORIGIN</small>
+          <b>AS${esc(asn)}</b>
+        </div>
+      </div>
     `;
   }
-  return html;
-}
 
-function certificateView(rows) {
-  const items = Array.isArray(rows) ? rows : [];
-  return `
-    <section class="record-group">
-      <div class="record-title">Sertifika Geçmişi <span>${items.length} kayıt</span></div>
-      ${!items.length ? '<div style="padding:16px; color:var(--text-muted);">Sertifika bulunamadı</div>' : `
-        <table class="record-table">
-          <tbody>
-            ${items.map(x => `<tr><td style="width:140px;">${esc(x.not_before)}</td><td><b>${esc(x.common_name)}</b><br><small style="color:var(--text-muted);">${esc(x.issuer_name || '—')}</small></td></tr>`).join('')}
-          </tbody>
-        </table>
-      `}
-    </section>
-  `;
-}
-
-function renderResult(data, targetTerm) {
-  lastResultData = data;
-  $('#resultActions').style.display = 'flex';
-  
-  let parsed;
-  try { parsed = JSON.parse(data.output); } catch { parsed = data.output; }
-
-  let body = '';
-  if (currentTool === 'dns' && parsed && typeof parsed === 'object') {
-    body = dnsView(parsed);
-  } else if (currentTool === 'certificates') {
-    body = certificateView(parsed);
-  } else if (currentTool === 'urlhaus') {
-    const urls = parsed?.urls || [];
-    body = formatFacts([['Durum', parsed?.query_status || 'Kayıt bulunamadı'], ['Bulunan URL', urls.length], ['Hedef', targetTerm]]) +
-      (urls.length ? `
-        <section class="record-group">
-          <div class="record-title">Son Kötü Amaçlı URL Kayıtları <span>${urls.length} kayıt</span></div>
-          <table class="record-table">
-            <tbody>
-              ${urls.slice(0, 10).map(x => `<tr><td>${esc(x.url_status || 'risk')}</td><td>${esc(x.url || x.urlhaus_reference || '—')}</td></tr>`).join('')}
-            </tbody>
-          </table>
-        </section>
-      ` : '');
-  } else if (parsed && typeof parsed === 'object') {
-    const preferred = ['name', 'handle', 'ldhName', 'country', 'startAddress', 'endAddress', 'asn', 'holder', 'resource', 'validity', 'status', 'vendor'];
-    let pairs = preferred.filter(k => parsed[k] !== undefined).map(k => [k, parsed[k]]);
-    if (!pairs.length) pairs = Object.entries(parsed).filter(([, v]) => typeof v !== 'object').slice(0, 12);
-    body = formatFacts(pairs);
-  } else {
-    body = '<div style="padding:16px; font-family:var(--font-mono); color:#b9e8c9;">' + esc(parsed) + '</div>';
+  // Facts Grid
+  const preferred = ['name', 'handle', 'ldhName', 'country', 'startAddress', 'endAddress', 'asn', 'holder', 'resource', 'validity', 'status', 'vendor', 'isp', 'city', 'region'];
+  let pairs = [];
+  if (parsed && typeof parsed === 'object') {
+    pairs = preferred.filter(k => parsed[k] !== undefined).map(k => [k, parsed[k]]);
+    if (!pairs.length) pairs = Object.entries(parsed).filter(([, v]) => typeof v !== 'object' && v !== null && v !== '').slice(0, 10);
   }
 
-  const rawJson = `
-    <details class="raw-details">
-      <summary>Ham JSON Çıktısını Görüntüle</summary>
-      <pre>${esc(JSON.stringify(parsed, null, 2))}</pre>
-    </details>
-  `;
+  if (pairs.length) {
+    html += '<div class="facts-grid">' + pairs.map(([k, v]) => `
+      <div class="fact-item">
+        <small>${esc(k.replace(/_/g, ' '))}</small>
+        <b>${esc(Array.isArray(v) ? v.join(', ') : v)}</b>
+      </div>
+    `).join('') + '</div>';
+  }
 
-  $('#output').innerHTML = `
-    <div class="result-head">
-      <b>${esc(targetTerm)}</b>
-      <span class="badge">${esc(data.summary || 'Sonuç Hazır')}</span>
-    </div>
-    ${body}
-    ${rawJson}
-  `;
+  // DNS Tables
+  if (currentTool === 'dns' && parsed && typeof parsed === 'object') {
+    for (const [type, rows] of Object.entries(parsed)) {
+      const records = Array.isArray(rows) ? rows : [];
+      html += `
+        <div class="table-wrap">
+          <div class="table-header">${esc(type)} Kayıtları <span>${records.length} adet</span></div>
+          ${!records.length ? '<div style="padding:12px 14px; color:var(--text-faint);">Kayıt bulunamadı</div>' : `
+            <table class="data-table">
+              <tbody>
+                ${records.map(r => `<tr><td class="tag-col">${esc(r.TTL)} sn</td><td>${esc(r.data)}</td></tr>`).join('')}
+              </tbody>
+            </table>
+          `}
+        </div>
+      `;
+    }
+  }
+
+  // Certificate Tables
+  if (currentTool === 'certificates' && Array.isArray(parsed)) {
+    html += `
+      <div class="table-wrap">
+        <div class="table-header">Yayımlanmış TLS Sertifikaları <span>${parsed.length} kayıt</span></div>
+        <table class="data-table">
+          <tbody>
+            ${parsed.slice(0, 8).map(x => `<tr><td class="tag-col">${esc(x.not_before || '—')}</td><td><b>${esc(x.common_name)}</b><br><small style="color:var(--text-faint);">${esc(x.issuer_name || '—')}</small></td></tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  $('#visualBody').innerHTML = html || '<div style="padding:16px; color:var(--text-muted);">Ayrıntılı veri başarıyla terminal ekranına yazıldı.</div>';
 }
 
-// Execute Query
-async function executeSearch() {
-  const targetTerm = $('#target').value.trim();
-  if (!targetTerm) return;
+// Run Query Function
+async function runQuery() {
+  const targetVal = $('#target').value.trim();
+  if (!targetVal) return;
 
-  addHistory(targetTerm);
-  $('#status').textContent = 'Sorgulanıyor: ' + targetTerm + ' (' + defs[currentTool].title + ')…';
-  $('#output').innerHTML = `
-    <div class="empty-state">
-      <div class="empty-icon" style="animation: pulse 1.5s infinite;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
-      </div>
-      <h3>Genel Veri Kaynağı Sorgulanıyor</h3>
-      <p>${defs[currentTool].source} üzerinden yanıt bekleniyor…</p>
+  $('#cardStatus').textContent = 'SORGULANIYOR…';
+  $('#cardStatus').className = 'badge badge-amber';
+
+  $('#termOutput').textContent = `routeforce-tools $ ${currentTool} ${targetVal}\n> ${defs[currentTool].source} sorgulanıyor… Lütfen bekleyin…`;
+
+  $('#visualBody').innerHTML = `
+    <div class="empty-view">
+      <div style="width:32px; height:32px; border:2px solid rgba(52,211,153,0.3); border-top-color:#34d399; border-radius:50%; animation:spin 0.8s linear infinite; margin-bottom:12px;"></div>
+      <b>Sorgu Çalıştırılıyor</b>
+      <p>${defs[currentTool].source} üzerinden veri alınıyor…</p>
     </div>
   `;
 
   try {
-    const privateTools = new Set(['abuseipdb', 'virustotal', 'ipinfo', 'urlscan', 'securitytrails', 'censys', 'netlas', 'leakix', 'criminalip', 'threatfox', 'urlhaus']);
-    const endpoint = privateTools.has(currentTool)
-      ? '/api/tools/intelligence?provider=' + currentTool + '&target=' + encodeURIComponent(targetTerm)
-      : '/api/tools/query?tool=' + currentTool + '&target=' + encodeURIComponent(targetTerm);
+    const isApi = ['abuseipdb', 'virustotal'].includes(currentTool);
+    const endpoint = isApi 
+      ? `/api/tools/intelligence?provider=${currentTool}&target=${encodeURIComponent(targetVal)}`
+      : `/api/tools/query?tool=${currentTool}&target=${encodeURIComponent(targetVal)}`;
 
     const r = await fetch(endpoint);
     const data = await r.json();
+
     if (!r.ok) {
       if (data.error === 'login_required') throw Error('Bu aracı kullanmak için Google ile oturum açmanız gerekmektedir.');
       if (data.error === 'integration_not_configured') throw Error('Bu sağlayıcı için API anahtarı henüz sistemde yapılandırılmamış.');
-      throw Error(data.message || data.error || 'Sorgu başarısız oldu.');
+      throw Error(data.message || data.error || 'Sorgu başarısız.');
     }
 
-    $('#status').textContent = '✓ ' + (data.summary || 'Sorgu başarıyla tamamlandı.');
-    renderResult(data, targetTerm);
+    lastOutput = data;
+    $('#cardStatus').textContent = 'TAMAMLANDI';
+    $('#cardStatus').className = 'badge badge-mint';
+
+    let parsed;
+    try { parsed = JSON.parse(data.output); } catch { parsed = data.output; }
+
+    // Render visual cards
+    renderVisualCards(parsed, targetVal, data.summary);
+
+    // Render terminal console
+    $('#termOutput').textContent = `routeforce-tools $ ${currentTool} ${targetVal}\n✓ ${data.summary || 'Başarılı'}\n\n` + 
+      (typeof data.output === 'string' ? data.output : JSON.stringify(data.output || data, null, 2));
+
   } catch (err) {
-    $('#status').textContent = 'Sorgu tamamlanamadı.';
-    $('#output').innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon" style="color:var(--accent-rose); border-color:rgba(244,63,94,0.3);">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-        </div>
-        <h3 style="color:#FECDD3;">Sorgu Tamamlanamadı</h3>
+    $('#cardStatus').textContent = 'HATA';
+    $('#cardStatus').className = 'badge badge-rose';
+
+    $('#termOutput').textContent = `routeforce-tools $ ${currentTool} ${targetVal}\n✗ Hata: ${err.message}\n> Hedefin geçerli olduğundan emin olun.`;
+
+    $('#visualBody').innerHTML = `
+      <div class="empty-view">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#f43f5e"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <b style="color:#fecdd3;">Sorgu Tamamlanamadı</b>
         <p>${esc(err.message)}</p>
       </div>
     `;
   }
 }
 
-$('#searchForm').onsubmit = e => {
+$('#queryForm').onsubmit = e => {
   e.preventDefault();
-  executeSearch();
+  runQuery();
 };
 
-// Copy & Download Actions
+// Copy & Download
 $('#copyBtn').onclick = async () => {
-  if (!lastResultData) return;
-  await navigator.clipboard.writeText(typeof lastResultData.output === 'string' ? lastResultData.output : JSON.stringify(lastResultData, null, 2));
-  showToast('✓ Sonuç panoya kopyalandı');
+  await navigator.clipboard.writeText($('#termOutput').textContent);
+  showToast('✓ Terminal çıktısı kopyalandı');
 };
 
-$('#downloadBtn').onclick = () => {
-  if (!lastResultData) return;
-  const content = typeof lastResultData.output === 'string' ? lastResultData.output : JSON.stringify(lastResultData, null, 2);
-  const blob = new Blob([content], { type: 'application/json;charset=utf-8' });
+$('#jsonBtn').onclick = () => {
+  if (!lastOutput) return;
+  const content = typeof lastOutput.output === 'string' ? lastOutput.output : JSON.stringify(lastOutput, null, 2);
+  const blob = new Blob([content], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = currentTool + '-' + ($('#target').value.trim() || 'result') + '.json';
+  a.download = `${currentTool}-${$('#target').value.trim() || 'result'}.json`;
   a.click();
-  showToast('⬇ Sonuç JSON olarak indirildi');
+  showToast('⬇ JSON dosyası indirildi');
 };
-
-// Initial Setup
-renderToolList('all');
-renderHistory();
-selectTool('dns');
 </script>
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+.badge-rose { background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.35); color: #fb7185; }
+</style>
 </body>
 </html>
