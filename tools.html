@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RouteForce — Looking Glass & Network Intelligence Studio</title>
+<title>RouteForce — Ağ Araçları & İstihbarat Portalı (21 Araç)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,7 +18,6 @@
   
   --line: rgba(255, 255, 255, 0.08);
   --line-strong: rgba(255, 255, 255, 0.15);
-  --line-glow: rgba(56, 189, 248, 0.3);
   
   --text-main: #f1f5f9;
   --text-muted: #8b99ad;
@@ -165,7 +164,7 @@ body {
 
 /* Main Container */
 .shell {
-  max-width: 1480px;
+  max-width: 1540px;
   margin: auto;
   padding: 20px 28px 48px;
 }
@@ -255,83 +254,194 @@ body {
   background: rgba(16, 185, 129, 0.15);
 }
 
-/* KuzeyDC Style Sticky Query Dock */
+/* Query Dock Container */
 .query-dock {
   background: var(--bg-dock);
   border: 1px solid var(--line-strong);
   border-radius: 18px;
-  padding: 18px 20px;
+  padding: 20px;
   margin-bottom: 22px;
   box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(16px);
-  position: sticky;
-  top: 72px;
-  z-index: 40;
 }
 
-/* Horizontal Tool Selector */
-.tool-tabs {
+/* Category Filter Tabs Header */
+.category-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.cat-tabs {
   display: flex;
   gap: 5px;
-  padding: 5px;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.4);
+  padding: 4px;
+  border-radius: 10px;
   border: 1px solid var(--line);
-  border-radius: 12px;
-  overflow-x: auto;
+  flex-wrap: wrap;
 }
 
-.tool-tab {
-  flex: 1;
-  min-width: 90px;
+.cat-tab {
   border: 0;
   background: transparent;
   color: var(--text-muted);
-  border-radius: 8px;
-  padding: 8px 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 7px;
   cursor: pointer;
-  text-align: center;
   transition: all 0.2s ease;
   font-family: var(--font-sans);
 }
 
-.tool-tab strong {
-  display: block;
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+.cat-tab:hover {
+  color: #fff;
 }
 
-.tool-tab small {
-  display: block;
-  font-size: 9.5px;
-  font-weight: 600;
+.cat-tab.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Search tool filter inside dock */
+.filter-input-wrap {
+  position: relative;
+  min-width: 200px;
+}
+
+.filter-input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  padding: 6px 12px 6px 30px;
+  font-size: 12px;
+  outline: 0;
+  font-family: var(--font-sans);
+}
+
+.filter-input:focus {
+  border-color: rgba(56, 189, 248, 0.5);
+}
+
+.filter-icon {
+  position: absolute;
+  left: 9px;
+  top: 7px;
+  width: 14px;
+  height: 14px;
   color: var(--text-faint);
-  margin-top: 2px;
 }
 
-.tool-tab:hover {
+/* Full 21-Tool Grid */
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 6px;
+  margin-bottom: 16px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.tool-card {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-muted);
+  border-radius: 9px;
+  padding: 8px 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  font-family: var(--font-sans);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 58px;
+  position: relative;
+}
+
+.tool-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--line-strong);
   color: #fff;
-  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
 }
 
-.tool-tab.active {
-  color: #031c12;
-  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-  box-shadow: 0 3px 12px rgba(16, 185, 129, 0.4);
-}
-
-.tool-tab.active small {
-  color: rgba(3, 28, 18, 0.75);
-}
-
-.tool-tab.api-tool.active {
+.tool-card.active {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(6, 182, 212, 0.22));
+  border-color: rgba(52, 211, 153, 0.6);
   color: #fff;
-  background: linear-gradient(135deg, #818cf8 0%, #6366f1 100%);
-  box-shadow: 0 3px 12px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
 }
 
-.tool-tab.api-tool.active small {
-  color: rgba(255, 255, 255, 0.8);
+.tool-card.api-mode.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(168, 85, 247, 0.25));
+  border-color: rgba(129, 140, 248, 0.6);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+}
+
+.tool-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.tool-card-icon {
+  font-size: 13px;
+}
+
+.tool-card-badge {
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 1px 4px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.badge-free {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+.badge-api {
+  background: rgba(99, 102, 241, 0.18);
+  color: #a5b4fc;
+}
+
+.tool-card strong {
+  font-size: 12px;
+  font-weight: 700;
+  display: block;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tool-card small {
+  font-size: 9.5px;
+  color: var(--text-faint);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tool-card.active small {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* Query Meta & Live Helper */
@@ -340,22 +450,21 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin: 14px 0 12px;
+  margin-bottom: 12px;
   flex-wrap: wrap;
 }
 
 .qhelp {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 12px;
+  gap: 8px;
+  font-size: 12.5px;
   color: var(--text-muted);
 }
 
 .qhelp-title {
   font-weight: 800;
   color: #fff;
-  letter-spacing: 0.02em;
 }
 
 .quick-targets {
@@ -444,11 +553,7 @@ body {
   transform: translateY(-1px);
 }
 
-.go-btn:active {
-  transform: translateY(0);
-}
-
-/* Main Workspace Results (Cards + Terminal) */
+/* Workspace Layout (Visual + Terminal) */
 .layout {
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(360px, 0.75fr);
@@ -516,7 +621,13 @@ body {
   color: #fbbf24;
 }
 
-/* AS Path Flow (KuzeyDC BGP Hop Nodes) */
+.badge-rose {
+  background: rgba(244, 63, 94, 0.15);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  color: #fb7185;
+}
+
+/* AS Path Flow */
 .as-path-flow {
   display: flex;
   align-items: center;
@@ -570,7 +681,7 @@ body {
 /* Fact Cards Grid */
 .facts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
   gap: 10px;
   margin-bottom: 16px;
 }
@@ -594,7 +705,7 @@ body {
 
 .fact-item b {
   display: block;
-  font-size: 13.5px;
+  font-size: 13px;
   font-family: var(--font-mono);
   color: #fff;
   word-break: break-all;
@@ -708,7 +819,7 @@ pre.terminal-screen {
   margin: 0;
 }
 
-/* Empty / Pending States */
+/* Empty View */
 .empty-view {
   min-height: 280px;
   display: flex;
@@ -768,6 +879,8 @@ pre.terminal-screen {
   opacity: 1;
 }
 
+@keyframes spin { to { transform: rotate(360deg); } }
+
 @media (max-width: 1080px) {
   .layout { grid-template-columns: 1fr; }
   pre.terminal-screen { height: 320px; }
@@ -808,11 +921,11 @@ pre.terminal-screen {
     <a class="active" href="/tools.html">Tools</a>
   </nav>
 
-  <span class="tag">GLOBAL NETWORK INTELLIGENCE</span>
+  <span class="tag">21 NETWORK TOOLS</span>
 </header>
 
 <main class="shell">
-  <!-- KuzeyDC Style System Status Strip -->
+  <!-- System Status Strip -->
   <div class="status-strip">
     <div class="stat-cell">
       <small><span class="dot-led"></span> İSTEMCİ IP ADRESİNİZ</small>
@@ -840,65 +953,33 @@ pre.terminal-screen {
     </div>
   </div>
 
-  <!-- KuzeyDC Style Unified Query Dock -->
+  <!-- Unified Query Dock -->
   <section class="query-dock">
-    <!-- Horizontal Tool Selector Bar -->
-    <div class="tool-tabs" id="toolTabs">
-      <button class="tool-tab active" data-tool="dns">
-        <strong>DNS</strong>
-        <small>A, MX, TXT</small>
-      </button>
-      <button class="tool-tab" data-tool="whois">
-        <strong>Whois</strong>
-        <small>RDAP Kayıt</small>
-      </button>
-      <button class="tool-tab" data-tool="bgp">
-        <strong>BGP</strong>
-        <small>AS Yolu & Rota</small>
-      </button>
-      <button class="tool-tab" data-tool="rpki">
-        <strong>RPKI</strong>
-        <small>ROA Doğrulama</small>
-      </button>
-      <button class="tool-tab" data-tool="bgp_prefixes">
-        <strong>Prefixler</strong>
-        <small>ASN Anonsları</small>
-      </button>
-      <button class="tool-tab" data-tool="peeringdb">
-        <strong>PeeringDB</strong>
-        <small>IXP & Eşleşme</small>
-      </button>
-      <button class="tool-tab" data-tool="ipapi">
-        <strong>IP Intel</strong>
-        <small>Konum & ISP</small>
-      </button>
-      <button class="tool-tab" data-tool="certificates">
-        <strong>Sertifika</strong>
-        <small>TLS CT Kaydı</small>
-      </button>
-      <button class="tool-tab" data-tool="urlhaus">
-        <strong>Tehdit</strong>
-        <small>URLHaus IOC</small>
-      </button>
-      <button class="tool-tab" data-tool="macvendor">
-        <strong>Donanım</strong>
-        <small>MAC Vendor</small>
-      </button>
-      <button class="tool-tab api-tool" data-tool="virustotal">
-        <strong>VirusTotal</strong>
-        <small>API Raporu</small>
-      </button>
-      <button class="tool-tab api-tool" data-tool="abuseipdb">
-        <strong>AbuseIPDB</strong>
-        <small>API Skoru</small>
-      </button>
+    <!-- Category Filter Bar + Tool Search -->
+    <div class="category-strip">
+      <div class="cat-tabs" id="catTabs">
+        <button class="cat-tab active" data-cat="all">Tümü (21)</button>
+        <button class="cat-tab" data-cat="free">⚡ Açık & Ücretsiz (12)</button>
+        <button class="cat-tab" data-cat="bgp">🛰️ BGP & Rota (5)</button>
+        <button class="cat-tab" data-cat="domain">🌐 DNS & Domain (4)</button>
+        <button class="cat-tab" data-cat="sec">🛡️ Tehdit & Güvenlik (10)</button>
+        <button class="cat-tab" data-cat="api">🔑 API Araçları (9)</button>
+      </div>
+
+      <div class="filter-input-wrap">
+        <svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input class="filter-input" id="toolFilter" placeholder="21 araç içinde ara..." autocomplete="off">
+      </div>
     </div>
 
-    <!-- Query Guide & Quick Presets -->
+    <!-- Complete 21 Tool Grid -->
+    <div class="tool-grid" id="toolGrid"></div>
+
+    <!-- Active Tool Meta & Quick Target Chips -->
     <div class="query-meta">
       <div class="qhelp" id="qhelp">
-        <span class="qhelp-title" id="helpTitle">DNS Kayıtları (DoH):</span>
-        <span id="helpText">Alan adına ait A, AAAA, MX, NS ve TXT kayıtlarını Cloudflare üzerinden sorgulayın.</span>
+        <span class="qhelp-title" id="helpTitle">DNS Kayıtları:</span>
+        <span id="helpText">Alan adına ait A, AAAA, MX, NS ve TXT kayıtlarını Cloudflare DoH üzerinden sorgulayın.</span>
       </div>
 
       <div class="quick-targets">
@@ -938,7 +1019,7 @@ pre.terminal-screen {
         <div class="empty-view">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           <b>Sorgu Bekleniyor</b>
-          <p>Yukarıdaki arama çubuğuna bir hedef yazıp 'Sorgula' butonuna basın veya hazır hedeflerden birine tıklayın.</p>
+          <p>Yukarıdaki 21 araçtan dilediğinizi seçin, hedefi girip 'Sorgula' butonuna basın.</p>
         </div>
       </div>
     </section>
@@ -957,8 +1038,8 @@ pre.terminal-screen {
         </div>
       </div>
       <pre class="terminal-screen" id="termOutput">routeforce-tools $ ready
-> Genel veri kaynakları (Cloudflare DoH, RIPEstat, RDAP, PeeringDB, crt.sh) bağlı.
-> Sorgulamak istediğiniz hedefi yukarıdaki çubuğa girin.</pre>
+> 21 Ağ İstihbarat Aracı (Cloudflare DoH, RIPEstat, RDAP, PeeringDB, crt.sh, abuse.ch) hazır.
+> Hedefinizi yukarıdaki çubuğa girerek sorgulamayı başlatın.</pre>
     </section>
   </section>
 </main>
@@ -970,19 +1051,32 @@ pre.terminal-screen {
 </div>
 
 <script>
-const defs = {
-  dns: { title: 'DNS Kayıtları', help: 'Alan adına ait A, AAAA, MX, NS ve TXT kayıtlarını Cloudflare DoH üzerinden sorgulayın.', placeholder: 'cloudflare.com veya google.com', source: 'Cloudflare DoH' },
-  whois: { title: 'WHOIS & RDAP Bilgisi', help: 'IP adresi veya alan adı için tescil sahibi, netname ve kayıt otoritesi bilgisi.', placeholder: '8.8.8.8 veya example.com', source: 'RDAP Registry' },
-  bgp: { title: 'BGP Rota Görünürlüğü', help: 'RIPEstat RIS üzerinden ASN veya prefix için global anons ve AS-Path görünürlüğü.', placeholder: 'AS13335 veya 1.1.1.0/24', source: 'RIPEstat RIS' },
-  rpki: { title: 'RPKI ROA Doğrulama', help: 'Otonom sistemin (ASN) anons ettiği prefixlerin Route Origin Authorization geçerliliği.', placeholder: 'AS13335', source: 'RIPEstat RPKI' },
-  bgp_prefixes: { title: 'Duyurulan Prefixler', help: 'Bir ASN tarafından küresel internete anons edilen tüm IPv4 ve IPv6 prefix listesi.', placeholder: 'AS13335', source: 'RIPEstat' },
-  peeringdb: { title: 'PeeringDB Profili', help: 'ASN için Internet Exchange (IXP) noktaları, tesisler ve peering politikası.', placeholder: 'AS13335', source: 'PeeringDB' },
-  ipapi: { title: 'IP Konum & Operatör', help: 'Genel IP adresi için coğrafi konum, ISP operatörü, ASN ve organizasyon verisi.', placeholder: '8.8.8.8 veya 1.1.1.1', source: 'ipinfo.io' },
-  certificates: { title: 'TLS Sertifika Geçmişi', help: 'Certificate Transparency (CT) kayıtlarında yayımlanmış SSL/TLS sertifikaları.', placeholder: 'example.com', source: 'crt.sh' },
-  urlhaus: { title: 'URLHaus Tehdit Kaydı', help: 'Zararlı yazılım ve kimlik avı dağıtan bilinen kötü amaçlı URL veritabanı.', placeholder: 'example.com veya 1.2.3.4', source: 'abuse.ch URLHaus' },
-  macvendor: { title: 'MAC Donanım Üreticisi', help: 'OUI donanım üreticisini MAC adresi üzerinden anında tespit edin.', placeholder: '00:11:22:33:44:55', source: 'MAC Vendors' },
-  virustotal: { title: 'VirusTotal Analizi', help: '70+ güvenlik motoru ile IP/domain kötü amaçlı yazılım raporu (API gerektirir).', placeholder: 'example.com veya 8.8.8.8', source: 'VirusTotal API' },
-  abuseipdb: { title: 'AbuseIPDB Raporu', help: 'IP adresinin saldırı ve kötüye kullanım skorları (API gerektirir).', placeholder: '8.8.8.8', source: 'AbuseIPDB v2' }
+// Complete Dictionary of All 21 Tools
+const allTools = {
+  // Free / Public Tools (12)
+  dns: { cat: 'domain', isApi: false, icon: '🌐', title: 'DNS Kayıtları', sub: 'A, MX, TXT', help: 'A, AAAA, MX, NS ve TXT kayıtlarını Cloudflare DoH üzerinden sorgulayın.', placeholder: 'cloudflare.com veya google.com', source: 'Cloudflare DoH' },
+  whois: { cat: 'domain', isApi: false, icon: '📋', title: 'WHOIS / RDAP', sub: 'Registry Kaydı', help: 'IP adresi veya alan adı için tescil sahibi, netname ve kayıt otoritesi bilgisi.', placeholder: '8.8.8.8 veya example.com', source: 'RDAP Registry' },
+  bgp: { cat: 'bgp', isApi: false, icon: '🛰️', title: 'BGP Rota', sub: 'AS Yolu & Rota', help: 'RIPEstat RIS üzerinden ASN veya prefix için global anons ve AS-Path görünürlüğü.', placeholder: 'AS13335 veya 1.1.1.0/24', source: 'RIPEstat RIS' },
+  rpki: { cat: 'bgp', isApi: false, icon: '🛡️', title: 'RPKI', sub: 'ROA Doğrulama', help: 'Otonom sistemin (ASN) anons ettiği prefixlerin Route Origin Authorization geçerliliği.', placeholder: 'AS13335', source: 'RIPEstat RPKI' },
+  bgp_prefixes: { cat: 'bgp', isApi: false, icon: '📡', title: 'Prefixler', sub: 'Duyurulan Ağlar', help: 'Bir ASN tarafından küresel internete anons edilen tüm IPv4 ve IPv6 prefix listesi.', placeholder: 'AS13335', source: 'RIPEstat' },
+  bgp_history: { cat: 'bgp', isApi: false, icon: '⏱️', title: 'BGP Tarihi', sub: '14 Günlük Rota', help: 'Son 14 gün içindeki BGP anons değişiklikleri ve rota stabilitesi.', placeholder: 'AS13335 veya 1.1.1.0/24', source: 'RIPEstat' },
+  peeringdb: { cat: 'bgp', isApi: false, icon: '🤝', title: 'PeeringDB', sub: 'IXP & Eşleşme', help: 'ASN için Internet Exchange (IXP) noktaları, tesisler ve peering politikası.', placeholder: 'AS13335', source: 'PeeringDB' },
+  ipapi: { cat: 'sec', isApi: false, icon: '📍', title: 'IP Intel', sub: 'Konum & ISP', help: 'Genel IP adresi için coğrafi konum, ISP operatörü, ASN ve organizasyon verisi.', placeholder: '8.8.8.8 veya 1.1.1.1', source: 'ipinfo.io' },
+  certificates: { cat: 'domain', isApi: false, icon: '🔒', title: 'Sertifikalar', sub: 'TLS CT Kaydı', help: 'Certificate Transparency (CT) kayıtlarında yayımlanmış SSL/TLS sertifikaları.', placeholder: 'example.com', source: 'crt.sh' },
+  macvendor: { cat: 'sec', isApi: false, icon: '💻', title: 'MAC Vendor', sub: 'Donanım Üretici', help: 'OUI donanım üreticisini MAC adresi üzerinden anında tespit edin.', placeholder: '00:11:22:33:44:55', source: 'MAC Vendors' },
+  urlhaus: { cat: 'sec', isApi: false, icon: '⚠️', title: 'URLHaus', sub: 'Zararlı URL', help: 'Zararlı yazılım ve kimlik avı dağıtan bilinen kötü amaçlı URL veritabanı.', placeholder: 'example.com veya 1.2.3.4', source: 'abuse.ch URLHaus' },
+  threatfox: { cat: 'sec', isApi: false, icon: '🦊', title: 'ThreatFox', sub: 'IOC İstihbarat', help: 'Zararlı yazılım göstergeleri (IOC) ve C2 istihbarat kaydı.', placeholder: '1.2.3.4 veya domain', source: 'abuse.ch ThreatFox' },
+
+  // API Integrated Tools (9)
+  abuseipdb: { cat: 'sec', isApi: true, icon: '🚨', title: 'AbuseIPDB', sub: 'İtibar Raporu', help: 'IP adresinin saldırı ve kötüye kullanım skorları (API gerektirir).', placeholder: '8.8.8.8', source: 'AbuseIPDB v2' },
+  virustotal: { cat: 'sec', isApi: true, icon: '🦠', title: 'VirusTotal', sub: 'Zararlı Analizi', help: '70+ antivirüs motoru ile IP/domain kötü amaçlı yazılım raporu (API gerektirir).', placeholder: 'example.com veya 8.8.8.8', source: 'VirusTotal API' },
+  censys: { cat: 'sec', isApi: true, icon: '🔍', title: 'Censys', sub: 'Açık Port & Host', help: 'Açık portlar, servisler ve cihaz envanteri taraması (API gerektirir).', placeholder: '8.8.8.8', source: 'Censys API' },
+  netlas: { cat: 'sec', isApi: true, icon: '🌌', title: 'Netlas', sub: 'İnternet Taraması', help: 'Küresel internet cihaz ve servis görünürlüğü araştırması (API gerektirir).', placeholder: '8.8.8.8', source: 'Netlas API' },
+  leakix: { cat: 'sec', isApi: true, icon: '💧', title: 'LeakIX', sub: 'Sızıntı Verisi', help: 'İnternete sızdırılmış veriler ve açık servisler (API gerektirir).', placeholder: '8.8.8.8', source: 'LeakIX API' },
+  criminalip: { cat: 'sec', isApi: true, icon: '🛡️', title: 'Criminal IP', sub: 'Risk Profili', help: 'Kapsamlı IP siber tehdit ve güvenlik skorlaması (API gerektirir).', placeholder: '8.8.8.8', source: 'Criminal IP API' },
+  ipinfo: { cat: 'sec', isApi: true, icon: '🏢', title: 'IPinfo Pro', sub: 'Kurumsal ASN', help: 'Kurumsal ASN, hosting, VPN ve privacy tespiti (API gerektirir).', placeholder: '8.8.8.8', source: 'IPinfo Token' },
+  securitytrails: { cat: 'domain', isApi: true, icon: '📜', title: 'SecurityTrails', sub: 'DNS Tarihi', help: 'Geçmiş DNS kayıtları ve subdomain haritası (API gerektirir).', placeholder: 'example.com', source: 'SecurityTrails API' },
+  urlscan: { cat: 'sec', isApi: true, icon: '📸', title: 'urlscan.io', sub: 'Web Taraması', help: 'Web sitesi taramaları, DOM ve ekran görüntüleri (API gerektirir).', placeholder: 'example.com', source: 'urlscan.io API' }
 };
 
 let currentTool = 'dns';
@@ -1009,31 +1103,83 @@ async function detectClientIp() {
 }
 detectClientIp();
 
+// Render 21 Tool Cards
+function renderToolCards(filterCat = 'all', searchQuery = '') {
+  const grid = $('#toolGrid');
+  grid.innerHTML = '';
+  const q = searchQuery.toLowerCase().trim();
+
+  Object.entries(allTools).forEach(([key, d]) => {
+    // Category match
+    if (filterCat === 'free' && d.isApi) return;
+    if (filterCat === 'api' && !d.isApi) return;
+    if (filterCat !== 'all' && filterCat !== 'free' && filterCat !== 'api' && d.cat !== filterCat) return;
+
+    // Search query match
+    if (q && !d.title.toLowerCase().includes(q) && !d.sub.toLowerCase().includes(q) && !key.toLowerCase().includes(q)) {
+      return;
+    }
+
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = `tool-card ${d.isApi ? 'api-mode' : ''} ${key === currentTool ? 'active' : ''}`;
+    card.dataset.tool = key;
+    card.innerHTML = `
+      <div class="tool-card-top">
+        <span class="tool-card-icon">${d.icon}</span>
+        <span class="tool-card-badge ${d.isApi ? 'badge-api' : 'badge-free'}">${d.isApi ? 'API' : 'Ücretsiz'}</span>
+      </div>
+      <div>
+        <strong>${esc(d.title)}</strong>
+        <small>${esc(d.sub)}</small>
+      </div>
+    `;
+
+    card.onclick = () => selectTool(key);
+    grid.appendChild(card);
+  });
+}
+
 // Select Tool
 function selectTool(key) {
   currentTool = key;
-  const d = defs[key];
-  document.querySelectorAll('.tool-tab').forEach(b => b.classList.toggle('active', b.dataset.tool === key));
+  const d = allTools[key];
+  
+  document.querySelectorAll('.tool-card').forEach(c => {
+    c.classList.toggle('active', c.dataset.tool === key);
+  });
+
   $('#helpTitle').textContent = d.title + ':';
   $('#helpText').textContent = d.help;
   $('#target').placeholder = d.placeholder + '…';
-  $('#cardTitle').textContent = d.title;
+  $('#cardTitle').textContent = d.title + ' Görsel Analizi';
 
   if ($('#target').value.trim()) {
     runQuery();
   }
 }
 
-document.querySelectorAll('.tool-tab').forEach(b => {
-  b.onclick = () => selectTool(b.dataset.tool);
+// Category tabs
+document.querySelectorAll('.cat-tab').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('.cat-tab').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    renderToolCards(b.dataset.cat, $('#toolFilter').value);
+  };
 });
 
-// Quick Buttons
+// Tool filter input
+$('#toolFilter').oninput = e => {
+  const activeCat = document.querySelector('.cat-tab.active').dataset.cat;
+  renderToolCards(activeCat, e.target.value);
+};
+
+// Quick target buttons
 document.querySelectorAll('.quick-btn').forEach(b => {
   b.onclick = () => {
     const val = b.dataset.val;
     $('#target').value = val;
-    if (val.startsWith('AS') && currentTool !== 'bgp' && currentTool !== 'rpki' && currentTool !== 'peeringdb' && currentTool !== 'bgp_prefixes') {
+    if (val.startsWith('AS') && (currentTool === 'dns' || currentTool === 'macvendor')) {
       selectTool('bgp');
     } else if (val.includes(':') && currentTool !== 'macvendor') {
       selectTool('macvendor');
@@ -1047,9 +1193,9 @@ document.querySelectorAll('.quick-btn').forEach(b => {
 function renderVisualCards(parsed, targetVal, summary) {
   let html = '';
 
-  if (currentTool === 'bgp') {
+  if (currentTool === 'bgp' || currentTool === 'bgp_prefixes' || currentTool === 'bgp_history') {
     const asMatch = targetVal.match(/AS(\d+)/i);
-    const asn = asMatch ? asMatch[1] : (parsed.asn || 'AS13335');
+    const asn = asMatch ? asMatch[1] : (parsed?.asn || 'AS13335');
     html = `
       <div class="as-path-flow">
         <div class="as-node">
@@ -1071,11 +1217,11 @@ function renderVisualCards(parsed, targetVal, summary) {
   }
 
   // Facts Grid
-  const preferred = ['name', 'handle', 'ldhName', 'country', 'startAddress', 'endAddress', 'asn', 'holder', 'resource', 'validity', 'status', 'vendor', 'isp', 'city', 'region'];
+  const preferred = ['name', 'handle', 'ldhName', 'country', 'startAddress', 'endAddress', 'asn', 'holder', 'resource', 'validity', 'status', 'vendor', 'isp', 'city', 'region', 'org'];
   let pairs = [];
   if (parsed && typeof parsed === 'object') {
     pairs = preferred.filter(k => parsed[k] !== undefined).map(k => [k, parsed[k]]);
-    if (!pairs.length) pairs = Object.entries(parsed).filter(([, v]) => typeof v !== 'object' && v !== null && v !== '').slice(0, 10);
+    if (!pairs.length) pairs = Object.entries(parsed).filter(([, v]) => typeof v !== 'object' && v !== null && v !== '').slice(0, 12);
   }
 
   if (pairs.length) {
@@ -1120,6 +1266,20 @@ function renderVisualCards(parsed, targetVal, summary) {
     `;
   }
 
+  // URLHaus & ThreatFox Tables
+  if (currentTool === 'urlhaus' && parsed?.urls) {
+    html += `
+      <div class="table-wrap">
+        <div class="table-header">Tespit Edilen Kötü Amaçlı URL Kayıtları <span>${parsed.urls.length} kayıt</span></div>
+        <table class="data-table">
+          <tbody>
+            ${parsed.urls.slice(0, 8).map(u => `<tr><td class="tag-col">${esc(u.url_status || 'risk')}</td><td>${esc(u.url || u.urlhaus_reference || '—')}</td></tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
   $('#visualBody').innerHTML = html || '<div style="padding:16px; color:var(--text-muted);">Ayrıntılı veri başarıyla terminal ekranına yazıldı.</div>';
 }
 
@@ -1128,21 +1288,22 @@ async function runQuery() {
   const targetVal = $('#target').value.trim();
   if (!targetVal) return;
 
+  const toolObj = allTools[currentTool];
   $('#cardStatus').textContent = 'SORGULANIYOR…';
   $('#cardStatus').className = 'badge badge-amber';
 
-  $('#termOutput').textContent = `routeforce-tools $ ${currentTool} ${targetVal}\n> ${defs[currentTool].source} sorgulanıyor… Lütfen bekleyin…`;
+  $('#termOutput').textContent = `routeforce-tools $ ${currentTool} ${targetVal}\n> ${toolObj.source} sorgulanıyor… Lütfen bekleyin…`;
 
   $('#visualBody').innerHTML = `
     <div class="empty-view">
       <div style="width:32px; height:32px; border:2px solid rgba(52,211,153,0.3); border-top-color:#34d399; border-radius:50%; animation:spin 0.8s linear infinite; margin-bottom:12px;"></div>
       <b>Sorgu Çalıştırılıyor</b>
-      <p>${defs[currentTool].source} üzerinden veri alınıyor…</p>
+      <p>${toolObj.source} üzerinden veri alınıyor…</p>
     </div>
   `;
 
   try {
-    const isApi = ['abuseipdb', 'virustotal'].includes(currentTool);
+    const isApi = toolObj.isApi;
     const endpoint = isApi 
       ? `/api/tools/intelligence?provider=${currentTool}&target=${encodeURIComponent(targetVal)}`
       : `/api/tools/query?tool=${currentTool}&target=${encodeURIComponent(targetVal)}`;
@@ -1163,10 +1324,8 @@ async function runQuery() {
     let parsed;
     try { parsed = JSON.parse(data.output); } catch { parsed = data.output; }
 
-    // Render visual cards
     renderVisualCards(parsed, targetVal, data.summary);
 
-    // Render terminal console
     $('#termOutput').textContent = `routeforce-tools $ ${currentTool} ${targetVal}\n✓ ${data.summary || 'Başarılı'}\n\n` + 
       (typeof data.output === 'string' ? data.output : JSON.stringify(data.output || data, null, 2));
 
@@ -1207,10 +1366,10 @@ $('#jsonBtn').onclick = () => {
   a.click();
   showToast('⬇ JSON dosyası indirildi');
 };
+
+// Initialize
+renderToolCards('all');
+selectTool('dns');
 </script>
-<style>
-@keyframes spin { to { transform: rotate(360deg); } }
-.badge-rose { background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.35); color: #fb7185; }
-</style>
 </body>
 </html>
