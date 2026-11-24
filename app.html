@@ -602,12 +602,12 @@ textarea, pre {
 
 @media(max-width: 1140px) {
   .shell { grid-template-columns: 240px 1fr; }
-  .right { display: none; }
+  .right { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--border-subtle); }
 }
 
 @media(max-width: 780px) {
-  .top { padding: 0 18px; }
-  .nav { display: none; }
+  .top { height: auto; flex-wrap: wrap; gap: 10px; padding: 12px 16px; }
+  .nav { display: flex; flex-wrap: wrap; width: 100%; }
   .shell { display: block; }
   .left { border-right: 0; border-bottom: 1px solid var(--border-subtle); }
   .main { padding: 20px; }
@@ -709,10 +709,11 @@ textarea, pre {
       </div>
       <p>Peer ayarları, announce policy'leri ve vendor farklarını birlikte kontrol edin.</p>
       <div class="suggestions">
-        <button>Prefix filter kontrolü yap</button>
-        <button>Bu BGP peer için öneri ver</button>
-        <button>Cisco–Junos farklarını açıkla</button>
+        <button type="button" data-ask="Prefix filter kontrolü yap">Prefix filter kontrolü yap</button>
+        <button type="button" data-ask="Bu BGP peer için öneri ver">Bu BGP peer için öneri ver</button>
+        <button type="button" data-ask="Cisco–Junos farklarını açıkla">Cisco–Junos farklarını açıkla</button>
       </div>
+      <p id="assistantReply" style="margin-top:12px">Bir öneriye basınca yanıt burada görünür.</p>
     </section>
 
     <section class="card">
@@ -733,21 +734,53 @@ const out = document.querySelector('#output');
 const projects = document.querySelector('#projects');
 let vendor = 'cisco', activeProject = null, authenticated = false;
 
+function prefixLen(mask) {
+  if (/^\d{1,2}$/.test(mask || '')) return mask;
+  if (!/^\d{1,3}(?:\.\d{1,3}){3}$/.test(mask || '')) return '24';
+  const bits = mask.split('.').map(Number).map(n => n.toString(2).padStart(8, '0')).join('');
+  if (!/^1*0*$/.test(bits)) return '24';
+  const index = bits.indexOf('0');
+  return String(index < 0 ? 32 : index);
+}
+
 function parsed() {
   const t = cfg.value;
   const as = (t.match(/(?:router bgp|bgp)\s+(\d+)/i) || [])[1] || '65001';
   const id = (t.match(/router-id\s+([\d.]+)/i) || [])[1] || '10.0.0.1';
-  const n = t.match(/(?:neighbor|peer)\s+(\S+)\s+(?:remote-as|as-number)\s+(\d+)/i) || [];
-  const net = (t.match(/network\s+([\d.]+)(?:\s+mask\s+|\s+)([\d.]+)/i) || []);
-  return { as, id, ip: n[1] || '192.0.2.2', peer: n[2] || '65002', network: net[1] || '203.0.113.0', mask: net[2] || '255.255.255.0' };
+  const peers = [];
+  const seen = new Set();
+  const re = /(?:neighbor|peer)\s+(\S+)\s+(?:remote-as|as-number)\s+(\d+)/gi;
+  let match;
+  while ((match = re.exec(t))) {
+    if (seen.has(match[1])) continue;
+    seen.add(match[1]);
+    const description = (t.match(new RegExp('(?:neighbor|peer)\\s+' + match[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s+description\\s+(.+)', 'i')) || [])[1] || 'TRANSIT-PEER';
+    peers.push({ ip: match[1], asn: match[2], description: description.trim() });
+  }
+  if (!peers.length) peers.push({ ip: '192.0.2.2', asn: '65002', description: 'TRANSIT-PEER' });
+  const networks = [];
+  const net = /^\s*network\s+([0-9a-fA-F:.\/]+)(?:\s+(?:mask\s+)?([0-9.]+))?/gim;
+  while ((match = net.exec(t))) {
+    const address = match[1].split('/')[0];
+    const length = match[1].includes('/') ? match[1].split('/')[1] : prefixLen(match[2]);
+    networks.push({ address, mask: match[2] || '255.255.255.0', prefix: address + '/' + length });
+  }
+  if (!networks.length) networks.push({ address: '203.0.113.0', mask: '255.255.255.0', prefix: '203.0.113.0/24' });
+  return { as, id, peers, networks };
 }
 
 function convert() {
   const d = parsed();
+  const ciscoPeers = d.peers.map(p => ` neighbor ${p.ip} remote-as ${p.asn}\n neighbor ${p.ip} description ${p.description}\n neighbor ${p.ip} route-map OUTBOUND out`).join('\n');
+  const huaweiPeers = d.peers.map(p => ` peer ${p.ip} as-number ${p.asn}\n peer ${p.ip} description ${p.description}\n peer ${p.ip} route-policy OUTBOUND export`).join('\n');
+  const juniperPeers = d.peers.map((p, i) => {
+    const group = (p.description || 'PEER' + (i + 1)).toUpperCase().replace(/[^A-Z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 24) || ('PEER' + (i + 1));
+    return `set protocols bgp group ${group} type external\nset protocols bgp group ${group} peer-as ${p.asn}\nset protocols bgp group ${group} neighbor ${p.ip} description "${p.description}"\nset protocols bgp group ${group} export OUTBOUND`;
+  }).join('\n');
   out.textContent = {
-    cisco: `router bgp ${d.as}\n bgp router-id ${d.id}\n neighbor ${d.ip} remote-as ${d.peer}\n neighbor ${d.ip} description TRANSIT-PEER\n neighbor ${d.ip} route-map OUTBOUND out\n network ${d.network} mask ${d.mask}`,
-    huawei: `bgp ${d.as}\n router-id ${d.id}\n peer ${d.ip} as-number ${d.peer}\n peer ${d.ip} route-policy OUTBOUND export\n ipv4-family unicast\n  network ${d.network} ${d.mask}`,
-    juniper: `set routing-options router-id ${d.id}\nset routing-options autonomous-system ${d.as}\nset protocols bgp group TRANSIT type external\nset protocols bgp group TRANSIT peer-as ${d.peer}\nset protocols bgp group TRANSIT neighbor ${d.ip}\nset protocols bgp group TRANSIT export OUTBOUND\nset policy-options prefix-list ANNOUNCED ${d.network}/24`
+    cisco: `router bgp ${d.as}\n bgp router-id ${d.id}\n${ciscoPeers}\n${d.networks.map(n => ' network ' + n.address + ' mask ' + n.mask).join('\n')}`,
+    huawei: `bgp ${d.as}\n router-id ${d.id}\n${huaweiPeers}\n ipv4-family unicast\n${d.peers.map(p => '  peer ' + p.ip + ' enable').join('\n')}\n${d.networks.map(n => '  network ' + n.prefix).join('\n')}`,
+    juniper: `set routing-options router-id ${d.id}\nset routing-options autonomous-system ${d.as}\n${d.networks.map(n => 'set policy-options prefix-list ANNOUNCED ' + n.prefix).join('\n')}\n${juniperPeers}`
   }[vendor];
   document.querySelector('#vendorLabel').textContent = { cisco: 'Cisco IOS / IOS-XE', huawei: 'Huawei VRP', juniper: 'Juniper Junos' }[vendor];
 }
@@ -788,6 +821,39 @@ async function selectProject(el) {
   document.querySelector('#subtitle').textContent = 'Config geçmişi bu proje altında güvenle saklanır.';
   await loadConfigs(activeProject);
 }
+
+async function askAssistant(message) {
+  const reply = document.querySelector('#assistantReply');
+  reply.textContent = 'Yanıt hazırlanıyor…';
+  try {
+    const r = await fetch('/api/assistant', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, config: cfg.value, vendor })
+    });
+    const data = await r.json();
+    if (!r.ok || !data.answer) throw Error(data.error || 'assistant_unavailable');
+    reply.textContent = data.answer;
+  } catch {
+    reply.textContent = 'Yanıt alınamadı. Bir dakika sonra tekrar deneyin.';
+  }
+}
+
+document.querySelectorAll('[data-ask]').forEach(button => {
+  button.onclick = () => askAssistant(button.dataset.ask);
+});
+
+try {
+  const draft = JSON.parse(sessionStorage.getItem('rf-draft') || 'null');
+  if (draft?.config) {
+    cfg.value = draft.config;
+    if (draft.vendor) {
+      vendor = draft.vendor;
+      document.querySelectorAll('[data-v]').forEach(button => button.classList.toggle('active', button.dataset.v === vendor));
+    }
+    sessionStorage.removeItem('rf-draft');
+  }
+} catch {}
 
 async function load() {
   try {

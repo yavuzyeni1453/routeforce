@@ -45,15 +45,32 @@ export async function onRequestPost(context: Context) {
     const result = await upstream.json() as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
     const raw = result.candidates?.[0]?.content?.parts?.map(p => p.text || "").join("").trim();
     if (!raw) return Response.json({ error: "empty_ai_response" }, { status: 502 });
-    let parsed: { answer?: string; config_patch?: unknown; description?: unknown; steps?: unknown } = {};
+    let parsed: { answer?: unknown; config_patch?: unknown; description?: unknown; steps?: unknown } = {};
         try { parsed = JSON.parse(raw); } catch { parsed.answer = raw; }
-        // Some model responses wrap their own JSON inside the answer field. Normalize it.
+        const linesOf = (value: unknown, depth = 0): string[] => {
+          if (depth > 4 || value == null) return [];
+          if (typeof value === "string") {
+            const trimmed = value.trim();
+            if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
+              try { return linesOf(JSON.parse(trimmed), depth + 1); } catch { return [trimmed]; }
+            }
+            return trimmed.split("\n").map(line => line.trim()).filter(Boolean);
+          }
+          if (Array.isArray(value)) return value.flatMap(item => linesOf(item, depth + 1));
+          if (typeof value === "object") {
+            const record = value as { answer?: unknown; description?: unknown; steps?: unknown };
+            const nested = [...linesOf(record.answer, depth + 1), ...linesOf(record.description, depth + 1), ...linesOf(record.steps, depth + 1)];
+            return nested.length ? nested : [];
+          }
+          return [String(value)];
+        };
+        if (Array.isArray(parsed)) parsed = { answer: parsed };
         if (typeof parsed.answer === "string" && parsed.answer.trim().startsWith("{")) {
           try {
             const nested = JSON.parse(parsed.answer);
             parsed.description = nested.description || parsed.description;
             parsed.steps = nested.steps || parsed.steps;
-            parsed.answer = nested.description || parsed.answer;
+            parsed.answer = nested.answer || nested.description || parsed.answer;
           } catch { /* keep the original answer */ }
         }
         const directPatch = Array.isArray(parsed.config_patch) ? parsed.config_patch : [];
@@ -62,7 +79,7 @@ export async function onRequestPost(context: Context) {
           const snippets = [...step.matchAll(/`([^`\\n]+)`/g)].map(m => m[1]);
           return snippets.length ? snippets : [];
         }) : [];
-        const answer = String(parsed.answer || parsed.description || raw).slice(0, 5000);
+        const answer = linesOf(parsed.answer || parsed.description || parsed.steps || raw).join("\n").slice(0, 5000);
         const configPatch = [...directPatch, ...stepPatch].filter(x => typeof x === "string").map(x => String(x).trim()).filter(Boolean).slice(0, 100);
         return Response.json({ answer, configPatch });
   } catch {

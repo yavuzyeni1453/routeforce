@@ -914,8 +914,8 @@ pre.code {
 
 @media (max-width: 860px) {
   .shell { padding: 20px 18px; }
-  .top { padding: 0 18px; }
-  .nav { display: none; }
+  .top { height: auto; flex-wrap: wrap; gap: 10px; padding: 12px 16px; }
+  .nav { display: flex; flex-wrap: wrap; width: 100%; }
   .hero-bar h1 { font-size: 26px; }
   .layout { display: block; }
   .panel { margin-bottom: 20px; }
@@ -1064,7 +1064,7 @@ pre.code {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
           İndir (.cfg)
         </button>
-        <a class="btn btn-soft" href="/app.html" style="text-decoration:none; margin-left:auto;">
+        <a class="btn btn-soft" id="saveProject" href="/app.html" style="text-decoration:none; margin-left:auto;">
           Projeye kaydet →
         </a>
       </div>
@@ -1199,20 +1199,41 @@ function detectVendor(t) {
   return 'cisco';
 }
 
+function collectPeers(t, source) {
+  const peers = [];
+  const seen = new Set();
+  if (source === 'juniper') {
+    const re = /set\s+protocols\s+bgp\s+group\s+(\S+)\s+neighbor\s+(\S+)/gi;
+    let match;
+    while ((match = re.exec(t))) {
+      const group = match[1];
+      const ip = match[2];
+      if (seen.has(group + ' ' + ip)) continue;
+      seen.add(group + ' ' + ip);
+      const asn = (t.match(new RegExp('set\\s+protocols\\s+bgp\\s+group\\s+' + group + '\\s+peer-as\\s+(\\d+)', 'i')) || [])[1] || '65002';
+      const description = (t.match(new RegExp('neighbor\\s+' + ip.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s+description\\s+"?([^"\\n]+)', 'i')) || [])[1] || group;
+      peers.push({ ip, asn, description: description.trim(), group });
+    }
+  } else {
+    const re = /(?:neighbor|peer)\s+(\S+)\s+(?:remote-as|as-number)\s+(\d+)/gi;
+    let match;
+    while ((match = re.exec(t))) {
+      if (seen.has(match[1])) continue;
+      seen.add(match[1]);
+      const description = (t.match(new RegExp('(?:neighbor|peer)\\s+' + match[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s+description\\s+(.+)', 'i')) || [])[1] || 'TRANSIT-PEER';
+      peers.push({ ip: match[1], asn: match[2], description: description.trim() });
+    }
+  }
+  return peers.length ? peers : [{ ip: '192.0.2.2', asn: '65002', description: 'TRANSIT-PEER' }];
+}
+
 function parse() {
   const t = input.value;
   const source = detectVendor(t);
   const as = (t.match(source === 'juniper' ? /set\s+routing-options\s+autonomous-system\s+(\d+)/i : /(?:router\s+bgp|^\s*bgp)\s+(\d+)/im) || [])[1] || '65001';
   const id = (t.match(source === 'juniper' ? /set\s+routing-options\s+router-id\s+([\d.]+)/i : /router-id\s+([\d.]+)/i) || [])[1] || '10.0.0.1';
-  let n = [];
-  if (source === 'juniper') {
-    const peer = (t.match(/set\s+protocols\s+bgp\s+group\s+(\S+).*?\s+neighbor\s+(\S+)/i) || []);
-    const peerAs = (peer[1] && t.match(new RegExp('set\\s+protocols\\s+bgp\\s+group\\s+' + peer[1] + '\\s+peer-as\\s+(\\d+)', 'i'))) || [];
-    n = [, peer[2], peerAs[1]];
-  } else {
-    n = t.match(/(?:neighbor|peer)\s+(\S+)\s+(?:remote-as|as-number)\s+(\d+)/i) || [];
-  }
-  const description = (t.match(source === 'juniper' ? /description\s+"?([^"\n]+)"?/i : /(?:neighbor|peer)\s+\S+\s+description\s+(.+)/i) || [])[1] || 'TRANSIT-PEER';
+  const peers = collectPeers(t, source);
+  const description = peers[0].description;
   const networks = [];
   const re = /^\s*network\s+([0-9a-fA-F:.\/]+)(?:\s+(?:mask\s+)?([0-9.]+))?/gim;
   let m;
@@ -1228,8 +1249,9 @@ function parse() {
     source,
     as,
     id,
-    peer: n[1] || '192.0.2.2',
-    peerAs: n[2] || '65002',
+    peers,
+    peer: peers[0].ip,
+    peerAs: peers[0].asn,
     description: description.trim(),
     networks: unique.length ? unique : [{ prefix: '203.0.113.0/24', address: '203.0.113.0', mask: '255.255.255.0' }],
     hasFilter: /prefix-list|ip-prefix|policy-statement|route-policy|route-map/i.test(t),
@@ -1266,30 +1288,44 @@ function render() {
   const prefixes = d.networks.map(x => x.prefix);
   const ciscoNetworks = d.networks.map(x => ' network ' + x.address + ' mask ' + (x.mask || '255.255.255.0')).join('\n');
   
+  const ciscoPeers = d.peers.map(p =>
+    ' neighbor ' + p.ip + ' remote-as ' + p.asn + '\n' +
+    ' neighbor ' + p.ip + ' description ' + p.description + '\n' +
+    ' neighbor ' + p.ip + ' route-map RF-OUT out\n' +
+    ' neighbor ' + p.ip + ' maximum-prefix 100 80 restart 5'
+  ).join('\n');
   const cisco = '! RouteForce generated — review before deployment\n' +
     prefixes.map((p, i) => 'ip prefix-list RF-OUT seq ' + ((i + 1) * 10) + ' permit ' + p).join('\n') +
     '\nroute-map RF-OUT permit 10\n match ip address prefix-list RF-OUT\n\n' +
     'router bgp ' + d.as + '\n' +
     ' bgp router-id ' + d.id + '\n' +
-    ' neighbor ' + d.peer + ' remote-as ' + d.peerAs + '\n' +
-    ' neighbor ' + d.peer + ' description ' + d.description + '\n' +
-    ' neighbor ' + d.peer + ' route-map RF-OUT out\n' +
-    ' neighbor ' + d.peer + ' maximum-prefix 100 80 restart 5\n' +
+    ciscoPeers + '\n' +
     ciscoNetworks + '\n\n! Add peer password and inbound policy as required.';
 
+  const huaweiPeers = d.peers.map(p =>
+    ' peer ' + p.ip + ' as-number ' + p.asn + '\n' +
+    ' peer ' + p.ip + ' description ' + p.description + '\n' +
+    ' peer ' + p.ip + ' route-policy RF-OUT export'
+  ).join('\n');
   const huawei = '# RouteForce generated — review before commit\n' +
     prefixes.map((p, i) => 'ip ip-prefix RF-OUT index ' + ((i + 1) * 10) + ' permit ' + p).join('\n') +
     '\nroute-policy RF-OUT permit node 10\n if-match ip-prefix RF-OUT\n#\n' +
     'bgp ' + d.as + '\n' +
     ' router-id ' + d.id + '\n' +
-    ' peer ' + d.peer + ' as-number ' + d.peerAs + '\n' +
-    ' peer ' + d.peer + ' description ' + d.description + '\n' +
-    ' peer ' + d.peer + ' route-policy RF-OUT export\n' +
+    huaweiPeers + '\n' +
     ' ipv4-family unicast\n' +
-    '  peer ' + d.peer + ' enable\n' +
+    d.peers.map(p => '  peer ' + p.ip + ' enable').join('\n') + '\n' +
     d.networks.map(x => '  network ' + x.prefix).join('\n') + '\n#\n' +
     '# Add peer password, import policy and prefix-limit as required.';
 
+  const juniperPeers = d.peers.map((p, i) => {
+    const group = (p.group || p.description || 'PEER' + (i + 1)).toUpperCase().replace(/[^A-Z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 24) || ('PEER' + (i + 1));
+    return 'set protocols bgp group ' + group + ' type external\n' +
+      'set protocols bgp group ' + group + ' peer-as ' + p.asn + '\n' +
+      'set protocols bgp group ' + group + ' neighbor ' + p.ip + ' description "' + p.description + '"\n' +
+      'set protocols bgp group ' + group + ' export RF-OUT\n' +
+      'set protocols bgp group ' + group + ' neighbor ' + p.ip + ' family inet unicast prefix-limit maximum 100';
+  }).join('\n');
   const juniper = '# RouteForce generated — review before commit\n' +
     'set routing-options router-id ' + d.id + '\n' +
     'set routing-options autonomous-system ' + d.as + '\n' +
@@ -1297,11 +1333,7 @@ function render() {
     'set policy-options policy-statement RF-OUT term ALLOW from prefix-list RF-OUT\n' +
     'set policy-options policy-statement RF-OUT term ALLOW then accept\n' +
     'set policy-options policy-statement RF-OUT term REJECT then reject\n' +
-    'set protocols bgp group TRANSIT type external\n' +
-    'set protocols bgp group TRANSIT peer-as ' + d.peerAs + '\n' +
-    'set protocols bgp group TRANSIT neighbor ' + d.peer + ' description "' + d.description + '"\n' +
-    'set protocols bgp group TRANSIT export RF-OUT\n' +
-    'set protocols bgp group TRANSIT neighbor ' + d.peer + ' family inet unicast prefix-limit maximum 100\n' +
+    juniperPeers + '\n' +
     '# Add authentication-key and import policy as required.';
 
   out.textContent = { cisco, huawei, juniper }[vendor];
@@ -1380,6 +1412,10 @@ document.querySelector('#preset-dual').onclick = () => {
 document.querySelector('#copy').onclick = async () => {
   await navigator.clipboard.writeText(out.textContent);
   showToast('✓ Çıktı panoya kopyalandı');
+};
+
+document.querySelector('#saveProject').onclick = () => {
+  sessionStorage.setItem('rf-draft', JSON.stringify({ config: input.value, vendor }));
 };
 
 document.querySelector('#downloadBtn').onclick = () => {

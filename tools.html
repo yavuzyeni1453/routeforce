@@ -889,8 +889,9 @@ pre.terminal-screen {
 
 @media (max-width: 760px) {
   .shell { padding: 16px 14px; }
-  .top { padding: 0 16px; }
-  .nav, .tag { display: none; }
+  .top { height: auto; flex-wrap: wrap; gap: 10px; padding: 12px 16px; }
+  .nav { display: flex; flex-wrap: wrap; width: 100%; }
+  .tag { display: none; }
   .query-row { flex-direction: column; }
   .go-btn { width: 100%; }
 }
@@ -959,11 +960,11 @@ pre.terminal-screen {
     <div class="category-strip">
       <div class="cat-tabs" id="catTabs">
         <button class="cat-tab active" data-cat="all">Tümü (21)</button>
-        <button class="cat-tab" data-cat="free">⚡ Açık & Ücretsiz (12)</button>
+        <button class="cat-tab" data-cat="free">⚡ Açık & Ücretsiz (10)</button>
         <button class="cat-tab" data-cat="bgp">🛰️ BGP & Rota (5)</button>
         <button class="cat-tab" data-cat="domain">🌐 DNS & Domain (4)</button>
-        <button class="cat-tab" data-cat="sec">🛡️ Tehdit & Güvenlik (10)</button>
-        <button class="cat-tab" data-cat="api">🔑 API Araçları (9)</button>
+        <button class="cat-tab" data-cat="sec">🛡️ Tehdit & Güvenlik (12)</button>
+        <button class="cat-tab" data-cat="api">🔑 API Araçları (11)</button>
       </div>
 
       <div class="filter-input-wrap">
@@ -1057,15 +1058,15 @@ const allTools = {
   dns: { cat: 'domain', isApi: false, icon: '🌐', title: 'DNS Kayıtları', sub: 'A, MX, TXT', help: 'A, AAAA, MX, NS ve TXT kayıtlarını Cloudflare DoH üzerinden sorgulayın.', placeholder: 'cloudflare.com veya google.com', source: 'Cloudflare DoH' },
   whois: { cat: 'domain', isApi: false, icon: '📋', title: 'WHOIS / RDAP', sub: 'Registry Kaydı', help: 'IP adresi veya alan adı için tescil sahibi, netname ve kayıt otoritesi bilgisi.', placeholder: '8.8.8.8 veya example.com', source: 'RDAP Registry' },
   bgp: { cat: 'bgp', isApi: false, icon: '🛰️', title: 'BGP Rota', sub: 'AS Yolu & Rota', help: 'RIPEstat RIS üzerinden ASN veya prefix için global anons ve AS-Path görünürlüğü.', placeholder: 'AS13335 veya 1.1.1.0/24', source: 'RIPEstat RIS' },
-  rpki: { cat: 'bgp', isApi: false, icon: '🛡️', title: 'RPKI', sub: 'ROA Doğrulama', help: 'Otonom sistemin (ASN) anons ettiği prefixlerin Route Origin Authorization geçerliliği.', placeholder: 'AS13335', source: 'RIPEstat RPKI' },
+  rpki: { cat: 'bgp', isApi: false, icon: '🛡️', title: 'RPKI', sub: 'ROA Doğrulama', help: 'ASN için örnek duyuruları veya tek bir prefix için ROA geçerliliğini RIPEstat üzerinden doğrular.', placeholder: 'AS13335 veya 1.1.1.0/24', source: 'RIPEstat RPKI' },
   bgp_prefixes: { cat: 'bgp', isApi: false, icon: '📡', title: 'Prefixler', sub: 'Duyurulan Ağlar', help: 'Bir ASN tarafından küresel internete anons edilen tüm IPv4 ve IPv6 prefix listesi.', placeholder: 'AS13335', source: 'RIPEstat' },
   bgp_history: { cat: 'bgp', isApi: false, icon: '⏱️', title: 'BGP Tarihi', sub: '14 Günlük Rota', help: 'Son 14 gün içindeki BGP anons değişiklikleri ve rota stabilitesi.', placeholder: 'AS13335 veya 1.1.1.0/24', source: 'RIPEstat' },
   peeringdb: { cat: 'bgp', isApi: false, icon: '🤝', title: 'PeeringDB', sub: 'IXP & Eşleşme', help: 'ASN için Internet Exchange (IXP) noktaları, tesisler ve peering politikası.', placeholder: 'AS13335', source: 'PeeringDB' },
   ipapi: { cat: 'sec', isApi: false, icon: '📍', title: 'IP Intel', sub: 'Konum & ISP', help: 'Genel IP adresi için coğrafi konum, ISP operatörü, ASN ve organizasyon verisi.', placeholder: '8.8.8.8 veya 1.1.1.1', source: 'ipinfo.io' },
   certificates: { cat: 'domain', isApi: false, icon: '🔒', title: 'Sertifikalar', sub: 'TLS CT Kaydı', help: 'Certificate Transparency (CT) kayıtlarında yayımlanmış SSL/TLS sertifikaları.', placeholder: 'example.com', source: 'crt.sh' },
   macvendor: { cat: 'sec', isApi: false, icon: '💻', title: 'MAC Vendor', sub: 'Donanım Üretici', help: 'OUI donanım üreticisini MAC adresi üzerinden anında tespit edin.', placeholder: '00:11:22:33:44:55', source: 'MAC Vendors' },
-  urlhaus: { cat: 'sec', isApi: false, icon: '⚠️', title: 'URLHaus', sub: 'Zararlı URL', help: 'Zararlı yazılım ve kimlik avı dağıtan bilinen kötü amaçlı URL veritabanı.', placeholder: 'example.com veya 1.2.3.4', source: 'abuse.ch URLHaus' },
-  threatfox: { cat: 'sec', isApi: false, icon: '🦊', title: 'ThreatFox', sub: 'IOC İstihbarat', help: 'Zararlı yazılım göstergeleri (IOC) ve C2 istihbarat kaydı.', placeholder: '1.2.3.4 veya domain', source: 'abuse.ch ThreatFox' },
+  urlhaus: { cat: 'sec', isApi: true, icon: '⚠️', title: 'URLHaus', sub: 'Zararlı URL', help: 'abuse.ch artık API anahtarı istiyor. Anahtar Entegrasyonlar ekranına kaydedildikten sonra host sorgusu çalışır.', placeholder: 'example.com veya 1.2.3.4', source: 'abuse.ch URLHaus' },
+  threatfox: { cat: 'sec', isApi: true, icon: '🦊', title: 'ThreatFox', sub: 'IOC İstihbarat', help: 'abuse.ch artık API anahtarı istiyor. Anahtar kaydedildikten sonra IOC sorgusu çalışır.', placeholder: '1.2.3.4 veya domain', source: 'abuse.ch ThreatFox' },
 
   // API Integrated Tools (9)
   abuseipdb: { cat: 'sec', isApi: true, icon: '🚨', title: 'AbuseIPDB', sub: 'İtibar Raporu', help: 'IP adresinin saldırı ve kötüye kullanım skorları (API gerektirir).', placeholder: '8.8.8.8', source: 'AbuseIPDB v2' },
@@ -1322,7 +1323,7 @@ async function runQuery() {
     $('#cardStatus').className = 'badge badge-mint';
 
     let parsed;
-    try { parsed = JSON.parse(data.output); } catch { parsed = data.output; }
+    try { parsed = JSON.parse(data.output); } catch { parsed = data.output || data.data || data; }
 
     renderVisualCards(parsed, targetVal, data.summary);
 

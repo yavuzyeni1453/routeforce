@@ -1,18 +1,75 @@
-type Tool = "dns"|"whois"|"bgp"|"rpki"|"certificates"|"urlhaus"|"bgp_history"|"bgp_prefixes"|"peeringdb"|"threatfox"|"ipapi"|"macvendor";
-const privateV4=/^(10\.|127\.|0\.|169\.254\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.)/;
-const tools:Tool[]=["dns","whois","bgp","rpki","certificates","urlhaus","bgp_history","bgp_prefixes","peeringdb","threatfox","ipapi","macvendor"];
-const pretty=(value:unknown)=>JSON.stringify(value,null,2);
-function valid(value:string){return value.length>0&&value.length<254&&/^[a-zA-Z0-9.:/_-]+$/.test(value)&&!privateV4.test(value)}
-export async function onRequestGet(context:{request:Request}){const url=new URL(context.request.url),tool=url.searchParams.get("tool") as Tool,target=(url.searchParams.get("target")||"").trim();if(!tools.includes(tool)||!valid(target))return Response.json({error:"invalid_target"},{status:400});try{
-if(tool==="dns"){const records:Record<string,unknown>={};for(const type of ["A","AAAA","MX","NS","TXT"]){const r=await fetch("https://cloudflare-dns.com/dns-query?name="+encodeURIComponent(target)+"&type="+type,{headers:{Accept:"application/dns-json"}});const b=await r.json() as {Answer?:unknown[]};records[type]=b.Answer||[]}const count=Object.values(records).flat().length;return Response.json({summary:count?count+" DNS kaydı bulundu":"Kayıt bulunamadı",output:pretty(records)})}
-if(tool==="whois"){const isIp=/^\d{1,3}(?:\.\d{1,3}){3}$|:/.test(target);const tld=target.split(".").pop()?.toLowerCase();const base=isIp?"https://rdap.arin.net/registry/ip/":(tld==="com"||tld==="net"?"https://rdap.verisign.com/"+tld+"/v1/domain/":"https://rdap.org/domain/");const r=await fetch(base+encodeURIComponent(target),{headers:{Accept:"application/rdap+json","User-Agent":"RouteForce/1.0"}});if(!r.ok)return Response.json({error:"lookup_not_found"},{status:404});const b=await r.json();return Response.json({summary:"RDAP kaydı bulundu",output:pretty(b)})}
-if(tool==="bgp"){const resource=target.toUpperCase().startsWith("AS")?target.toUpperCase():target;const endpoint=resource.startsWith("AS")?"as-overview":"prefix-overview";const r=await fetch("https://stat.ripe.net/data/"+endpoint+"/data.json?resource="+encodeURIComponent(resource));if(!r.ok)throw Error();const b=await r.json() as {data?:unknown};return Response.json({summary:"RIPEstat BGP görünürlüğü",output:pretty(b.data||b)})}
-if(tool==="bgp_history"||tool==="bgp_prefixes"){const endpoint=tool==="bgp_history"?"routing-history":"announced-prefixes";const dates=tool==="bgp_history"?("&starttime="+encodeURIComponent(new Date(Date.now()-12096e5).toISOString())+"&endtime="+encodeURIComponent(new Date().toISOString())):"";const r=await fetch("https://stat.ripe.net/data/"+endpoint+"/data.json?resource="+encodeURIComponent(target)+dates);if(!r.ok)throw Error();const b=await r.json() as {data?:unknown};return Response.json({summary:tool==="bgp_history"?"BGP rota geçmişi":"Duyurulan prefixler",output:pretty(b.data||b)})}
-if(tool==="peeringdb"){const asn=target.toUpperCase().replace(/^AS/,"");if(!/^\d+$/.test(asn))return Response.json({error:"asn_required"},{status:400});const r=await fetch("https://www.peeringdb.com/api/net?asn="+asn,{headers:{Accept:"application/json","User-Agent":"RouteForce/1.0"}});if(!r.ok)throw Error();const b=await r.json();return Response.json({summary:"PeeringDB ağı bulundu",output:pretty(b)})}
-if(tool==="rpki"){if(!/^AS\d+$/i.test(target))return Response.json({error:"asn_required"},{status:400});const r=await fetch("https://stat.ripe.net/data/rpki-validation/data.json?resource="+encodeURIComponent(target.toUpperCase()));if(!r.ok)throw Error();const b=await r.json() as {data?:unknown};return Response.json({summary:"RPKI doğrulama sonucu",output:pretty(b.data||b)})}
-if(tool==="certificates"){const r=await fetch("https://crt.sh/?q="+encodeURIComponent(target)+"&output=json",{headers:{Accept:"application/json"}});if(!r.ok)throw Error();const rows=await r.json() as Array<Record<string,unknown>>;const selected=rows.slice(0,25).map(x=>({common_name:x.common_name,name_value:x.name_value,issuer_name:x.issuer_name,not_before:x.not_before,not_after:x.not_after}));return Response.json({summary:selected.length+" sertifika kaydı bulundu",output:pretty(selected)})}
-if(tool==="urlhaus"){const r=await fetch("https://urlhaus-api.abuse.ch/v1/host/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"host="+encodeURIComponent(target)});if(!r.ok)throw Error();const b=await r.json() as {query_status?:string;urls?:unknown[]};return Response.json({summary:b.query_status==="ok"?(b.urls?.length||0)+" URLHaus kaydı bulundu":"URLHaus kaydı bulunamadı",output:pretty(b)})}
-if(tool==="threatfox"){const r=await fetch("https://threatfox-api.abuse.ch/api/v1/",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({query:"search_ioc",search_term:target})});if(!r.ok)throw Error();const b=await r.json() as {query_status?:string;data?:unknown[]};return Response.json({summary:b.query_status==="ok"?(b.data?.length||0)+" ThreatFox kaydı bulundu":"ThreatFox kaydı bulunamadı",output:pretty(b)})}
-if(tool==="ipapi"){const r=await fetch("https://ipinfo.io/"+encodeURIComponent(target)+"/json");if(!r.ok)throw Error();const b=await r.json();return Response.json({summary:"IP konum ve ASN bilgisi",output:pretty(b)})}
-const r=await fetch("https://api.macvendors.com/"+encodeURIComponent(target));if(!r.ok)return Response.json({summary:"MAC vendor kaydı bulunamadı",output:pretty({})});return Response.json({summary:"MAC üreticisi bulundu",output:pretty({vendor:await r.text()})})
-}catch{return Response.json({error:"upstream_unavailable",message:"Sağlayıcı şu anda RouteForce üzerinden yanıt vermiyor."},{status:424})}}
+import { LookupError, rpkiLookup, whoisLookup } from "../../lib/lookup";
+
+type Tool = "dns" | "whois" | "bgp" | "rpki" | "certificates" | "urlhaus" | "bgp_history" | "bgp_prefixes" | "peeringdb" | "threatfox" | "ipapi" | "macvendor";
+const privateV4 = /^(10\.|127\.|0\.|169\.254\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.)/;
+const tools: Tool[] = ["dns", "whois", "bgp", "rpki", "certificates", "urlhaus", "bgp_history", "bgp_prefixes", "peeringdb", "threatfox", "ipapi", "macvendor"];
+const pretty = (value: unknown) => JSON.stringify(value, null, 2);
+
+function valid(value: string) {
+  return value.length > 0 && value.length < 254 && /^[a-zA-Z0-9.:/_-]+$/.test(value) && !privateV4.test(value);
+}
+
+export async function onRequestGet(context: { request: Request }) {
+  const url = new URL(context.request.url);
+  const tool = url.searchParams.get("tool") as Tool;
+  const target = (url.searchParams.get("target") || "").trim();
+  if (!tools.includes(tool) || !valid(target)) return Response.json({ error: "invalid_target", message: "Hedef boş, özel bir ağ veya desteklenmeyen bir değer." }, { status: 400 });
+  try {
+    if (tool === "dns") {
+      const records: Record<string, unknown> = {};
+      for (const type of ["A", "AAAA", "MX", "NS", "TXT"]) {
+        const response = await fetch("https://cloudflare-dns.com/dns-query?name=" + encodeURIComponent(target) + "&type=" + type, { headers: { Accept: "application/dns-json" } });
+        const body = await response.json() as { Answer?: unknown[] };
+        records[type] = body.Answer || [];
+      }
+      const count = Object.values(records).flat().length;
+      return Response.json({ summary: count ? count + " DNS kaydı bulundu" : "Kayıt bulunamadı", output: pretty(records) });
+    }
+    if (tool === "whois") return Response.json(await whoisLookup(target));
+    if (tool === "bgp") {
+      const resource = target.toUpperCase().startsWith("AS") ? target.toUpperCase() : target;
+      const endpoint = resource.startsWith("AS") ? "as-overview" : "prefix-overview";
+      const response = await fetch("https://stat.ripe.net/data/" + endpoint + "/data.json?resource=" + encodeURIComponent(resource));
+      if (!response.ok) throw new LookupError("upstream_unavailable", "RIPEstat yanıt vermiyor.", 424);
+      const body = await response.json() as { data?: unknown };
+      return Response.json({ summary: "RIPEstat BGP görünürlüğü", output: pretty(body.data || body) });
+    }
+    if (tool === "bgp_history" || tool === "bgp_prefixes") {
+      const endpoint = tool === "bgp_history" ? "routing-history" : "announced-prefixes";
+      const dates = tool === "bgp_history" ? "&starttime=" + encodeURIComponent(new Date(Date.now() - 12096e5).toISOString()) + "&endtime=" + encodeURIComponent(new Date().toISOString()) : "";
+      const response = await fetch("https://stat.ripe.net/data/" + endpoint + "/data.json?resource=" + encodeURIComponent(target) + dates);
+      if (!response.ok) throw new LookupError("upstream_unavailable", "RIPEstat yanıt vermiyor.", 424);
+      const body = await response.json() as { data?: unknown };
+      return Response.json({ summary: tool === "bgp_history" ? "BGP rota geçmişi" : "Duyurulan prefixler", output: pretty(body.data || body) });
+    }
+    if (tool === "peeringdb") {
+      const asn = target.toUpperCase().replace(/^AS/, "");
+      if (!/^\d+$/.test(asn)) return Response.json({ error: "asn_required", message: "PeeringDB için ASN girin. Örnek: AS13335" }, { status: 400 });
+      const response = await fetch("https://www.peeringdb.com/api/net?asn=" + asn, { headers: { Accept: "application/json", "User-Agent": "RouteForce/1.0" } });
+      if (!response.ok) throw new LookupError("upstream_unavailable", "PeeringDB yanıt vermiyor.", 424);
+      return Response.json({ summary: "PeeringDB ağı bulundu", output: pretty(await response.json()) });
+    }
+    if (tool === "rpki") return Response.json(await rpkiLookup(target));
+    if (tool === "certificates") {
+      const response = await fetch("https://crt.sh/?q=" + encodeURIComponent(target) + "&output=json", { headers: { Accept: "application/json" } });
+      if (!response.ok) throw new LookupError("upstream_unavailable", "crt.sh yanıt vermiyor.", 424);
+      const rows = await response.json() as Array<Record<string, unknown>>;
+      const selected = rows.slice(0, 25).map(row => ({ common_name: row.common_name, name_value: row.name_value, issuer_name: row.issuer_name, not_before: row.not_before, not_after: row.not_after }));
+      return Response.json({ summary: selected.length + " sertifika kaydı bulundu", output: pretty(selected) });
+    }
+    if (tool === "urlhaus" || tool === "threatfox") {
+      return Response.json({ error: "integration_not_configured", message: "abuse.ch bu sorguyu artık API anahtarı olmadan vermiyor. Yönetim → Entegrasyonlar ekranından anahtar ekleyin." }, { status: 424 });
+    }
+    if (tool === "ipapi") {
+      const response = await fetch("https://ipinfo.io/" + encodeURIComponent(target) + "/json");
+      if (!response.ok) throw new LookupError("upstream_unavailable", "IP konum servisi yanıt vermiyor.", 424);
+      return Response.json({ summary: "IP konum ve ASN bilgisi", output: pretty(await response.json()) });
+    }
+    const response = await fetch("https://api.macvendors.com/" + encodeURIComponent(target));
+    if (!response.ok) return Response.json({ summary: "MAC vendor kaydı bulunamadı", output: pretty({}) });
+    return Response.json({ summary: "MAC üreticisi bulundu", output: pretty({ vendor: await response.text() }) });
+  } catch (error) {
+    if (error instanceof LookupError) return Response.json({ error: error.code, message: error.message }, { status: error.status >= 400 && error.status < 500 ? error.status : 424 });
+    return Response.json({ error: "upstream_unavailable", message: "Sağlayıcı şu anda RouteForce üzerinden yanıt vermiyor." }, { status: 424 });
+  }
+}

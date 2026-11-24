@@ -500,8 +500,8 @@ body {
 }
 
 @media(max-width: 760px) {
-  .top { padding: 0 18px; }
-  .nav { display: none; }
+  .top { height: auto; flex-wrap: wrap; gap: 10px; padding: 12px 16px; }
+  .nav { display: flex; flex-wrap: wrap; width: 100%; }
   .tag { display: none; }
   .wrap { padding: 20px 18px; }
   .intro { align-items: flex-start; flex-direction: column; }
@@ -546,7 +546,7 @@ body {
     <div>
       <div class="ey">LOOKING GLASS</div>
       <h1>İnternet rotasını farklı bir açıdan görün.</h1>
-      <p>Prefix, ASN, domain ve IP görünürlüğünü tek ekranda sorgulayın. Canlı BGP, WHOIS ve DNS verisi herkese açıktır.</p>
+      <p>Prefix, ASN, domain ve IP görünürlüğünü tek ekranda sorgulayın. BGP, WHOIS, DNS, ping, traceroute ve MTR herkese açıktır.</p>
     </div>
     <div class="vantage">
       <i class="dot"></i> Public data vantage · Global
@@ -558,9 +558,9 @@ body {
       <button class="active" data-tool="bgp">BGP lookup</button>
       <button data-tool="whois">WHOIS</button>
       <button data-tool="dns">DNS</button>
-      <button class="locked" data-tool="ping">Ping</button>
-      <button class="locked" data-tool="trace">Traceroute</button>
-      <button class="locked" data-tool="mtr">MTR</button>
+      <button data-tool="ping">Ping</button>
+      <button data-tool="trace">Traceroute</button>
+      <button data-tool="mtr">MTR</button>
     </div>
     
     <form class="query" id="query">
@@ -613,8 +613,8 @@ body {
           <span id="status">Sorgu için hedef girin.</span>
         </div>
         <pre class="result" id="output">routeforce-lg $ ready
-> BGP lookup, WHOIS ve DNS canlı veri kaynaklarını kullanır.
-> Ping, traceroute ve MTR için RouteForce probe node yakında eklenecek.</pre>
+> BGP, WHOIS ve DNS genel kayıtlardan gelir.
+> Ping, traceroute ve MTR dünya üzerindeki probe noktalarından çalışır.</pre>
       </div>
     </section>
 
@@ -631,28 +631,28 @@ body {
             <b>Ping analizi</b>
             <small>Latency, loss, jitter</small>
           </div>
-          <span class="pending">PROBE GEREKİR</span>
+          <span class="pending">CANLI</span>
         </div>
         <div class="probeitem">
           <div>
             <b>Traceroute</b>
             <small>Hop-by-hop rota</small>
           </div>
-          <span class="pending">PROBE GEREKİR</span>
+          <span class="pending">CANLI</span>
         </div>
         <div class="probeitem">
           <div>
             <b>MTR</b>
             <small>Tekrarlı yol ölçümü</small>
           </div>
-          <span class="pending">PROBE GEREKİR</span>
+          <span class="pending">CANLI</span>
         </div>
         <div class="probeitem">
           <div>
             <b>Speed test</b>
-            <small>Download performansı</small>
+            <small>10 MB indirme ölçümü</small>
           </div>
-          <span class="pending">YAKINDA</span>
+          <button id="speedTest" type="button" class="pending" style="cursor:pointer;background:transparent;color:inherit;border:0;font:inherit;">Başlat</button>
         </div>
       </div>
     </section>
@@ -677,11 +677,11 @@ body {
 <script>
 const labels = {
   bgp: ['BGP görünürlüğü', 'BGP: ASN, IPv4/IPv6 adresi veya prefix girin.', 'RIPEstat', 'BGP routing visibility'],
-  whois: ['WHOIS / RDAP', 'WHOIS: IP adresi veya domain girin.', 'RDAP', 'Registry ownership data'],
+  whois: ['WHOIS / RDAP', 'WHOIS: IP adresi veya domain girin.', 'RIPEstat / RDAP', 'Registry ownership data'],
   dns: ['DNS lookup', 'DNS: Bir domain girin.', 'Cloudflare DoH', 'Public DNS A records'],
-  ping: ['Ping analizi', 'Ping için RouteForce probe node gerekir.', 'Probe gerekli', 'Latency, loss, jitter'],
-  trace: ['Traceroute', 'Traceroute için RouteForce probe node gerekir.', 'Probe gerekli', 'Hop-by-hop route'],
-  mtr: ['MTR', 'MTR için RouteForce probe node gerekir.', 'Probe gerekli', 'Repeated path checks']
+  ping: ['Ping analizi', 'Ping: genel bir IP veya alan adı girin.', 'Globalping', 'Latency, loss, jitter'],
+  trace: ['Traceroute', 'Traceroute: genel bir IP veya alan adı girin.', 'Globalping', 'Hop-by-hop route'],
+  mtr: ['MTR', 'MTR: genel bir IP veya alan adı girin.', 'Globalping', 'Repeated path checks']
 };
 
 let tool = 'bgp';
@@ -696,7 +696,7 @@ function choose(next) {
   document.querySelector('#hint').textContent = l[1];
   document.querySelector('#source').textContent = l[2];
   document.querySelector('#sourceNote').textContent = l[3];
-  target.placeholder = tool === 'bgp' ? 'AS13335, 1.1.1.0/24 veya example.com' : tool === 'whois' ? 'IP adresi veya example.com' : 'example.com';
+  target.placeholder = tool === 'bgp' ? 'AS13335, 1.1.1.0/24 veya example.com' : tool === 'whois' ? 'IP adresi veya example.com' : tool === 'dns' ? 'example.com' : '1.1.1.1 veya example.com';
 }
 
 document.querySelectorAll('[data-tool]').forEach(b => b.onclick = () => choose(b.dataset.tool));
@@ -705,12 +705,6 @@ document.querySelector('#query').onsubmit = async e => {
   e.preventDefault();
   const value = target.value.trim();
   if (!value) return;
-  if (['ping', 'trace', 'mtr'].includes(tool)) {
-    document.querySelector('#state').textContent = 'PROBE GEREKİR';
-    document.querySelector('#status').textContent = 'Bu araç henüz bağlı değil.';
-    output.textContent = 'routeforce-lg $ ' + tool + ' ' + value + '\n> Bu test, RouteForce probe node bağlandığında aktif olacaktır.';
-    return;
-  }
   document.querySelector('#shownTarget').textContent = value;
   document.querySelector('#state').textContent = 'ÇALIŞIYOR';
   document.querySelector('#status').textContent = 'Genel veri kaynağı sorgulanıyor…';
@@ -718,7 +712,7 @@ document.querySelector('#query').onsubmit = async e => {
   try {
     const r = await fetch('/api/lg/query?tool=' + tool + '&target=' + encodeURIComponent(value));
     const data = await r.json();
-    if (!r.ok) throw Error(data.error || 'query_failed');
+    if (!r.ok) throw Error(data.message || data.error || 'query_failed');
     document.querySelector('#state').textContent = 'TAMAMLANDI';
     document.querySelector('#status').textContent = data.summary;
     document.querySelector('#summary').textContent = data.summary;
@@ -727,6 +721,31 @@ document.querySelector('#query').onsubmit = async e => {
     document.querySelector('#state').textContent = 'HATA';
     document.querySelector('#status').textContent = 'Sorgu tamamlanamadı.';
     output.textContent = 'routeforce-lg $ error\n> ' + err.message + '\n> Hedefin genel ve geçerli olduğundan emin olun.';
+  }
+};
+
+document.querySelector('#speedTest').onclick = async () => {
+  const button = document.querySelector('#speedTest');
+  button.textContent = 'Ölçülüyor';
+  document.querySelector('#state').textContent = 'ÇALIŞIYOR';
+  document.querySelector('#status').textContent = '10 MB indirme ölçülüyor…';
+  output.textContent = 'routeforce-lg $ speedtest\n> Cloudflare edge üzerinden 10 MB indiriliyor…';
+  try {
+    const started = performance.now();
+    const response = await fetch('https://speed.cloudflare.com/__down?bytes=10000000&r=' + Date.now(), { cache: 'no-store' });
+    const bytes = (await response.arrayBuffer()).byteLength;
+    const seconds = Math.max((performance.now() - started) / 1000, 0.001);
+    const mbps = (bytes * 8 / seconds / 1e6).toFixed(1);
+    button.textContent = mbps + ' Mbps';
+    document.querySelector('#state').textContent = 'TAMAMLANDI';
+    document.querySelector('#status').textContent = mbps + ' Mbps';
+    document.querySelector('#summary').textContent = mbps + ' Mbps';
+    output.textContent = 'routeforce-lg $ speedtest\n> ' + bytes + ' bayt / ' + seconds.toFixed(2) + ' sn\n> ' + mbps + ' Mbps';
+  } catch (err) {
+    button.textContent = 'Başlat';
+    document.querySelector('#state').textContent = 'HATA';
+    document.querySelector('#status').textContent = 'Hız testi tamamlanamadı.';
+    output.textContent = 'routeforce-lg $ speedtest\n> ' + err.message;
   }
 };
 
