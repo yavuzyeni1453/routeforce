@@ -23,41 +23,143 @@ async function readJson(url: string, init?: RequestInit) {
   return response.json() as Promise<Record<string, unknown>>;
 }
 
-function flattenWhois(data: Record<string, unknown>) {
-  const groups = Array.isArray(data.records) ? data.records : [];
-  const fields: Record<string, string> = {};
-  const lines: string[] = [];
-  for (const group of groups) {
+type BriefRow = { label: string; value: string };
+type WhoisBrief = { title: string; rows: BriefRow[] };
+
+const statusTr: Record<string, string> = {
+  "client delete prohibited": "silme kilitli",
+  "client transfer prohibited": "transfer kilitli",
+  "client update prohibited": "güncelleme kilitli",
+  "server delete prohibited": "registry silme kilidi",
+  "server transfer prohibited": "registry transfer kilidi",
+  "server update prohibited": "registry güncelleme kilidi",
+  "client renew prohibited": "yenileme kilitli",
+  "ASSIGNED PORTABLE": "taşınabilir tahsis",
+  "ALLOCATED PORTABLE": "taşınabilir blok",
+  "ASSIGNED NON-PORTABLE": "sağlayıcıya bağlı tahsis",
+  "ALLOCATED PA": "sağlayıcı tahsisi",
+  "Direct Allocation": "doğrudan tahsis",
+  "Direct Assignment": "doğrudan atama"
+};
+
+function readableDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value.slice(0, 10);
+  return new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(date);
+}
+
+function countryName(code: string) {
+  const clean = code.trim().toUpperCase();
+  if (!/^[A-Z]{2}$/.test(clean)) return code;
+  try {
+    const name = new Intl.DisplayNames(["tr"], { type: "region" }).of(clean);
+    return name ? name + " (" + clean + ")" : clean;
+  } catch {
+    return clean;
+  }
+}
+
+function present(rows: Array<[string, string]>, title: string) {
+  const brief: WhoisBrief = { title, rows: rows.filter(([, value]) => value.trim()).map(([label, value]) => ({ label, value: value.trim() })) };
+  return {
+    summary: title,
+    output: brief.rows.map(row => row.label + ": " + row.value.replace(/\n/g, "\n  ")).join("\n"),
+    brief
+  };
+}
+
+function ripeRows(data: Record<string, unknown>) {
+  const grouped = new Map<string, string[]>();
+  for (const group of Array.isArray(data.records) ? data.records : []) {
     if (!Array.isArray(group)) continue;
     for (const row of group) {
       if (!row || typeof row !== "object") continue;
-      const key = String((row as { key?: unknown }).key || "");
-      const value = (row as { value?: unknown }).value;
-      if (!key || value == null || value === "") continue;
-      const text = String(value);
-      lines.push(key + ": " + text);
-      const id = key.toLowerCase();
-      fields[id] = fields[id] ? fields[id] + " | " + text : text;
+      const key = String((row as { key?: unknown }).key || "").toLowerCase();
+      const value = String((row as { value?: unknown }).value || "").trim();
+      if (!key || !value || /^[-.\s]+$/.test(value)) continue;
+      const list = grouped.get(key) || [];
+      if (!list.includes(value)) list.push(value);
+      grouped.set(key, list);
     }
   }
-  return {
-    name: fields.netname || fields["domain name"] || fields.domain || fields.descr || "",
-    handle: fields.netname || fields["domain name"] || "",
-    country: fields.country || "",
-    resource: String(data.resource || fields.inetnum || fields.route || ""),
-    descr: fields.descr || "",
-    source: "RIPEstat WHOIS",
-    records: lines.slice(0, 80)
+  const first = (key: string) => grouped.get(key)?.[0] || "";
+  const joined = (key: string) => (grouped.get(key) || []).join("\n");
+  const status = [...(grouped.get("status") || []), ...(grouped.get("nettype") || [])].map(value => statusTr[value] || value).join(", ");
+  const rawOwner = first("orgname") || first("organization") || first("org-name") || first("org");
+  const owner = /[a-z]|\s/.test(rawOwner) ? rawOwner : "";
+  const networkName = first("netname");
+  const showName = networkName && (!owner || networkName.length > 6 || networkName.includes("-"));
+  const place = [first("address"), [first("city"), first("stateprov"), first("postalcode")].filter(Boolean).join(", ")].filter(Boolean).join("\n");
+  const abuse = [first("orgabuseemail"), first("abuse-mailbox"), first("orgabusephone")].filter(Boolean).join("\n");
+  const country = first("country") ? countryName(first("country")) : "";
+  const title = [owner || first("netname") || first("inetnum") || first("cidr") || String(data.resource || ""), country].filter(Boolean).join(" · ");
+  return present([
+    ["Ağ", first("cidr") || first("inetnum") || first("route") || first("netrange") || String(data.resource || "")],
+    ["Aralık", first("cidr") && first("netrange") ? first("netrange") : ""],
+    ["Ad", showName ? networkName : ""],
+    ["Sahip", owner],
+    ["Adres", place],
+    ["Açıklama", joined("descr")],
+    ["Ülke", country],
+    ["Durum", status],
+    ["Origin AS", first("originas") || first("origin")],
+    ["Kötüye kullanım", abuse],
+    ["Kayıt tarihi", first("regdate") ? readableDate(first("regdate")) : ""],
+    ["Son güncelleme", first("last-modified") ? readableDate(first("last-modified")) : ""]
+  ], title || "WHOIS kaydı");
+}
+
+function vcardValue(entity: Record<string, unknown>, key: string) {
+  const card = entity.vcardArray as [string, unknown[]] | undefined;
+  const items = Array.isArray(card?.[1]) ? card[1] : [];
+  for (const item of items) {
+    if (Array.isArray(item) && item[0] === key && item[3]) return String(item[3]).replace(/^tel:/, "");
+  }
+  return "";
+}
+
+function domainRows(body: Record<string, unknown>, target: string) {
+  let registrar = "";
+  let abuse = "";
+  const walk = (entities: unknown) => {
+    if (!Array.isArray(entities)) return;
+    for (const entity of entities) {
+      if (!entity || typeof entity !== "object") continue;
+      const record = entity as Record<string, unknown>;
+      const roles = Array.isArray(record.roles) ? record.roles.map(String) : [];
+      if (roles.includes("registrar")) registrar = registrar || vcardValue(record, "fn");
+      if (roles.includes("abuse")) abuse = abuse || [vcardValue(record, "email"), vcardValue(record, "tel")].filter(Boolean).join(" · ");
+      walk(record.entities);
+    }
   };
+  walk(body.entities);
+  const events = Array.isArray(body.events) ? body.events as Array<{ eventAction?: string; eventDate?: string }> : [];
+  const when = (action: string) => readableDate(events.find(event => event.eventAction === action)?.eventDate || "");
+  const nameservers = (Array.isArray(body.nameservers) ? body.nameservers : [])
+    .map(server => server && typeof server === "object" ? String((server as { ldhName?: string }).ldhName || "") : "")
+    .filter(Boolean);
+  const statuses = (Array.isArray(body.status) ? body.status : []).map(status => statusTr[String(status)] || String(status));
+  const signed = (body.secureDNS as { delegationSigned?: boolean } | undefined)?.delegationSigned;
+  const name = String(body.ldhName || body.name || target).toUpperCase();
+  return present([
+    ["Alan adı", name],
+    ["Kayıt firması", registrar],
+    ["Kötüye kullanım", abuse],
+    ["Kayıt tarihi", when("registration")],
+    ["Bitiş tarihi", when("expiration")],
+    ["Son değişiklik", when("last changed")],
+    ["DNSSEC", signed == null ? "" : signed ? "İmzalı" : "İmzasız"],
+    ["Nameserver", nameservers.join("\n")],
+    ["Kilitler", statuses.join("\n")]
+  ], [name, registrar].filter(Boolean).join(" · "));
 }
 
 async function ripeWhois(target: string) {
   const body = await readJson("https://stat.ripe.net/data/whois/data.json?resource=" + encodeURIComponent(target));
   const data = (body.data || {}) as Record<string, unknown>;
-  const flat = flattenWhois(data);
-  if (!flat.records.length) throw new LookupError("lookup_not_found", "WHOIS kaydı bulunamadı.", 404);
-  const summary = [flat.name || flat.resource || target, flat.country].filter(Boolean).join(" · ");
-  return { summary: summary || "WHOIS kaydı bulundu", output: pretty(flat) };
+  const result = ripeRows(data);
+  if (!result.brief.rows.length) throw new LookupError("lookup_not_found", "WHOIS kaydı bulunamadı.", 404);
+  return result;
 }
 
 export async function whoisLookup(target: string) {
@@ -71,9 +173,9 @@ export async function whoisLookup(target: string) {
     try {
       const response = await fetch(url, { headers: { Accept: "application/rdap+json", "User-Agent": "RouteForce/1.0" }, redirect: "follow" });
       if (!response.ok) continue;
-      const body = await response.json() as { ldhName?: string; handle?: string; name?: string };
-      const name = body.ldhName || body.name || body.handle || target;
-      return { summary: name + " · RDAP", output: pretty(body) };
+      const body = await response.json() as Record<string, unknown>;
+      const result = domainRows(body, target);
+      if (result.brief.rows.length) return result;
     } catch { /* try the next registry */ }
   }
   return ripeWhois(target);

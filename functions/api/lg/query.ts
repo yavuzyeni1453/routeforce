@@ -31,7 +31,7 @@ export async function onRequestGet(context: { request: Request }) {
     }
     if (tool === "whois") {
       const result = await whoisLookup(target);
-      return json({ tool, target, summary: result.summary, output: result.output });
+      return json({ tool, target, summary: result.summary, output: result.output, brief: result.brief });
     }
     const resource = target.toUpperCase().startsWith("AS") ? target.toUpperCase() : target;
     const endpoint = target.toUpperCase().startsWith("AS") ? "as-overview" : "prefix-overview";

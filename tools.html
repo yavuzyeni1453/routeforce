@@ -1323,7 +1323,8 @@ async function runQuery() {
     $('#cardStatus').className = 'badge badge-mint';
 
     let parsed;
-    try { parsed = JSON.parse(data.output); } catch { parsed = data.output || data.data || data; }
+    if (data.brief?.rows?.length) parsed = Object.fromEntries(data.brief.rows.map(row => [row.label, row.value]));
+    else { try { parsed = JSON.parse(data.output); } catch { parsed = data.output || data.data || data; } }
 
     renderVisualCards(parsed, targetVal, data.summary);
 

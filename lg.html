@@ -415,16 +415,52 @@ body {
 
 .metric b {
   display: block;
-  font-size: 18px;
+  font-size: 16px;
   margin-top: 4px;
   color: #fff;
   font-weight: 700;
+  line-height: 1.35;
+  word-break: break-word;
 }
 
 .metric em {
   font-style: normal;
   color: var(--text-muted);
   font-size: 11px;
+}
+
+.facts {
+  display: grid;
+  gap: 8px;
+  padding: 0 20px 18px;
+}
+
+.facts[hidden] { display: none; }
+
+.fact {
+  padding: 10px 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.fact small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.fact b {
+  display: block;
+  margin-top: 3px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.45;
+  white-space: pre-line;
+  word-break: break-word;
 }
 
 .probe {
@@ -594,9 +630,10 @@ body {
         <div class="metric">
           <small>SONUÇ</small>
           <b id="summary">—</b>
-          <em>Henüz sorgu çalışmadı</em>
+          <em id="summaryNote">Henüz sorgu çalışmadı</em>
         </div>
       </div>
+      <div class="facts" id="facts" hidden></div>
     </section>
 
     <section class="panel">
@@ -688,6 +725,24 @@ let tool = 'bgp';
 const target = document.querySelector('#target');
 const output = document.querySelector('#output');
 
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function renderFacts(brief) {
+  const box = document.querySelector("#facts");
+  const note = document.querySelector("#summaryNote");
+  if (!brief?.rows?.length) {
+    box.hidden = true;
+    box.innerHTML = "";
+    note.textContent = "Henüz sorgu çalışmadı";
+    return;
+  }
+  box.hidden = false;
+  note.textContent = brief.rows.length + " alan";
+  box.innerHTML = brief.rows.map(row => "<div class=\"fact\"><small>" + escapeHtml(row.label) + "</small><b>" + escapeHtml(row.value) + "</b></div>").join("");
+}
+
 function choose(next) {
   tool = next;
   document.querySelectorAll('[data-tool]').forEach(b => b.classList.toggle('active', b.dataset.tool === tool));
@@ -708,6 +763,7 @@ document.querySelector('#query').onsubmit = async e => {
   document.querySelector('#shownTarget').textContent = value;
   document.querySelector('#state').textContent = 'ÇALIŞIYOR';
   document.querySelector('#status').textContent = 'Genel veri kaynağı sorgulanıyor…';
+  renderFacts(null);
   output.textContent = 'routeforce-lg $ ' + tool + ' ' + value + '\n> Working…';
   try {
     const r = await fetch('/api/lg/query?tool=' + tool + '&target=' + encodeURIComponent(value));
@@ -716,6 +772,7 @@ document.querySelector('#query').onsubmit = async e => {
     document.querySelector('#state').textContent = 'TAMAMLANDI';
     document.querySelector('#status').textContent = data.summary;
     document.querySelector('#summary').textContent = data.summary;
+    renderFacts(data.brief);
     output.textContent = 'routeforce-lg $ ' + tool + ' ' + value + '\n\n' + data.output;
   } catch (err) {
     document.querySelector('#state').textContent = 'HATA';
