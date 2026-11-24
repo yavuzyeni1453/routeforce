@@ -1,4 +1,4 @@
-import { LookupError, probeLookup, whoisLookup } from "../../lib/lookup";
+import { LookupError, bgpLookup, dnsLookup, probeLookup, whoisLookup } from "../../lib/lookup";
 
 type Tool = "bgp" | "whois" | "dns" | "ping" | "trace" | "mtr";
 const privateV4 = /^(10\.|127\.|0\.|169\.254\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.)/;
@@ -22,23 +22,18 @@ export async function onRequestGet(context: { request: Request }) {
     if (tool === "ping" || tool === "trace" || tool === "mtr") {
       const kind = tool === "trace" ? "traceroute" : tool;
       const result = await probeLookup(kind, target);
-      return json({ tool, target, summary: result.summary, output: result.output });
+      return json({ tool, target, summary: result.summary, output: result.output, brief: result.brief });
     }
     if (tool === "dns") {
-      const answer = await fetch("https://cloudflare-dns.com/dns-query?name=" + encodeURIComponent(target) + "&type=A", { headers: { Accept: "application/dns-json" } });
-      const data = await answer.json() as { Answer?: Array<{ name?: string; type?: number; TTL?: number; data?: string }> };
-      return json({ tool, target, summary: data.Answer?.length ? data.Answer.length + " DNS kaydı bulundu" : "A kaydı bulunamadı", output: JSON.stringify(data.Answer || [], null, 2) });
+      const result = await dnsLookup(target);
+      return json({ tool, target, summary: result.summary, output: result.output, brief: result.brief });
     }
     if (tool === "whois") {
       const result = await whoisLookup(target);
       return json({ tool, target, summary: result.summary, output: result.output, brief: result.brief });
     }
-    const resource = target.toUpperCase().startsWith("AS") ? target.toUpperCase() : target;
-    const endpoint = target.toUpperCase().startsWith("AS") ? "as-overview" : "prefix-overview";
-    const response = await fetch("https://stat.ripe.net/data/" + endpoint + "/data.json?resource=" + encodeURIComponent(resource));
-    if (!response.ok) return json({ error: "bgp_lookup_failed" }, 502);
-    const body = await response.json() as { data?: unknown };
-    return json({ tool, target, summary: "RIPEstat BGP görünürlüğü", output: JSON.stringify(body.data || body, null, 2) });
+    const result = await bgpLookup(target);
+    return json({ tool, target, summary: result.summary, output: result.output, brief: result.brief });
   } catch (error) {
     if (error instanceof LookupError) return json({ error: error.code, message: error.message }, error.status);
     return json({ error: "upstream_unavailable", message: "Sağlayıcı şu anda RouteForce üzerinden yanıt vermiyor." }, 502);

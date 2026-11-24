@@ -456,12 +456,21 @@ body {
   display: block;
   margin-top: 3px;
   color: #fff;
-  font-size: 13px;
   font-weight: 650;
   line-height: 1.45;
   white-space: pre-line;
   word-break: break-word;
+  font-family: var(--font-mono);
+  font-size: 12px;
 }
+
+.fact.section {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.fact.section small { color: var(--accent-mint-light); }
+.fact.section b { font-family: var(--font-sans); font-size: 13px; }
 
 .probe {
   padding: 18px 20px;
@@ -658,31 +667,23 @@ body {
     <section class="panel">
       <div class="ph">
         <div>
-          <span>PROBE ARAÇLARI</span>
-          <h2>Network Testleri</h2>
+          <span>SON PROBE</span>
+          <h2 id="probeTitle">Henüz çalışmadı</h2>
         </div>
       </div>
       <div class="probe">
         <div class="probeitem">
           <div>
-            <b>Ping analizi</b>
-            <small>Latency, loss, jitter</small>
+            <b>Özet</b>
+            <small id="probeSummary">Ping, traceroute veya MTR çalıştırın.</small>
           </div>
-          <span class="pending">CANLI</span>
         </div>
         <div class="probeitem">
           <div>
-            <b>Traceroute</b>
-            <small>Hop-by-hop rota</small>
+            <b>Konum tercihi</b>
+            <small>Önce Türkiye, sonra Avrupa probe’ları</small>
           </div>
-          <span class="pending">CANLI</span>
-        </div>
-        <div class="probeitem">
-          <div>
-            <b>MTR</b>
-            <small>Tekrarlı yol ölçümü</small>
-          </div>
-          <span class="pending">CANLI</span>
+          <span class="pending">TR → EU</span>
         </div>
         <div class="probeitem">
           <div>
@@ -714,11 +715,11 @@ body {
 <script>
 const labels = {
   bgp: ['BGP görünürlüğü', 'BGP: ASN, IPv4/IPv6 adresi veya prefix girin.', 'RIPEstat', 'BGP routing visibility'],
-  whois: ['WHOIS / RDAP', 'WHOIS: IP adresi veya domain girin.', 'RIPEstat / RDAP', 'Registry ownership data'],
-  dns: ['DNS lookup', 'DNS: Bir domain girin.', 'Cloudflare DoH', 'Public DNS A records'],
-  ping: ['Ping analizi', 'Ping: genel bir IP veya alan adı girin.', 'Globalping', 'Latency, loss, jitter'],
-  trace: ['Traceroute', 'Traceroute: genel bir IP veya alan adı girin.', 'Globalping', 'Hop-by-hop route'],
-  mtr: ['MTR', 'MTR: genel bir IP veya alan adı girin.', 'Globalping', 'Repeated path checks']
+  whois: ['WHOIS / RDAP', 'WHOIS: IP adresi veya domain girin.', 'RIPEstat / RDAP', 'Sahip, adres, abuse'],
+  dns: ['DNS lookup', 'DNS: Bir domain girin.', 'Cloudflare DoH', 'A / AAAA / MX / NS / TXT'],
+  ping: ['Ping analizi', 'Ping: genel bir IP veya alan adı girin.', 'Globalping TR→EU', 'Min / ort / maks / kayıp'],
+  trace: ['Traceroute', 'Traceroute: genel bir IP veya alan adı girin.', 'Globalping TR→EU', 'Hop listesi ve RTT'],
+  mtr: ['MTR', 'MTR: genel bir IP veya alan adı girin.', 'Globalping TR→EU', 'Hop, kayıp ve ortalama']
 };
 
 let tool = 'bgp';
@@ -740,7 +741,16 @@ function renderFacts(brief) {
   }
   box.hidden = false;
   note.textContent = brief.rows.length + " alan";
-  box.innerHTML = brief.rows.map(row => "<div class=\"fact\"><small>" + escapeHtml(row.label) + "</small><b>" + escapeHtml(row.value) + "</b></div>").join("");
+  box.innerHTML = brief.rows.map(row => {
+    const section = /^Probe\s+\d+$/i.test(row.label);
+    return "<div class=\"fact" + (section ? " section" : "") + "\"><small>" + escapeHtml(row.label) + "</small><b>" + escapeHtml(row.value) + "</b></div>";
+  }).join("");
+}
+
+function updateProbePanel(toolName, summary) {
+  if (!["ping", "trace", "mtr"].includes(toolName)) return;
+  document.querySelector("#probeTitle").textContent = { ping: "Ping", trace: "Traceroute", mtr: "MTR" }[toolName];
+  document.querySelector("#probeSummary").textContent = summary || "Tamamlandı";
 }
 
 function choose(next) {
@@ -773,6 +783,7 @@ document.querySelector('#query').onsubmit = async e => {
     document.querySelector('#status').textContent = data.summary;
     document.querySelector('#summary').textContent = data.summary;
     renderFacts(data.brief);
+    updateProbePanel(tool, data.summary);
     output.textContent = 'routeforce-lg $ ' + tool + ' ' + value + '\n\n' + data.output;
   } catch (err) {
     document.querySelector('#state').textContent = 'HATA';
